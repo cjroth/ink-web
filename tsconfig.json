@@ -22,10 +22,12 @@
 
     /* Paths */
     "baseUrl": ".",
+    "rootDirs": [".", "./.react-router/types"],
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": ["vite/client"]
   },
-  "include": ["src"],
+  "include": ["src", "app", ".react-router/types/**/*"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }
