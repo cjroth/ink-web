@@ -12,6 +12,7 @@
     "format": "biome format --write"
   },
   "dependencies": {
+    "@ink-web/browser": "workspace:*",
     "@orama/orama": "^3.1.16",
     "@react-router/node": "^7.9.6",
     "fumadocs-core": "16.0.12",

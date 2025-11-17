@@ -1,4 +1,5 @@
-import path from 'path'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 import type { Plugin } from 'vite'
 
 export function inkBrowserPlugin(): Plugin {
@@ -12,7 +13,8 @@ export function inkBrowserPlugin(): Plugin {
         // Try to resolve from node_modules (when installed as a dependency)
         inkBrowserPath = path.dirname(require.resolve('@ink-web/browser'))
       } catch {
-        // Fallback for development (shouldn't happen in practice)
+        // Fallback for development using import.meta.url
+        const __dirname = path.dirname(fileURLToPath(import.meta.url))
         inkBrowserPath = path.resolve(__dirname, '..')
       }
 
@@ -53,8 +55,7 @@ export function inkBrowserPlugin(): Plugin {
           },
         },
         define: {
-          'process.env': {},
-          'process.cwd': '() => "/"',
+          'process.env': '{}',
         },
       }
     },

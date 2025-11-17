@@ -1,3 +1,4 @@
+import { inkBrowserPlugin } from '@ink-web/browser/vite'
 import { reactRouter } from '@react-router/dev/vite'
 import tailwindcss from '@tailwindcss/vite'
 import mdx from 'fumadocs-mdx/vite'
@@ -7,6 +8,7 @@ import * as MdxConfig from './source.config'
 
 export default defineConfig({
   plugins: [
+    inkBrowserPlugin(),
     mdx(MdxConfig),
     tailwindcss(),
     reactRouter(),

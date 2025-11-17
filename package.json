@@ -1,0 +1,10 @@
+{
+  "name": "ink-web-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "ink-browser",
+    "ink-browser/docs",
+    "ink-browser/examples/basic"
+  ]
+}

@@ -22,7 +22,6 @@ export default defineConfig({
     },
   },
   define: {
-    'process.env': {},
-    'process.cwd': '() => "/"',
+    'process.env': '{}',
   },
 })

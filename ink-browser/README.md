@@ -6,25 +6,22 @@ Run [Ink](https://github.com/vadimdemedes/ink) (React for CLIs) in the browser u
 
 - 🖥️ Renders Ink components inside Xterm.js in the browser
 - 🚫 No Node.js required - uses minimal shims for Node-only modules
-- ⚛️ **Currently supports React 18 and Ink 5 only** (React 19 and Ink 6 support coming soon)
 - 📦 Bundled and ready to use
 
 ## Installation
 
 ```bash
-npm install @ink-web/browser ink@5 react@18 xterm
+npm install @ink-web/browser ink react xterm
 # or
-bun add @ink-web/browser ink@5 react@18 xterm
+bun add @ink-web/browser ink react xterm
 ```
-
-**Important:** This library currently only supports React 18 and Ink 5. If your project uses React 19, you'll need to stay on React 18 for now or wait for React 19 support to be added.
 
 ## Usage
 
 ### 1. Install Dependencies
 
 ```bash
-npm install @ink-web/browser ink@5 react@18 xterm path-browserify
+npm install @ink-web/browser ink react xterm path-browserify
 ```
 
 ### 2. Configure Vite
