@@ -1,0 +1,21 @@
+# Source files (only publish dist/)
+src/
+demo/
+stories/
+tests/
+
+# Config files
+tsconfig.json
+tsup.config.ts
+vite.config.ts
+vite.aliases.ts
+
+# Test files
+*.test.ts
+*.test.tsx
+
+# Development
+node_modules/
+.DS_Store
+*.log
+

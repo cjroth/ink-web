@@ -1,0 +1,24 @@
+node_modules/
+
+# Ignore the private repository
+.git-private
+
+# Ignore agent configuration files
+.aider*
+.claude*
+.obsidian*
+.zed*
+**/*.base
+**/*.DS_Store
+
+# Ignore agent log folder
+.agent/
+
+# Ignore all private notes
+**/*.md
+!**/**AGENTS.md
+!**/**EXAMPLE.md
+!**/**README.md
+
+.env*
+*.log

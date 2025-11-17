@@ -1,0 +1,73 @@
+{
+  "name": "@ink-web/browser",
+  "version": "0.1.0",
+  "description": "Run Ink (React for CLIs) in the browser using Xterm.js",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "build:watch": "tsup --watch",
+    "dev": "bun run build && bunx vite --config vite.config.ts",
+    "dev:watch": "bunx concurrently \"bun run build:watch\" \"bunx vite --config vite.config.ts\"",
+    "test": "bun test",
+    "prepublishOnly": "bun run build"
+  },
+  "peerDependencies": {
+    "ink": ">=5.0.0",
+    "react": ">=18.0.0",
+    "xterm": ">=5.0.0"
+  },
+  "dependencies": {
+    "@xterm/addon-fit": "^0.10.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.20",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.1.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "chalk": "^5.4.1",
+    "ink": "5",
+    "path-browserify": "^1.0.1",
+    "react": "18",
+    "tsup": "^8.1.0",
+    "typescript": "^5.7.2",
+    "vite": "^6.0.3",
+    "xterm": "^5.3.0"
+  },
+  "keywords": [
+    "ink",
+    "xterm",
+    "terminal",
+    "browser",
+    "react",
+    "cli",
+    "tui"
+  ],
+  "author": "",
+  "license": "MIT",
+  "homepage": "https://github.com/yourusername/ink-web#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/ink-web.git",
+    "directory": "ink-browser"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/ink-web/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
