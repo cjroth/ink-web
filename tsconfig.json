@@ -19,15 +19,32 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
 
-    /* Paths */
+    /* Path aliases */
     "baseUrl": ".",
-    "rootDirs": [".", "./.react-router/types"],
     "paths": {
-      "@/*": ["./src/*"]
-    },
-    "types": ["vite/client"]
+      "cli-cursor": ["./src/shims/cli-cursor.ts"],
+      "supports-color": ["./src/shims/supports-color.ts"],
+      "#supports-color": ["./src/shims/supports-color.ts"],
+      "signal-exit": ["./src/shims/signal-exit.ts"],
+      "window-size": ["./src/shims/window-size.ts"],
+      "tty": ["./src/shims/tty.ts"],
+      "process": ["./src/shims/process.ts"],
+      "node:process": ["./src/shims/process.ts"],
+      "events": ["./src/shims/events.ts"],
+      "node:events": ["./src/shims/events.ts"],
+      "stream": ["./src/shims/stream.ts"],
+      "node:stream": ["./src/shims/stream.ts"],
+      "module": ["./src/shims/module.ts"],
+      "node:module": ["./src/shims/module.ts"],
+      "buffer": ["./src/shims/buffer.ts"],
+      "node:buffer": ["./src/shims/buffer.ts"],
+      "fs": ["./src/shims/fs.ts"],
+      "node:fs": ["./src/shims/fs.ts"],
+      "chalk-orig": ["./node_modules/chalk/source/index.js"],
+      "chalk": ["./src/shims/chalk.ts"]
+    }
   },
-  "include": ["src", "app", ".react-router/types/**/*"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src", "demo", "stories", "tests"]
 }
