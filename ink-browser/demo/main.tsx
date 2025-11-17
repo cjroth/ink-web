@@ -1,8 +1,10 @@
 import { Box, Text, useInput } from 'ink'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import 'xterm/css/xterm.css'
 // In a real app, this would be: import { mountInkInXterm } from '@ink-web/browser'
 import { mountInkInXterm } from '../dist/index.js'
+
+console.log('React version:', React.version)
 
 const App = () => {
   const [input, setInput] = useState('')
@@ -24,6 +26,7 @@ const App = () => {
   return (
     <Box flexDirection="column">
       <Text color="green">Ink + Xterm (browser)</Text>
+      <Text dimColor>React version: {React.version}</Text>
       <Text dimColor>Type something and press Enter...</Text>
       <Text> </Text>
       {history.length > 0 && (
