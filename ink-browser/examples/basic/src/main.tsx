@@ -1,6 +1,7 @@
-import { mountInkInXterm } from '@ink-web/browser'
+import { InkXterm } from '@ink-web/browser'
 import { Box, Text, useInput } from 'ink'
-import React, { useState } from 'react'
+import { createRoot } from 'react-dom/client'
+import { useState } from 'react'
 import 'xterm/css/xterm.css'
 
 const App = () => {
@@ -43,11 +44,9 @@ const App = () => {
   )
 }
 
-const container = document.getElementById('terminal')!
-const { term, unmount } = mountInkInXterm(<App />, {
-  container,
-  focus: true,
-})
-
-// Clean up when done
-// await unmount()
+const root = createRoot(document.getElementById('terminal')!)
+root.render(
+  <InkXterm focus>
+    <App />
+  </InkXterm>
+)
