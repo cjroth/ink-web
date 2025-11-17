@@ -26,4 +26,3 @@ export function inkBrowserAliases(rootDir: string) {
     { find: 'chalk', replacement: r('src/shims/chalk.ts') },
   ] as { find: string; replacement: string }[]
 }
-

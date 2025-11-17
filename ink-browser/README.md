@@ -27,50 +27,26 @@ npm install @ink-web/browser ink react xterm path-browserify
 
 ### 2. Configure Vite
 
-Since Ink relies on Node.js modules, you need to configure Vite to alias these to browser-compatible shims:
+Use the included Vite plugin to automatically configure all necessary settings:
 
 **vite.config.ts:**
 
 ```typescript
+import { inkBrowserPlugin } from '@ink-web/browser/vite'
 import react from '@vitejs/plugin-react'
-import path from 'path'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  plugins: [react()],
-  resolve: {
-    alias: {
-      // Alias Node.js built-ins to shims
-      'cli-cursor': path.resolve(__dirname, 'node_modules/@ink-web/browser/src/shims/cli-cursor.ts'),
-      'supports-color': path.resolve(__dirname, 'node_modules/@ink-web/browser/src/shims/supports-color.ts'),
-      '#supports-color': path.resolve(__dirname, 'node_modules/@ink-web/browser/src/shims/supports-color.ts'),
-      'signal-exit': path.resolve(__dirname, 'node_modules/@ink-web/browser/src/shims/signal-exit.ts'),
-      'window-size': path.resolve(__dirname, 'node_modules/@ink-web/browser/src/shims/window-size.ts'),
-      'tty': path.resolve(__dirname, 'node_modules/@ink-web/browser/src/shims/tty.ts'),
-      'process': path.resolve(__dirname, 'node_modules/@ink-web/browser/src/shims/process.ts'),
-      'node:process': path.resolve(__dirname, 'node_modules/@ink-web/browser/src/shims/process.ts'),
-      'events': path.resolve(__dirname, 'node_modules/@ink-web/browser/src/shims/events.ts'),
-      'node:events': path.resolve(__dirname, 'node_modules/@ink-web/browser/src/shims/events.ts'),
-      'stream': path.resolve(__dirname, 'node_modules/@ink-web/browser/src/shims/stream.ts'),
-      'node:stream': path.resolve(__dirname, 'node_modules/@ink-web/browser/src/shims/stream.ts'),
-      'module': path.resolve(__dirname, 'node_modules/@ink-web/browser/src/shims/module.ts'),
-      'node:module': path.resolve(__dirname, 'node_modules/@ink-web/browser/src/shims/module.ts'),
-      'buffer': path.resolve(__dirname, 'node_modules/@ink-web/browser/src/shims/buffer.ts'),
-      'node:buffer': path.resolve(__dirname, 'node_modules/@ink-web/browser/src/shims/buffer.ts'),
-      'fs': path.resolve(__dirname, 'node_modules/@ink-web/browser/src/shims/fs.ts'),
-      'node:fs': path.resolve(__dirname, 'node_modules/@ink-web/browser/src/shims/fs.ts'),
-      'node:path': 'path-browserify',
-      // Chalk special handling
-      'chalk-orig': 'chalk',
-      'chalk': path.resolve(__dirname, 'node_modules/@ink-web/browser/src/shims/chalk.ts'),
-    },
-  },
-  define: {
-    'process.env': {},
-    'process.cwd': '() => "/"',
-  },
+  plugins: [react(), inkBrowserPlugin()],
 })
 ```
+
+> **Note:** The plugin is exported as a separate entry point (`@ink-web/browser/vite`) to avoid loading browser-specific dependencies (like `xterm`) during Vite config evaluation.
+
+The plugin automatically:
+- Sets up all required module aliases for browser shims
+- Configures build targets for ES2020+ (needed for top-level await support)
+- Defines global variables (`process.env`, `process.cwd`)
 
 ### 3. Use in Your App
 

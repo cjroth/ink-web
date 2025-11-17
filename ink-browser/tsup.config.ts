@@ -6,14 +6,17 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
 export default defineConfig({
-  entry: ['src/index.ts'],
+  entry: {
+    index: 'src/index.ts',
+    'vite-plugin': 'src/vite-plugin.ts',
+  },
   format: ['esm', 'cjs'],
   dts: true,
   clean: true,
   sourcemap: true,
   target: 'es2020',
   platform: 'browser',
-  external: ['react', 'react-dom', 'ink', 'xterm', '@xterm/addon-fit'],
+  external: ['react', 'react-dom', 'ink', 'xterm', '@xterm/addon-fit', 'vite', 'path'],
   noExternal: [
     // Bundle these packages and their dependencies (which will hit our shims)
     'chalk',
