@@ -11,24 +11,100 @@ Run [Ink](https://github.com/vadimdemedes/ink) (React for CLIs) in the browser u
 ## Installation
 
 ```bash
-npm install @ink-web/browser ink react xterm
+npm install @ink-web/browser react xterm
 # or
-bun add @ink-web/browser ink react xterm
+bun add @ink-web/browser react xterm
 ```
 
 ## Usage
 
-### 1. Install Dependencies
+There are **two ways** to use `@ink-web/browser`, depending on your needs:
+
+### Option A: Bundled Version (Recommended for Simplicity)
+
+**Best for:** Most users who want less configuration and encapsulated dependencies.
+
+**Advantages:**
+- ✅ Minimal or no Vite plugin configuration (Vite auto-polyfills most node built-ins)
+- ✅ Shims are largely encapsulated and won't interfere with other code
+- ✅ Single import for both ink and the wrapper
+
+**Disadvantages:**
+- ❌ Larger bundle size (~1MB for ink + dependencies)
+- ❌ If you use ink/chalk elsewhere, they get duplicated
+- ❌ May require minimal Vite config for production builds (see below)
+
+**Installation:**
 
 ```bash
-npm install @ink-web/browser ink react xterm path-browserify
+npm install @ink-web/browser react xterm
 ```
 
-### 2. Configure Vite
+**Usage:**
 
-Use the included Vite plugin to automatically configure all necessary settings:
+```typescript
+import { InkXterm, Box, Text } from '@ink-web/browser/bundled'
+import 'xterm/css/xterm.css'
 
-**vite.config.ts:**
+const App = () => (
+  <InkXterm focus>
+    <Box flexDirection="column">
+      <Text color="green">Hello from Ink in the browser!</Text>
+    </Box>
+  </InkXterm>
+)
+```
+
+**Note for Production Builds:** If you encounter build errors about unresolved modules, add this minimal config:
+
+```typescript
+// vite.config.ts
+export default defineConfig({
+  resolve: {
+    alias: {
+      stream: 'stream-browserify',
+      buffer: 'buffer',
+      process: 'process/browser',
+      events: 'events',
+    },
+  },
+  define: {
+    'process.env': {},
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      define: {
+        global: 'globalThis',
+      },
+    },
+  },
+})
+```
+
+Then install: `npm install stream-browserify buffer process events`
+
+---
+
+### Option B: Plugin-Based (Smaller Bundle)
+
+**Best for:** Advanced users who want smaller bundles or already use ink/chalk in their app.
+
+**Advantages:**
+- ✅ Smaller package bundle size (~5KB)
+- ✅ No duplication if you use ink/chalk elsewhere
+- ✅ More control over versions
+
+**Disadvantages:**
+- ❌ Requires Vite plugin configuration
+- ❌ Shims are global to your entire build (may affect other code)
+
+**Installation:**
+
+```bash
+npm install @ink-web/browser ink react xterm
+```
+
+**Vite Configuration:**
 
 ```typescript
 import { inkBrowserPlugin } from '@ink-web/browser/vite'
@@ -40,12 +116,32 @@ export default defineConfig({
 })
 ```
 
-> **Note:** The plugin is exported as a separate entry point (`@ink-web/browser/vite`) to avoid loading browser-specific dependencies (like `xterm`) during Vite config evaluation.
-
 The plugin automatically:
 - Sets up all required module aliases for browser shims
 - Configures build targets for ES2020+ (needed for top-level await support)
 - Defines global variables (`process.env`, `process.cwd`)
+
+**Usage:**
+
+```typescript
+import { InkXterm } from '@ink-web/browser'
+import { Box, Text } from 'ink'
+import 'xterm/css/xterm.css'
+
+const App = () => (
+  <InkXterm focus>
+    <Box flexDirection="column">
+      <Text color="green">Hello from Ink!</Text>
+    </Box>
+  </InkXterm>
+)
+```
+
+Note: Import ink components from `ink` separately.
+
+---
+
+## Examples
 
 ### 3. Use in Your App
 
@@ -175,13 +271,11 @@ React component wrapper for mounting Ink in Xterm.
 
 ## Compatibility
 
-- **React:** 18.x only
-- **Ink:** 5.x only  
+- **React:** 19.x+
+- **Ink:** 6.x+
 - **Node.js:** 18.0.0+
-- **Vite:** 4.0.0+
+- **Vite:** 7.0.0+ (for plugin-based approach)
 - **Xterm.js:** 5.0.0+
-
-React 19 and Ink 6 support is planned for a future release.
 
 ## License
 
