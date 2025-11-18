@@ -5,6 +5,9 @@
   text-align: left !important;
   line-height: 1 !important;
   letter-spacing: 0 !important;
+  overflow: hidden !important;
+  max-width: 100% !important;
+  position: relative !important;
 }
 
 /* Ensure xterm container fills the space and isn't affected by docs styles */
@@ -13,7 +16,9 @@
   margin: 0 !important;
   height: 100% !important;
   width: 100% !important;
+  max-width: 100% !important;
   text-align: left !important;
+  box-sizing: border-box !important;
 }
 
 /* Prevent fumadocs from centering terminal text */
@@ -32,5 +37,6 @@
 
 .ink-terminal-reset .xterm .xterm-viewport {
   overflow-y: auto !important;
+  overflow-x: hidden !important;
+  max-width: 100% !important;
 }
-
