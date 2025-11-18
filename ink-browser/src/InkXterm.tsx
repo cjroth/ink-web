@@ -20,7 +20,7 @@ export const InkXterm: React.FC<InkXtermProps> = ({ className = '', focus, termO
     }
   }, [children, focus, termOptions])
 
-  return <div className={className} ref={containerRef} />
+  return <div className={className} ref={containerRef} style={{ width: '100%', height: '100%' }} />
 }
 
 export default InkXterm

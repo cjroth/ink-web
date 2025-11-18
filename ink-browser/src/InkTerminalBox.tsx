@@ -17,7 +17,7 @@ interface InkTerminalBoxProps {
 export const InkTerminalBox: React.FC<InkTerminalBoxProps> = ({ className = '', focus, termOptions, children }) => {
   return (
     <div className={`ink-terminal-box ${className}`}>
-      <div className="ink-terminal-reset overflow-scroll!">
+      <div className="ink-terminal-reset">
         <InkXterm focus={focus} termOptions={termOptions}>
           {children}
         </InkXterm>

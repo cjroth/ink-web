@@ -28,7 +28,7 @@ export const DemoApp = () => {
         <Box flexDirection="column">
           <Text bold>History:</Text>
           {history.map((item, i) => (
-            <Text key={i}>  {item}</Text>
+            <Text key={i}> {item}</Text>
           ))}
           <Text> </Text>
         </Box>
@@ -41,4 +41,3 @@ export const DemoApp = () => {
     </Box>
   )
 }
-

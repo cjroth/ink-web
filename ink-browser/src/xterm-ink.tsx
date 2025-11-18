@@ -16,25 +16,25 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkBrowserOpt
   // Get container dimensions to set initial terminal size
   const containerWidth = opts.container.clientWidth
   const containerHeight = opts.container.clientHeight
-  
+
   // Calculate initial cols/rows based on container size
   const charWidth = 9 // approximate char width in pixels
   const charHeight = 17 // approximate char height in pixels
   const initialCols = Math.floor(containerWidth / charWidth) || 80
   const initialRows = Math.floor(containerHeight / charHeight) || 24
-  
-  const term = new Terminal({ 
-    convertEol: true, 
+
+  const term = new Terminal({
+    convertEol: true,
     disableStdin: false,
     cols: initialCols,
     rows: initialRows,
-    ...opts.termOptions 
+    ...opts.termOptions,
   })
   const fitAddon = new FitAddon()
-  
+
   term.open(opts.container)
   term.loadAddon(fitAddon)
-  
+
   // Wait for the terminal to be fully initialized before fitting
   setTimeout(() => {
     fitAddon.fit()
