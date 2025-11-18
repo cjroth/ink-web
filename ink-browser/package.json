@@ -16,6 +16,9 @@
       "types": "./dist/bundled.d.ts",
       "import": "./dist/bundled.js"
     },
+    "./bundled/css": {
+      "import": "./dist/bundled.css"
+    },
     "./vite": {
       "types": "./dist/vite-plugin.d.ts",
       "import": "./dist/vite-plugin.js",

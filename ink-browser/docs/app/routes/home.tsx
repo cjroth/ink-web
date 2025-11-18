@@ -17,7 +17,7 @@ export default function Home() {
 
   return (
     <HomeLayout {...baseOptions()}>
-      <div className="p-4 flex flex-col items-center justify-center text-center flex-1">
+      <div className="p-4 flex flex-col items-center justify-center text-center flex-1 overflow-x-hidden max-w-full">
         <h1 className="text-xl font-bold mb-2">Fumadocs on React Router.</h1>
         <p className="text-fd-muted-foreground mb-4">The truly flexible docs framework on React.js.</p>
         

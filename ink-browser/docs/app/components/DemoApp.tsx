@@ -1,4 +1,4 @@
-import { Box, Text, useInput } from 'ink'
+import { Box, Text, useInput } from '@ink-web/browser/bundled'
 import React, { useState } from 'react'
 
 export const DemoApp = () => {
@@ -28,7 +28,7 @@ export const DemoApp = () => {
         <Box flexDirection="column">
           <Text bold>History:</Text>
           {history.map((item, i) => (
-            <Text key={i}> {item}</Text>
+            <Text key={i}>  {item}</Text>
           ))}
           <Text> </Text>
         </Box>
@@ -41,3 +41,4 @@ export const DemoApp = () => {
     </Box>
   )
 }
+

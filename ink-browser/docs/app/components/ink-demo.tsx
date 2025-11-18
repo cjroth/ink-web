@@ -1,15 +1,12 @@
-import { DemoApp, InkXterm } from '@ink-web/browser/bundled'
+import { InkTerminalBox } from '@ink-web/browser/bundled'
+import '@ink-web/browser/bundled/css'
 import 'xterm/css/xterm.css'
-import './ink-demo.css'
+import { DemoApp } from './DemoApp'
 
 export function InkDemo() {
   return (
-    <div className="w-full h-64 border border-fd-border rounded overflow-hidden relative">
-      <div className="ink-terminal-reset absolute inset-0">
-        <InkXterm focus>
-          <DemoApp />
-        </InkXterm>
-      </div>
-    </div>
+    <InkTerminalBox focus>
+      <DemoApp />
+    </InkTerminalBox>
   )
 }

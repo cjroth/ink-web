@@ -1,4 +1,5 @@
 export { InkXterm } from './InkXterm'
+export { InkTerminalBox } from './InkTerminalBox'
 export { mountInkInXterm } from './xterm-ink'
 export type { InkBrowserOptions } from './xterm-ink'
 export { DemoApp } from './DemoApp'
