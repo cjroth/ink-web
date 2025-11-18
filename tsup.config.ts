@@ -1,7 +1,7 @@
+import type { Plugin } from 'esbuild'
 import { dirname, resolve } from 'path'
 import { defineConfig } from 'tsup'
 import { fileURLToPath } from 'url'
-import type { Plugin } from 'esbuild'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -50,7 +50,7 @@ const nodeShimsPlugin = (rootDir: string): Plugin => ({
   name: 'node-shims',
   setup(build) {
     const aliases = shimAliases(rootDir)
-    
+
     // Special handling for chalk-orig -> chalk
     build.onResolve({ filter: /^chalk-orig$/ }, async (args) => {
       const result = await build.resolve('chalk', {
@@ -59,7 +59,7 @@ const nodeShimsPlugin = (rootDir: string): Plugin => ({
       })
       return result
     })
-    
+
     // Intercept all imports and resolve node built-ins to our shims
     Object.entries(aliases).forEach(([find, replacement]) => {
       build.onResolve({ filter: new RegExp(`^${find.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`) }, () => {
@@ -99,19 +99,14 @@ export default defineConfig([
     target: 'esnext', // Support top-level await for ink's dependencies
     platform: 'browser', // Browser platform for proper module resolution
     splitting: false, // Disable code splitting to keep everything in one bundle
+    minify: false, // Keep readable for debugging (define will still remove dev code)
     // Externalize React and xterm - they must be shared with the app
-    external: [
-      'react',
-      'react-dom',
-      'react/jsx-runtime',
-      'xterm',
-      '@xterm/addon-fit',
-    ],
+    external: ['react', 'react-dom', 'react/jsx-runtime', 'xterm', '@xterm/addon-fit'],
     noExternal: [
       'ink',
       // Force node built-ins to be bundled (will be resolved via aliases)
       'stream',
-      'process', 
+      'process',
       'events',
       'buffer',
       'os',
@@ -128,10 +123,17 @@ export default defineConfig([
     esbuildPlugins: [nodeShimsPlugin(resolve(__dirname))],
     esbuildOptions(options) {
       options.format = 'esm' // Force ESM output
-      options.conditions = ['browser', 'module', 'import']
+      options.conditions = ['browser', 'production', 'module', 'import']
       options.mainFields = ['browser', 'module', 'main']
       // Use alias to map node built-ins to our shims (but not chalk - let it bundle)
       options.alias = shimAliasesForBundled(resolve(__dirname))
+      // Define NODE_ENV and __DEV__ to ensure production mode
+      options.define = {
+        'process.env.NODE_ENV': '"production"',
+        __DEV__: 'false',
+        'process.env.DEBUG': 'undefined',
+        ...options.define,
+      }
       // Prevent esbuild from creating require() wrappers for externals
       options.banner = {
         js: `
@@ -148,7 +150,7 @@ if (typeof globalThis.__bundled_require__ === 'undefined') {
   };
 }
 const require = globalThis.__bundled_require__;
-        `.trim()
+        `.trim(),
       }
     },
   },

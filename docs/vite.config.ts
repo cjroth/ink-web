@@ -5,7 +5,7 @@ import { defineConfig } from 'vite'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import * as MdxConfig from './source.config'
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
   plugins: [
     mdx(MdxConfig),
     tailwindcss(),
@@ -24,27 +24,27 @@ export default defineConfig({
       os: 'os-browserify/browser',
       fs: new URL('./fs-shim.ts', import.meta.url).pathname,
     },
+    conditions: mode === 'production' ? ['production', 'browser', 'module', 'import'] : ['browser', 'module', 'import'],
+    mainFields: ['browser', 'module', 'main'],
   },
   define: {
-    'process.env': {},
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production'),
+    __DEV__: JSON.stringify(false),
     global: 'globalThis',
   },
   optimizeDeps: {
     exclude: ['ink-web'],
-    include: [
-      'stream-browserify',
-      'buffer',
-      'process',
-      'events',
-      'os-browserify/browser',
-      '@xterm/addon-fit',
-      'xterm',
-    ],
+    include: ['stream-browserify', 'buffer', 'process', 'events', 'os-browserify/browser', '@xterm/addon-fit', 'xterm'],
     esbuildOptions: {
       define: {
         global: 'globalThis',
+        'process.env.NODE_ENV': '"production"',
+        __DEV__: 'false',
       },
     },
+  },
+  build: {
+    minify: 'esbuild',
   },
   server: {
     fs: {
@@ -52,4 +52,4 @@ export default defineConfig({
       allow: ['..', '../..'],
     },
   },
-})
+}))
