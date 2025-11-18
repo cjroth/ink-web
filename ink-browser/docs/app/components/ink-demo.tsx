@@ -1,12 +1,15 @@
-import { InkXterm, Text } from '@ink-web/browser/bundled'
+import { DemoApp, InkXterm } from '@ink-web/browser/bundled'
+import 'xterm/css/xterm.css'
+import './ink-demo.css'
 
 export function InkDemo() {
   return (
-    <InkXterm focus>
-      <Text color="green">Hello World from Ink!</Text>
-      <Text> </Text>
-      <Text dimColor>Running in the browser with xterm.js</Text>
-    </InkXterm>
+    <div className="w-full h-64 border border-fd-border rounded overflow-hidden">
+      <div className="ink-terminal-reset">
+        <InkXterm focus>
+          <DemoApp />
+        </InkXterm>
+      </div>
+    </div>
   )
 }
-

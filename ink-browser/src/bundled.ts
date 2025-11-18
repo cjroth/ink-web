@@ -11,3 +11,6 @@ export { Box, Newline, Spacer, Static, Text, Transform, measureElement, render, 
 
 // Re-export types
 export type { Instance, RenderOptions } from 'ink'
+
+// Export demo component
+export { DemoApp } from './DemoApp'

@@ -14,11 +14,16 @@ export interface InkBrowserOptions {
 
 export function mountInkInXterm(element: React.ReactElement, opts: InkBrowserOptions) {
   const term = new Terminal({ convertEol: true, disableStdin: false, ...opts.termOptions })
-  term.open(opts.container)
   const fitAddon = new FitAddon()
+  
+  term.open(opts.container)
   term.loadAddon(fitAddon)
-  fitAddon.fit()
-  if (opts.focus !== false) term.focus()
+  
+  // Wait for the terminal to be fully initialized before fitting
+  setTimeout(() => {
+    fitAddon.fit()
+    if (opts.focus !== false) term.focus()
+  }, 0)
 
   // Create stdout stream that writes into xterm
   const stdoutBase = new Writable()
