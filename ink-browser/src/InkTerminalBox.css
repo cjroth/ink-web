@@ -41,6 +41,10 @@
   box-sizing: border-box !important;
 }
 
+.ink-terminal-box .xterm .xterm-screen {
+  padding: 10px;
+}
+
 /* Prevent parent styles from centering terminal text */
 .ink-terminal-box .xterm .xterm-screen,
 .ink-terminal-box .xterm .xterm-rows,
@@ -59,4 +63,9 @@
 .ink-terminal-box .xterm .xterm-viewport {
   overflow-y: auto !important;
   overflow-x: hidden !important;
+}
+
+/* Hide default cursor - use input cursor instead */
+.ink-terminal-box .xterm .xterm-cursor {
+  display: none;
 }
