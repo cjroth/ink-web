@@ -11,7 +11,10 @@ export default {
     const excluded: string[] = [];
 
     for (const path of getStaticPaths()) {
-      if (!excluded.includes(path)) paths.push(path);
+      // Skip paths with wildcards as they can't be prerendered
+      if (!excluded.includes(path) && !path.includes('*')) {
+        paths.push(path);
+      }
     }
 
     for await (const entry of glob('**/*.mdx', { cwd: 'content/docs' })) {

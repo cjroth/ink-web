@@ -1,3 +1,6 @@
 {
-  "rewrites": [{ "source": "/**", "destination": "/index.html" }]
+  "public": "build/client",
+  "cleanUrls": true,
+  "trailingSlash": false
 }
+

@@ -1,7 +1,6 @@
 import { baseOptions } from '@/lib/layout.shared'
 import { HomeLayout } from 'fumadocs-ui/layouts/home'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router'
 import type { Route } from './+types/home'
 
 export function meta({}: Route.MetaArgs) {
@@ -18,16 +17,14 @@ export default function Home() {
   return (
     <HomeLayout {...baseOptions()}>
       <div className="p-4 flex flex-col items-center justify-center text-center flex-1 overflow-x-hidden max-w-full">
-        <h1 className="text-xl font-bold mb-2">Fumadocs on React Router.</h1>
+        <h1 className="text-xl font-bold mb-2">Build cross-platform CLIs that work in the browser and terminal.</h1>
         <p className="text-fd-muted-foreground mb-4">The truly flexible docs framework on React.js.</p>
-        
-        <div className="w-full max-w-2xl mb-4">
-          {mounted && <ClientOnlyInkDemo />}
-        </div>
 
-        <Link className="text-sm bg-fd-primary text-fd-primary-foreground rounded-full font-medium px-4 py-2.5" to="/docs">
+        <div className="w-full max-w-2xl mb-4">{mounted && <ClientOnlyInkDemo />}</div>
+
+        <a className="text-sm bg-fd-primary text-fd-primary-foreground rounded-full font-medium px-4 py-2.5" href="/docs">
           Open Docs
-        </Link>
+        </a>
       </div>
     </HomeLayout>
   )
