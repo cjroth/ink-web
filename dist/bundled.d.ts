@@ -1,6 +1,9 @@
+import * as react_jsx_runtime from 'react/jsx-runtime';
 import React from 'react';
 import { ITerminalOptions, Terminal } from 'xterm';
 export { Box, Instance, Newline, RenderOptions, Spacer, Static, Text, Transform, measureElement, render, useApp, useFocus, useFocusManager, useInput, useIsScreenReaderEnabled, useStderr, useStdin, useStdout } from 'ink';
+
+declare const DemoApp: () => react_jsx_runtime.JSX.Element;
 
 interface InkTerminalBoxProps {
     className?: string;
@@ -34,4 +37,4 @@ declare function mountInkInXterm(element: React.ReactElement, opts: InkWebOption
 
 declare const waitForYogaInit: () => Promise<void>;
 
-export { InkTerminalBox, type InkWebOptions, InkXterm, mountInkInXterm, waitForYogaInit };
+export { DemoApp, InkTerminalBox, type InkWebOptions, InkXterm, mountInkInXterm, waitForYogaInit };

@@ -6,6 +6,7 @@
 import './InkTerminalBox.css'
 
 // Re-export everything from the main package
+export { DemoApp } from './DemoApp'
 export { InkTerminalBox } from './InkTerminalBox'
 export { InkXterm } from './InkXterm'
 export { mountInkInXterm } from './xterm-ink'

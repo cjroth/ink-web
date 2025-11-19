@@ -10,14 +10,10 @@ export function InkDemo() {
   useEffect(() => {
     // Ensure this only runs on the client
     import('ink-web/bundled').then((mod) => {
-      const { InkTerminalBox, Box, Text } = mod
-      // Try with Box wrapper for proper layout
+      const { InkTerminalBox, DemoApp } = mod
       const DemoComp = () => (
         <InkTerminalBox focus>
-          <Box flexDirection="column">
-            <Text color="green">Hello World Chris!</Text>
-            <Text>This is a test</Text>
-          </Box>
+          <DemoApp />
         </InkTerminalBox>
       )
       setComponent(() => DemoComp)

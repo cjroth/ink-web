@@ -560,16 +560,8 @@ var require_stack_utils = __commonJS({
 // src/bundled.ts
 init_fs();
 
-// src/InkTerminalBox.tsx
+// src/DemoApp.tsx
 init_fs();
-
-// src/InkXterm.tsx
-init_fs();
-import { useEffect as useEffect3, useRef } from "react";
-
-// src/xterm-ink.tsx
-init_fs();
-import { FitAddon } from "@xterm/addon-fit";
 
 // node_modules/.bun/ink@6.5.0+3bec67d7c27e1e8a/node_modules/ink/build/index.js
 init_fs();
@@ -6636,7 +6628,58 @@ var measureElement = (node) => ({
 });
 var measure_element_default = measureElement;
 
+// src/DemoApp.tsx
+import React10, { useState as useState2 } from "react";
+import { jsx, jsxs } from "react/jsx-runtime";
+var DemoApp = () => {
+  const [input, setInput] = useState2("");
+  const [history, setHistory] = useState2([]);
+  use_input_default((inputChar, key) => {
+    if (key.return) {
+      if (input.trim()) {
+        setHistory((prev) => [...prev, input]);
+        setInput("");
+      }
+    } else if (key.backspace || key.delete) {
+      setInput((prev) => prev.slice(0, -1));
+    } else if (!key.ctrl && !key.meta && inputChar) {
+      setInput((prev) => prev + inputChar);
+    }
+  });
+  return /* @__PURE__ */ jsxs(Box_default, { flexDirection: "column", children: [
+    /* @__PURE__ */ jsx(Text, { color: "green", children: "Ink + Xterm (browser)" }),
+    /* @__PURE__ */ jsxs(Text, { dimColor: true, children: [
+      "React version: ",
+      React10.version
+    ] }),
+    /* @__PURE__ */ jsx(Text, { dimColor: true, children: "Type something and press Enter..." }),
+    /* @__PURE__ */ jsx(Text, { children: " " }),
+    history.length > 0 && /* @__PURE__ */ jsxs(Box_default, { flexDirection: "column", children: [
+      /* @__PURE__ */ jsx(Text, { bold: true, children: "History:" }),
+      history.map((item, i) => /* @__PURE__ */ jsxs(Text, { children: [
+        " ",
+        item
+      ] }, i)),
+      /* @__PURE__ */ jsx(Text, { children: " " })
+    ] }),
+    /* @__PURE__ */ jsxs(Text, { children: [
+      /* @__PURE__ */ jsx(Text, { color: "cyan", children: "> " }),
+      /* @__PURE__ */ jsx(Text, { children: input }),
+      /* @__PURE__ */ jsx(Text, { inverse: true, children: " " })
+    ] })
+  ] });
+};
+
+// src/InkTerminalBox.tsx
+init_fs();
+
+// src/InkXterm.tsx
+init_fs();
+import { useEffect as useEffect3, useRef } from "react";
+
 // src/xterm-ink.tsx
+init_fs();
+import { FitAddon } from "@xterm/addon-fit";
 import { Terminal } from "xterm";
 
 // src/shims/stream.ts
@@ -6880,7 +6923,7 @@ function mountInkInXterm(element, opts) {
 }
 
 // src/InkXterm.tsx
-import { jsx } from "react/jsx-runtime";
+import { jsx as jsx2 } from "react/jsx-runtime";
 var InkXterm = ({ className = "", focus, termOptions, children }) => {
   const containerRef = useRef(null);
   useEffect3(() => {
@@ -6898,13 +6941,13 @@ var InkXterm = ({ className = "", focus, termOptions, children }) => {
       }
     };
   }, [children, focus, termOptions]);
-  return /* @__PURE__ */ jsx("div", { className, ref: containerRef, style: { width: "100%", height: "100%" } });
+  return /* @__PURE__ */ jsx2("div", { className, ref: containerRef, style: { width: "100%", height: "100%" } });
 };
 
 // src/InkTerminalBox.tsx
-import { jsx as jsx2 } from "react/jsx-runtime";
+import { jsx as jsx3 } from "react/jsx-runtime";
 var InkTerminalBox = ({ className = "", focus, termOptions, children }) => {
-  return /* @__PURE__ */ jsx2("div", { className: `ink-terminal-box ${className}`, children: /* @__PURE__ */ jsx2("div", { className: "ink-terminal-reset", children: /* @__PURE__ */ jsx2(InkXterm, { focus, termOptions, children }) }) });
+  return /* @__PURE__ */ jsx3("div", { className: `ink-terminal-box ${className}`, children: /* @__PURE__ */ jsx3("div", { className: "ink-terminal-reset", children: /* @__PURE__ */ jsx3(InkXterm, { focus, termOptions, children }) }) });
 };
 
 // src/bundled.ts
@@ -6917,6 +6960,7 @@ var waitForYogaInit = () => {
 };
 export {
   Box_default as Box,
+  DemoApp,
   InkTerminalBox,
   InkXterm,
   Newline,
