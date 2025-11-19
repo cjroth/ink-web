@@ -58,20 +58,9 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
   // Create stdout stream that writes into xterm
   const stdoutBase = new Writable()
 
-  // Override the write method to intercept all terminal output
+  // Override the write method to write to xterm
   stdoutBase.write = (chunk: unknown, encoding?: any, cb?: any) => {
     const str = typeof chunk === 'string' ? chunk : String(chunk)
-
-    console.log('✍️ stdout.write() called with:', JSON.stringify(str.substring(0, 100)))
-
-    // Log line lengths for each row
-    const lines = str.split('\n')
-    lines.forEach((line, index) => {
-      // Remove ANSI escape codes to get actual text length
-      const cleanLine = line.replace(/\x1b\[[0-9;]*m/g, '')
-      console.log(`Row ${index} text length: ${cleanLine.length} chars`)
-    })
-
     term.write(str)
 
     if (typeof encoding === 'function') {
@@ -91,14 +80,6 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
     cork: () => {},
     uncork: () => {},
   }) as unknown as NodeJS.WriteStream
-
-  console.log('📊 stdout properties:', {
-    isTTY: stdout.isTTY,
-    writable: (stdout as any).writable,
-    columns: stdout.columns,
-    rows: stdout.rows,
-    hasWrite: typeof stdout.write === 'function',
-  })
 
   // Create stdin stream that emits data from xterm keystrokes
   const stdinBase = new Readable()
@@ -139,71 +120,14 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
   // Wait for yoga WASM to initialize before rendering
   let instance: any
 
-  // Wrap stdout.write to see ALL calls
-  const originalWrite = stdout.write.bind(stdout)
-  let writeCallCount = 0
-  stdout.write = (chunk: any, encoding?: any, cb?: any) => {
-    writeCallCount++
-    console.log(`📞 stdout.write called (call #${writeCallCount})`)
-    return originalWrite(chunk, encoding, cb)
-  }
-
-  console.log('⚙️ Checking yoga initialization...')
-  console.log('⚙️ globalThis.__yogaPromise exists:', typeof (globalThis as any).__yogaPromise !== 'undefined')
-
   getYogaInit()
     .then(() => {
-      console.log('✅ Yoga init promise resolved')
-
-      // Add a delay to ensure yoga WASM is fully ready and all properties are copied
-      return new Promise((resolve) => setTimeout(resolve, 500))
-    })
-    .then(async () => {
-      console.log('🎨 About to call Ink render() with element:', element)
-      console.log('🎨 Element type:', element.type)
-      console.log('🎨 Element props:', element.props)
-
-      // Force a small delay to ensure everything is ready
-      await new Promise((resolve) => setTimeout(resolve, 100))
-
       instance = render(element, {
         stdout,
         stderr: stdout,
         stdin,
         patchConsole: false,
-        debug: true, // Enable debug mode to bypass logUpdate throttling
       })
-
-      console.log('✅ Ink render() returned instance:', instance)
-      console.log('🔍 stdout dimensions for Ink:', {
-        columns: stdout.columns,
-        rows: stdout.rows,
-        isTTY: stdout.isTTY,
-      })
-
-      // Test if stdout.write works at all
-      setTimeout(() => {
-        console.log('🧪 Manual test: calling stdout.write directly...')
-        stdout.write('MANUAL TEST 1\n')
-      }, 200)
-
-      // Try to force stdout resize event to trigger layout calculation
-      setTimeout(() => {
-        console.log('🔄 Emitting resize event on stdout...')
-        ;(stdout as any).emit('resize')
-      }, 300)
-
-      // Force a re-render to trigger output
-      setTimeout(() => {
-        console.log('🔄 Calling instance.rerender()...')
-        instance.rerender(element)
-      }, 500)
-
-      // Another manual test after rerender
-      setTimeout(() => {
-        console.log('🧪 Manual test 2: calling stdout.write after rerender...')
-        stdout.write('MANUAL TEST 2\n')
-      }, 700)
     })
     .catch((e: Error) => {
       console.error('Error initializing Yoga or rendering Ink:', e)

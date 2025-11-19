@@ -15,7 +15,7 @@ export function InkDemo() {
       const DemoComp = () => (
         <InkTerminalBox focus>
           <Box flexDirection="column">
-            <Text color="green">Hello World!</Text>
+            <Text color="green">Hello World Chris!</Text>
             <Text>This is a test</Text>
           </Box>
         </InkTerminalBox>
