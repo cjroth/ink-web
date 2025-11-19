@@ -53,13 +53,13 @@ const nodeShimsPlugin = (rootDir: string): Plugin => ({
 
     // Intercept node: prefixed imports and bare node built-ins
     const nodeBuiltins = ['fs', 'process', 'buffer', 'events', 'stream', 'os', 'tty', 'module']
-    
+
     nodeBuiltins.forEach((builtin) => {
       // Match both 'fs' and 'node:fs'
       build.onResolve({ filter: new RegExp(`^(node:)?${builtin}$`) }, (args) => {
         const key = args.path.startsWith('node:') ? args.path : builtin
         const replacement = aliases[key] || aliases[builtin]
-        
+
         if (replacement && (replacement.startsWith('/') || replacement.includes(rootDir))) {
           console.log(`[node-shims] Resolving ${args.path} -> ${replacement}`)
           return { path: replacement, external: false }
@@ -113,15 +113,7 @@ export default defineConfig([
     splitting: false,
     minify: false,
     // Externalize React and related packages - they must be provided by the host app
-    external: [
-      'react',
-      'react-dom',
-      'react/jsx-runtime',
-      'react/jsx-dev-runtime',
-      'scheduler',
-      'xterm',
-      '@xterm/addon-fit',
-    ],
+    external: ['react', 'react-dom', 'react/jsx-runtime', 'react/jsx-dev-runtime', 'scheduler', 'react-reconciler', 'xterm', '@xterm/addon-fit'],
     noExternal: [
       'ink',
       'chalk',
@@ -165,15 +157,7 @@ export default defineConfig([
         ...options.define,
       }
       // Make React and scheduler truly external - don't bundle them
-      options.external = [
-        'react',
-        'react-dom',
-        'react/jsx-runtime',
-        'react/jsx-dev-runtime',
-        'scheduler',
-        'xterm',
-        '@xterm/addon-fit',
-      ]
+      options.external = ['react', 'react-dom', 'react/jsx-runtime', 'react/jsx-dev-runtime', 'scheduler', 'react-reconciler', 'xterm', '@xterm/addon-fit']
       // Add banner to provide require for external modules (similar to bundled)
       options.banner = {
         js: `
@@ -181,6 +165,7 @@ import * as __react__ from 'react';
 import * as __react_dom__ from 'react-dom';
 import * as __react_jsx_runtime__ from 'react/jsx-runtime';
 import * as __scheduler__ from 'scheduler';
+import * as __react_reconciler__ from 'react-reconciler';
 import * as __xterm__ from 'xterm';
 import * as __xterm_addon_fit__ from '@xterm/addon-fit';
 // Provide require for CommonJS modules that need to import externals
@@ -189,6 +174,7 @@ const __EXTERNAL_MODULES__ = {
   'react-dom': __react_dom__,
   'react/jsx-runtime': __react_jsx_runtime__,
   'scheduler': __scheduler__,
+  'react-reconciler': __react_reconciler__,
   'xterm': __xterm__,
   '@xterm/addon-fit': __xterm_addon_fit__,
 };
@@ -217,7 +203,7 @@ const require = globalThis.__semi_bundled_require__;
     minify: false, // Keep readable for debugging (define will still remove dev code)
     // Externalize React and xterm - they must be shared with the app
     // React must be external to work with Next.js and other React environments
-    external: ['react', 'react-dom', 'react/jsx-runtime', 'xterm', '@xterm/addon-fit'],
+    external: ['react', 'react-dom', 'react/jsx-runtime', 'scheduler', 'react-reconciler', 'xterm', '@xterm/addon-fit'],
     noExternal: [
       'ink',
       'chalk',
@@ -245,6 +231,8 @@ const require = globalThis.__semi_bundled_require__;
         'process.env.NODE_ENV': '"production"',
         __DEV__: 'false',
         'process.env.DEBUG': 'undefined',
+        // Ensure console.log is preserved
+        'console.log': 'console.log',
         ...options.define,
       }
       // Provide require for external modules only (not yoga-layout, it's bundled)
@@ -253,6 +241,8 @@ const require = globalThis.__semi_bundled_require__;
 import * as __react__ from 'react';
 import * as __react_dom__ from 'react-dom';
 import * as __react_jsx_runtime__ from 'react/jsx-runtime';
+import * as __scheduler__ from 'scheduler';
+import * as __react_reconciler__ from 'react-reconciler';
 import * as __xterm__ from 'xterm';
 import * as __xterm_addon_fit__ from '@xterm/addon-fit';
 // Provide require for CommonJS modules that need to import externals
@@ -260,6 +250,8 @@ const __EXTERNAL_MODULES__ = {
   'react': __react__,
   'react-dom': __react_dom__,
   'react/jsx-runtime': __react_jsx_runtime__,
+  'scheduler': __scheduler__,
+  'react-reconciler': __react_reconciler__,
   'xterm': __xterm__,
   '@xterm/addon-fit': __xterm_addon_fit__,
 };

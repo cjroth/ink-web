@@ -149,7 +149,6 @@ var getYogaInit = () => {
   return Promise.resolve();
 };
 function mountInkInXterm(element, opts) {
-  console.log("\u{1F680} mountInkInXterm CALLED - This is the updated version with logging!");
   const containerWidth = opts.container.clientWidth;
   const containerHeight = opts.container.clientHeight;
   const charWidth = 9;
@@ -176,21 +175,15 @@ function mountInkInXterm(element, opts) {
     }, 100);
   }
   const stdoutBase = new Writable();
-  stdoutBase.on("data", (data) => {
-    console.log("\u{1F535} data event fired:", data);
-  });
   stdoutBase.write = (chunk, encoding, cb) => {
     const str = typeof chunk === "string" ? chunk : String(chunk);
-    console.log("=== Terminal Write Called ===");
-    console.log("Raw output:", JSON.stringify(str));
+    console.log("\u270D\uFE0F stdout.write() called with:", JSON.stringify(str.substring(0, 100)));
     const lines = str.split("\n");
-    console.log(`Total lines in this write: ${lines.length}`);
     lines.forEach((line, index) => {
       const cleanLine = line.replace(/\x1b\[[0-9;]*m/g, "");
-      console.log(`Row ${index} text length: ${cleanLine.length} chars (raw: "${cleanLine}")`);
+      console.log(`Row ${index} text length: ${cleanLine.length} chars`);
     });
     term.write(str);
-    stdoutBase.emit("data", str);
     if (typeof encoding === "function") {
       encoding();
     } else if (cb) {
@@ -202,15 +195,20 @@ function mountInkInXterm(element, opts) {
     columns: term.cols,
     rows: term.rows,
     isTTY: true,
+    writable: true,
     setDefaultEncoding: (_enc) => stdout,
     cork: () => {
     },
     uncork: () => {
     }
   });
-  console.log("\u{1F4DD} stdout object created with custom write function");
-  console.log("\u{1F4DD} stdout.write is:", stdout.write);
-  console.log("\u{1F4DD} stdout.columns:", stdout.columns, "stdout.rows:", stdout.rows, "stdout.isTTY:", stdout.isTTY);
+  console.log("\u{1F4CA} stdout properties:", {
+    isTTY: stdout.isTTY,
+    writable: stdout.writable,
+    columns: stdout.columns,
+    rows: stdout.rows,
+    hasWrite: typeof stdout.write === "function"
+  });
   const stdinBase = new Readable();
   const inputBuffer = [];
   const stdin = Object.assign(stdinBase, {
@@ -248,23 +246,53 @@ function mountInkInXterm(element, opts) {
   };
   updateStreamsSize();
   let instance;
+  const originalWrite = stdout.write.bind(stdout);
+  let writeCallCount = 0;
+  stdout.write = (chunk, encoding, cb) => {
+    writeCallCount++;
+    console.log(`\u{1F4DE} stdout.write called (call #${writeCallCount})`);
+    return originalWrite(chunk, encoding, cb);
+  };
+  console.log("\u2699\uFE0F Checking yoga initialization...");
+  console.log("\u2699\uFE0F globalThis.__yogaPromise exists:", typeof globalThis.__yogaPromise !== "undefined");
   getYogaInit().then(() => {
-    console.log("\u2705 Yoga initialized, about to render Ink element");
-    console.log("\u{1F4DD} Passing stdout to Ink:", stdout);
-    console.log("\u{1F4DD} Element to render:", element);
+    console.log("\u2705 Yoga init promise resolved");
+    return new Promise((resolve) => setTimeout(resolve, 500));
+  }).then(async () => {
+    console.log("\u{1F3A8} About to call Ink render() with element:", element);
+    console.log("\u{1F3A8} Element type:", element.type);
+    console.log("\u{1F3A8} Element props:", element.props);
+    await new Promise((resolve) => setTimeout(resolve, 100));
     instance = (0, import_ink.render)(element, {
       stdout,
       stderr: stdout,
       stdin,
       patchConsole: false,
       debug: true
-      // Enable debug mode
+      // Enable debug mode to bypass logUpdate throttling
     });
-    console.log("\u2705 Ink render() called, instance created:", instance);
+    console.log("\u2705 Ink render() returned instance:", instance);
+    console.log("\u{1F50D} stdout dimensions for Ink:", {
+      columns: stdout.columns,
+      rows: stdout.rows,
+      isTTY: stdout.isTTY
+    });
     setTimeout(() => {
-      console.log("\u{1F9EA} Testing manual write to stdout...");
-      stdout.write("TEST WRITE\n");
-    }, 1e3);
+      console.log("\u{1F9EA} Manual test: calling stdout.write directly...");
+      stdout.write("MANUAL TEST 1\n");
+    }, 200);
+    setTimeout(() => {
+      console.log("\u{1F504} Emitting resize event on stdout...");
+      stdout.emit("resize");
+    }, 300);
+    setTimeout(() => {
+      console.log("\u{1F504} Calling instance.rerender()...");
+      instance.rerender(element);
+    }, 500);
+    setTimeout(() => {
+      console.log("\u{1F9EA} Manual test 2: calling stdout.write after rerender...");
+      stdout.write("MANUAL TEST 2\n");
+    }, 700);
   }).catch((e) => {
     console.error("Error initializing Yoga or rendering Ink:", e);
   });
@@ -314,7 +342,6 @@ var InkXterm = ({ className = "", focus, termOptions, children }) => {
     if (!containerRef.current) return;
     const initTimeout = setTimeout(() => {
       if (!containerRef.current) return;
-      console.log("Container is ready, mounting Ink in xterm");
       const { unmount } = mountInkInXterm(children, { container: containerRef.current, focus, termOptions });
       containerRef.current._unmount = unmount;
     }, 100);

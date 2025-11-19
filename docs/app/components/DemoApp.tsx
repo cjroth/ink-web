@@ -7,7 +7,6 @@ export const DemoApp = () => {
   const [input, setInput] = useState('')
   const [history, setHistory] = useState<string[]>([])
 
-  console.log('chris was here')
   useInput((inputChar, key) => {
     if (key.return) {
       if (input.trim()) {

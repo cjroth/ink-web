@@ -20,7 +20,6 @@ export const InkXterm: React.FC<InkXtermProps> = ({ className = '', focus, termO
     const initTimeout = setTimeout(() => {
       if (!containerRef.current) return
       
-      console.log('Container is ready, mounting Ink in xterm')
       const { unmount } = mountInkInXterm(children, { container: containerRef.current, focus, termOptions })
       
       // Store unmount for cleanup
