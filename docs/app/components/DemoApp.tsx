@@ -1,10 +1,13 @@
+'use client'
+
 import { Box, Text, useInput } from 'ink-web/bundled'
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 export const DemoApp = () => {
   const [input, setInput] = useState('')
   const [history, setHistory] = useState<string[]>([])
 
+  console.log('chris was here')
   useInput((inputChar, key) => {
     if (key.return) {
       if (input.trim()) {
@@ -21,7 +24,6 @@ export const DemoApp = () => {
   return (
     <Box flexDirection="column">
       <Text color="green">Ink + Xterm (browser)</Text>
-      <Text dimColor>React version: {React.version}</Text>
       <Text dimColor>Type something and press Enter...</Text>
       <Text> </Text>
       {history.length > 0 && (

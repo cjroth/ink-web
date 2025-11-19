@@ -103,6 +103,12 @@ var Readable = class extends Stream {
 };
 
 // src/xterm-ink.tsx
+var getYogaInit = () => {
+  if (typeof globalThis !== "undefined" && globalThis.__yogaPromise) {
+    return globalThis.__yogaPromise.then(() => void 0);
+  }
+  return Promise.resolve();
+};
 function mountInkInXterm(element, opts) {
   const containerWidth = opts.container.clientWidth;
   const containerHeight = opts.container.clientHeight;
@@ -120,20 +126,30 @@ function mountInkInXterm(element, opts) {
   const fitAddon = new FitAddon();
   term.open(opts.container);
   term.loadAddon(fitAddon);
-  setTimeout(() => {
-    fitAddon.fit();
-    if (opts.focus !== false) term.focus();
-  }, 0);
+  if (opts.focus !== false) {
+    setTimeout(() => {
+      try {
+        term.focus();
+      } catch (e) {
+        console.warn("Error focusing terminal:", e);
+      }
+    }, 100);
+  }
   const stdoutBase = new Writable();
   const stdout = Object.assign(stdoutBase, {
     columns: term.cols,
     rows: term.rows,
     isTTY: true,
-    write: (str) => {
+    write: (str, encoding, cb) => {
       term.write(str);
+      if (typeof encoding === "function") {
+        encoding();
+      } else if (cb) {
+        cb();
+      }
       return true;
     },
-    setDefaultEncoding: (_enc) => stdoutBase,
+    setDefaultEncoding: (_enc) => stdout,
     cork: () => {
     },
     uncork: () => {
@@ -174,9 +190,28 @@ function mountInkInXterm(element, opts) {
     stdin.rows = rows;
     stdout.emit("resize");
   };
+  updateStreamsSize();
+  let instance;
+  getYogaInit().then(() => {
+    instance = render(element, {
+      stdout,
+      stderr: stdout,
+      stdin,
+      patchConsole: false,
+      debug: false
+    });
+  }).catch((e) => {
+    console.error("Error initializing Yoga or rendering Ink:", e);
+  });
   const resize = () => {
-    fitAddon.fit();
-    updateStreamsSize();
+    try {
+      if (term._core?.viewport) {
+        fitAddon.fit();
+        updateStreamsSize();
+      }
+    } catch (e) {
+      console.error("Error during resize:", e);
+    }
   };
   const ro = new ResizeObserver(() => {
     resize();
@@ -184,13 +219,16 @@ function mountInkInXterm(element, opts) {
   ro.observe(opts.container);
   const onWindowResize = () => resize();
   window.addEventListener("resize", onWindowResize);
-  updateStreamsSize();
-  const instance = render(element, { stdout, stderr: stdout, stdin, patchConsole: false, debug: false });
+  setTimeout(() => {
+    resize();
+  }, 200);
   return {
     term,
     unmount: async () => {
       try {
-        instance.unmount();
+        if (instance) {
+          instance.unmount();
+        }
       } finally {
         try {
           ro.disconnect();
@@ -209,9 +247,18 @@ var InkXterm = ({ className = "", focus, termOptions, children }) => {
   const containerRef = useRef(null);
   useEffect(() => {
     if (!containerRef.current) return;
-    const { unmount } = mountInkInXterm(children, { container: containerRef.current, focus, termOptions });
+    const initTimeout = setTimeout(() => {
+      if (!containerRef.current) return;
+      console.log("Container is ready, mounting Ink in xterm");
+      const { unmount } = mountInkInXterm(children, { container: containerRef.current, focus, termOptions });
+      containerRef.current._unmount = unmount;
+    }, 100);
     return () => {
-      void unmount();
+      clearTimeout(initTimeout);
+      const unmount = containerRef.current?._unmount;
+      if (unmount) {
+        void unmount();
+      }
     };
   }, [children, focus, termOptions]);
   return /* @__PURE__ */ jsx("div", { className, ref: containerRef, style: { width: "100%", height: "100%" } });

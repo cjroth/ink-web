@@ -1,0 +1,57 @@
+/* src/InkTerminalBox.css */
+.ink-terminal-box {
+  width: 100%;
+  height: 16rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  position: relative;
+}
+@media (prefers-color-scheme: dark) {
+  .ink-terminal-box {
+    border-color: #374151;
+  }
+}
+.ink-terminal-box .ink-terminal-reset {
+  width: 100%;
+  height: 100%;
+  text-align: left !important;
+  line-height: 1 !important;
+  letter-spacing: 0 !important;
+  overflow: hidden !important;
+  max-width: 100% !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+.ink-terminal-box .xterm {
+  padding: 0 !important;
+  margin: 0 !important;
+  height: 100% !important;
+  width: 100% !important;
+  text-align: left !important;
+  box-sizing: border-box !important;
+}
+.ink-terminal-box .xterm .xterm-screen {
+  padding: 10px;
+}
+.ink-terminal-box .xterm .xterm-screen,
+.ink-terminal-box .xterm .xterm-rows,
+.ink-terminal-box .xterm .xterm-row {
+  text-align: left !important;
+  display: block !important;
+}
+.ink-terminal-box .xterm-helper-textarea {
+  position: absolute !important;
+  opacity: 0 !important;
+}
+.ink-terminal-box .xterm .xterm-viewport {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+.ink-terminal-box .xterm .xterm-cursor {
+  display: none;
+}
+/*# sourceMappingURL=semi-bundled.css.map */

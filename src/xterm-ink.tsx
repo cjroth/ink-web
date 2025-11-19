@@ -4,6 +4,14 @@ import React from 'react'
 import { Terminal, type ITerminalOptions } from 'xterm'
 import { Readable, Writable } from './shims/stream'
 
+// Helper to check if yoga init is available
+const getYogaInit = (): Promise<void> => {
+  if (typeof globalThis !== 'undefined' && (globalThis as any).__yogaPromise) {
+    return (globalThis as any).__yogaPromise.then(() => undefined)
+  }
+  return Promise.resolve()
+}
+
 export interface InkWebOptions {
   termOptions?: ITerminalOptions
   container: HTMLElement
@@ -32,26 +40,38 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
   })
   const fitAddon = new FitAddon()
 
+  // Open terminal synchronously - Ink needs it immediately
   term.open(opts.container)
   term.loadAddon(fitAddon)
 
-  // Wait for the terminal to be fully initialized before fitting
-  setTimeout(() => {
-    fitAddon.fit()
-    if (opts.focus !== false) term.focus()
-  }, 0)
+  // Focus if needed (delay to allow full initialization)
+  if (opts.focus !== false) {
+    setTimeout(() => {
+      try {
+        term.focus()
+      } catch (e) {
+        console.warn('Error focusing terminal:', e)
+      }
+    }, 100)
+  }
 
   // Create stdout stream that writes into xterm
   const stdoutBase = new Writable()
+
   const stdout = Object.assign(stdoutBase, {
     columns: term.cols,
     rows: term.rows,
     isTTY: true,
-    write: (str: string) => {
+    write: (str: string, encoding?: any, cb?: any) => {
       term.write(str)
+      if (typeof encoding === 'function') {
+        encoding() // encoding is actually the callback
+      } else if (cb) {
+        cb()
+      }
       return true
     },
-    setDefaultEncoding: (_enc: string) => stdoutBase,
+    setDefaultEncoding: (_enc: string) => stdout,
     cork: () => {},
     uncork: () => {},
   }) as unknown as NodeJS.WriteStream
@@ -89,9 +109,37 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
     ;(stdout as unknown as { emit: (event: string) => void }).emit('resize')
   }
 
+  // Update sizes BEFORE rendering Ink
+  updateStreamsSize()
+
+  // Wait for yoga WASM to initialize before rendering
+  let instance: any
+
+  getYogaInit()
+    .then(() => {
+      instance = render(element, {
+        stdout,
+        stderr: stdout,
+        stdin,
+        patchConsole: false,
+        debug: false,
+      })
+    })
+    .catch((e: Error) => {
+      console.error('Error initializing Yoga or rendering Ink:', e)
+    })
+
+  // Set up resize handling - only after Ink is rendered
   const resize = () => {
-    fitAddon.fit()
-    updateStreamsSize()
+    try {
+      // Only fit if the terminal has been properly initialized
+      if ((term as any)._core?.viewport) {
+        fitAddon.fit()
+        updateStreamsSize()
+      }
+    } catch (e) {
+      console.error('Error during resize:', e)
+    }
   }
 
   // Observe container size changes
@@ -104,16 +152,18 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
   const onWindowResize = () => resize()
   window.addEventListener('resize', onWindowResize)
 
-  // Update sizes after initial fit
-  updateStreamsSize()
-
-  const instance = render(element, { stdout, stderr: stdout, stdin, patchConsole: false, debug: false })
+  // Try initial resize after a delay
+  setTimeout(() => {
+    resize()
+  }, 200)
 
   return {
     term,
     unmount: async () => {
       try {
-        instance.unmount()
+        if (instance) {
+          instance.unmount()
+        }
       } finally {
         try {
           ro.disconnect()

@@ -12,7 +12,7 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup",
+    "build": "tsup && bun run scripts/fix-bundled-fs.ts",
     "build:watch": "tsup --watch",
     "dev": "bun run build && bunx vite --config vite.config.ts",
     "dev:watch": "bunx concurrently \"bun run build:watch\" \"bunx vite --config vite.config.ts\"",
@@ -26,6 +26,13 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./semi-bundled": {
+      "types": "./dist/semi-bundled.d.ts",
+      "import": "./dist/semi-bundled.js"
+    },
+    "./semi-bundled/css": {
+      "import": "./dist/bundled.css"
     },
     "./bundled": {
       "types": "./dist/bundled.d.ts",
@@ -55,6 +62,8 @@
     "@xterm/addon-fit": "^0.10.0"
   },
   "devDependencies": {
+    "@happy-dom/global-registrator": "^20.0.10",
+    "@testing-library/react": "^16.3.0",
     "@types/bun": "^1.2.20",
     "@types/node": "^24.10.1",
     "@types/react": "^19.0.0",
@@ -63,6 +72,8 @@
     "ink": "^6.0.0",
     "path-browserify": "^1.0.1",
     "react": "^19.0.0",
+    "react-dom": "^19.2.0",
+    "scheduler": "^0.27.0",
     "tsup": "^8.1.0",
     "typescript": "^5.7.2",
     "vite": "^7.2.2",

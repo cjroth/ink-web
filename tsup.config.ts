@@ -49,25 +49,36 @@ const shimAliases = (rootDir: string) => ({
 const nodeShimsPlugin = (rootDir: string): Plugin => ({
   name: 'node-shims',
   setup(build) {
-    const aliases = shimAliases(rootDir)
+    const aliases = shimAliasesForBundled(rootDir)
 
-    // Special handling for chalk-orig -> chalk
-    build.onResolve({ filter: /^chalk-orig$/ }, async (args) => {
-      const result = await build.resolve('chalk', {
-        resolveDir: args.resolveDir,
-        kind: args.kind,
+    // Intercept node: prefixed imports and bare node built-ins
+    const nodeBuiltins = ['fs', 'process', 'buffer', 'events', 'stream', 'os', 'tty', 'module']
+    
+    nodeBuiltins.forEach((builtin) => {
+      // Match both 'fs' and 'node:fs'
+      build.onResolve({ filter: new RegExp(`^(node:)?${builtin}$`) }, (args) => {
+        const key = args.path.startsWith('node:') ? args.path : builtin
+        const replacement = aliases[key] || aliases[builtin]
+        
+        if (replacement && (replacement.startsWith('/') || replacement.includes(rootDir))) {
+          console.log(`[node-shims] Resolving ${args.path} -> ${replacement}`)
+          return { path: replacement, external: false }
+        }
+        return undefined
       })
-      return result
     })
 
-    // Intercept all imports and resolve node built-ins to our shims
+    // Handle other aliases (non-node-builtins)
     Object.entries(aliases).forEach(([find, replacement]) => {
-      build.onResolve({ filter: new RegExp(`^${find.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`) }, () => {
-        // Skip aliases that point to npm packages (not absolute paths)
+      if (nodeBuiltins.includes(find) || find.startsWith('node:')) {
+        return // Already handled above
+      }
+      const escapedFind = find.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      build.onResolve({ filter: new RegExp(`^${escapedFind}$`) }, (args) => {
         if (!replacement.startsWith('/') && !replacement.includes(rootDir)) {
-          return undefined // Let esbuild handle it normally
+          return undefined
         }
-        // Return with explicit external: false to force bundling
+        console.log(`[node-shims] Resolving ${find} -> ${replacement}`)
         return { path: replacement, external: false }
       })
     })
@@ -88,6 +99,110 @@ export default defineConfig([
     platform: 'browser',
     external: ['react', 'react-dom', 'ink', 'xterm', '@xterm/addon-fit'],
   },
+  // Semi-bundled version - bundles Ink and shims but NOT React
+  // Compatible with Next.js and other React 19+ environments
+  {
+    entry: {
+      'semi-bundled': 'src/semi-bundled.ts',
+    },
+    format: ['esm'],
+    dts: true,
+    sourcemap: true,
+    target: 'esnext',
+    platform: 'browser',
+    splitting: false,
+    minify: false,
+    // Externalize React and related packages - they must be provided by the host app
+    external: [
+      'react',
+      'react-dom',
+      'react/jsx-runtime',
+      'react/jsx-dev-runtime',
+      'scheduler',
+      'xterm',
+      '@xterm/addon-fit',
+    ],
+    noExternal: [
+      'ink',
+      'chalk',
+      'cli-cursor',
+      'signal-exit',
+      'window-size',
+      'stack-utils',
+      'code-excerpt',
+      'ansi-escapes',
+      'wrap-ansi',
+      'yoga-layout', // MUST bundle yoga-layout, not externalize it
+      // Include all node built-ins so they get shimmed
+      'fs',
+      'node:fs',
+      'process',
+      'node:process',
+      'events',
+      'node:events',
+      'stream',
+      'node:stream',
+      'buffer',
+      'node:buffer',
+      'module',
+      'node:module',
+      'os',
+      'node:os',
+      'tty',
+      'path',
+      'node:path',
+    ],
+    esbuildPlugins: [nodeShimsPlugin(resolve(__dirname))],
+    esbuildOptions(options) {
+      options.format = 'esm'
+      options.conditions = ['browser', 'production', 'module', 'import']
+      options.mainFields = ['browser', 'module', 'main']
+      options.alias = shimAliasesForBundled(resolve(__dirname))
+      options.define = {
+        'process.env.NODE_ENV': '"production"',
+        __DEV__: 'false',
+        'process.env.DEBUG': 'undefined',
+        ...options.define,
+      }
+      // Make React and scheduler truly external - don't bundle them
+      options.external = [
+        'react',
+        'react-dom',
+        'react/jsx-runtime',
+        'react/jsx-dev-runtime',
+        'scheduler',
+        'xterm',
+        '@xterm/addon-fit',
+      ]
+      // Add banner to provide require for external modules (similar to bundled)
+      options.banner = {
+        js: `
+import * as __react__ from 'react';
+import * as __react_dom__ from 'react-dom';
+import * as __react_jsx_runtime__ from 'react/jsx-runtime';
+import * as __scheduler__ from 'scheduler';
+import * as __xterm__ from 'xterm';
+import * as __xterm_addon_fit__ from '@xterm/addon-fit';
+// Provide require for CommonJS modules that need to import externals
+const __EXTERNAL_MODULES__ = {
+  'react': __react__,
+  'react-dom': __react_dom__,
+  'react/jsx-runtime': __react_jsx_runtime__,
+  'scheduler': __scheduler__,
+  'xterm': __xterm__,
+  '@xterm/addon-fit': __xterm_addon_fit__,
+};
+if (typeof globalThis.__semi_bundled_require__ === 'undefined') {
+  globalThis.__semi_bundled_require__ = function(id) {
+    if (__EXTERNAL_MODULES__[id]) return __EXTERNAL_MODULES__[id];
+    throw new Error('Cannot find module: ' + id);
+  };
+}
+const require = globalThis.__semi_bundled_require__;
+        `.trim(),
+      }
+    },
+  },
   // Bundled version - large, no plugin needed (ink is bundled with shims)
   {
     entry: {
@@ -101,32 +216,30 @@ export default defineConfig([
     splitting: false, // Disable code splitting to keep everything in one bundle
     minify: false, // Keep readable for debugging (define will still remove dev code)
     // Externalize React and xterm - they must be shared with the app
+    // React must be external to work with Next.js and other React environments
     external: ['react', 'react-dom', 'react/jsx-runtime', 'xterm', '@xterm/addon-fit'],
     noExternal: [
       'ink',
-      // Force node built-ins to be bundled (will be resolved via aliases)
-      'stream',
-      'process',
-      'events',
-      'buffer',
-      'os',
-      'fs',
-      'tty',
-      'module',
       'chalk',
-      'stream-browserify',
-      'buffer',
-      'process',
-      'events',
-      'os-browserify',
+      'cli-cursor',
+      'signal-exit',
+      'window-size',
+      'stack-utils',
+      'code-excerpt',
+      'ansi-escapes',
+      'wrap-ansi',
+      'yoga-layout', // MUST bundle yoga-layout, not externalize it
+      // All other dependencies should be bundled
     ],
     esbuildPlugins: [nodeShimsPlugin(resolve(__dirname))],
     esbuildOptions(options) {
       options.format = 'esm' // Force ESM output
       options.conditions = ['browser', 'production', 'module', 'import']
       options.mainFields = ['browser', 'module', 'main']
-      // Use alias to map node built-ins to our shims (but not chalk - let it bundle)
+      // Use alias to map node built-ins to our shims
       options.alias = shimAliasesForBundled(resolve(__dirname))
+      // Inject fs shim globally to override node:fs imports
+      options.inject = [resolve(__dirname, 'src/shims/fs.ts')]
       // Define NODE_ENV and __DEV__ to ensure production mode
       options.define = {
         'process.env.NODE_ENV': '"production"',
@@ -134,18 +247,27 @@ export default defineConfig([
         'process.env.DEBUG': 'undefined',
         ...options.define,
       }
-      // Prevent esbuild from creating require() wrappers for externals
+      // Provide require for external modules only (not yoga-layout, it's bundled)
       options.banner = {
         js: `
 import * as __react__ from 'react';
 import * as __react_dom__ from 'react-dom';
 import * as __react_jsx_runtime__ from 'react/jsx-runtime';
+import * as __xterm__ from 'xterm';
+import * as __xterm_addon_fit__ from '@xterm/addon-fit';
 // Provide require for CommonJS modules that need to import externals
+const __EXTERNAL_MODULES__ = {
+  'react': __react__,
+  'react-dom': __react_dom__,
+  'react/jsx-runtime': __react_jsx_runtime__,
+  'xterm': __xterm__,
+  '@xterm/addon-fit': __xterm_addon_fit__,
+};
 if (typeof globalThis.__bundled_require__ === 'undefined') {
   globalThis.__bundled_require__ = function(id) {
-    if (id === 'react') return __react__;
-    if (id === 'react-dom') return __react_dom__;
-    if (id === 'react/jsx-runtime') return __react_jsx_runtime__;
+    if (__EXTERNAL_MODULES__[id]) {
+      return __EXTERNAL_MODULES__[id];
+    }
     throw new Error('Cannot find module: ' + id);
   };
 }

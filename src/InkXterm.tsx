@@ -14,9 +14,25 @@ export const InkXterm: React.FC<InkXtermProps> = ({ className = '', focus, termO
 
   useEffect(() => {
     if (!containerRef.current) return
-    const { unmount } = mountInkInXterm(children, { container: containerRef.current, focus, termOptions })
+    
+    // Ensure container is fully mounted before initializing xterm
+    // This prevents the "Cannot read properties of undefined (reading 'dimensions')" error
+    const initTimeout = setTimeout(() => {
+      if (!containerRef.current) return
+      
+      console.log('Container is ready, mounting Ink in xterm')
+      const { unmount } = mountInkInXterm(children, { container: containerRef.current, focus, termOptions })
+      
+      // Store unmount for cleanup
+      ;(containerRef.current as any)._unmount = unmount
+    }, 100)
+
     return () => {
-      void unmount()
+      clearTimeout(initTimeout)
+      const unmount = (containerRef.current as any)?._unmount
+      if (unmount) {
+        void unmount()
+      }
     }
   }, [children, focus, termOptions])
 

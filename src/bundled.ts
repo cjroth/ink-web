@@ -15,3 +15,13 @@ export { Box, measureElement, Newline, render, Spacer, Static, Text, Transform, 
 
 // Re-export types
 export type { Instance, RenderOptions } from 'ink'
+
+// Export yoga initialization helper (will be added by post-build script)
+// This allows consumers to wait for yoga WASM to load before rendering
+export const waitForYogaInit = (): Promise<void> => {
+  const g = globalThis as any
+  if (typeof g.__yogaPromise !== 'undefined') {
+    return g.__yogaPromise.then(() => undefined)
+  }
+  return Promise.resolve()
+}
