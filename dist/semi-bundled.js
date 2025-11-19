@@ -5341,7 +5341,6 @@ var backgroundContext = createContext8(void 0);
 
 // node_modules/.bun/ink@6.5.0+3bec67d7c27e1e8a/node_modules/ink/build/components/Box.js
 var Box = forwardRef(({ children, backgroundColor, "aria-label": ariaLabel, "aria-hidden": ariaHidden, "aria-role": role, "aria-state": ariaState, ...style }, ref) => {
-  console.log("[Ink] Box rendering");
   const { isScreenReaderEnabled } = useContext(accessibilityContext);
   const label = ariaLabel ? React.createElement("ink-text", null, ariaLabel) : void 0;
   if (isScreenReaderEnabled && ariaHidden) {
