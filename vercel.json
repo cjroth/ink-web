@@ -1,6 +1,5 @@
 {
   "buildCommand": "bun run build && cd docs && bun run build",
   "installCommand": "bun install",
-  "framework": "nextjs",
   "outputDirectory": "docs/.next"
 }
