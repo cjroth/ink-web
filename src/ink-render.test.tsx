@@ -92,7 +92,9 @@ describe('Ink rendering in Node.js environment', () => {
     const allOutput = mockStdout.writes.join('')
     expect(allOutput).toContain('Hello from Ink!')
 
-    instance.unmount()
+    act(() => {
+      instance.unmount()
+    })
   })
 
   test('can render Box with Text children', async () => {
@@ -125,7 +127,9 @@ describe('Ink rendering in Node.js environment', () => {
     expect(allOutput).toContain('Line 1')
     expect(allOutput).toContain('Line 2')
 
-    instance.unmount()
+    act(() => {
+      instance.unmount()
+    })
   })
 })
 
@@ -144,22 +148,28 @@ describe('Ink rendering via bundled in browser-like environment', () => {
     const mockStdout = createMockStdout()
 
     const element = React.createElement(Text, {}, 'Bundled Ink Test')
-    const instance = render(element, {
-      stdout: mockStdout as any,
-      stderr: mockStdout as any,
-      stdin: process.stdin as any,
-      patchConsole: false,
-      debug: false,
-    })
+    let instance: any
+    
+    await act(async () => {
+      instance = render(element, {
+        stdout: mockStdout as any,
+        stderr: mockStdout as any,
+        stdin: process.stdin as any,
+        patchConsole: false,
+        debug: false,
+      })
 
-    await new Promise((resolve) => setTimeout(resolve, 200))
+      await new Promise((resolve) => setTimeout(resolve, 200))
+    })
 
     expect(mockStdout.writes.length).toBeGreaterThan(0)
     const allOutput = mockStdout.writes.join('')
     expect(allOutput.length).toBeGreaterThan(0)
     expect(allOutput).toContain('Bundled Ink Test')
 
-    instance.unmount()
+    act(() => {
+      instance.unmount()
+    })
   })
 
   test('can render Box and Text from bundled', async () => {
@@ -173,22 +183,28 @@ describe('Ink rendering via bundled in browser-like environment', () => {
       React.createElement(Text, {}, 'Body text')
     )
 
-    const instance = render(element, {
-      stdout: mockStdout as any,
-      stderr: mockStdout as any,
-      stdin: process.stdin as any,
-      patchConsole: false,
-      debug: false,
-    })
+    let instance: any
+    
+    await act(async () => {
+      instance = render(element, {
+        stdout: mockStdout as any,
+        stderr: mockStdout as any,
+        stdin: process.stdin as any,
+        patchConsole: false,
+        debug: false,
+      })
 
-    await new Promise((resolve) => setTimeout(resolve, 200))
+      await new Promise((resolve) => setTimeout(resolve, 200))
+    })
 
     expect(mockStdout.writes.length).toBeGreaterThan(0)
     const allOutput = mockStdout.writes.join('')
     expect(allOutput).toContain('Title')
     expect(allOutput).toContain('Body text')
 
-    instance.unmount()
+    act(() => {
+      instance.unmount()
+    })
   })
 
   test('renders with InkTerminalBox in browser environment', async () => {
@@ -250,21 +266,27 @@ describe('Ink rendering via semi-bundled', () => {
     const mockStdout = createMockStdout()
 
     const element = React.createElement(Text, {}, 'Semi-bundled Test')
-    const instance = render(element, {
-      stdout: mockStdout as any,
-      stderr: mockStdout as any,
-      stdin: process.stdin as any,
-      patchConsole: false,
-      debug: false,
-    })
+    let instance: any
+    
+    await act(async () => {
+      instance = render(element, {
+        stdout: mockStdout as any,
+        stderr: mockStdout as any,
+        stdin: process.stdin as any,
+        patchConsole: false,
+        debug: false,
+      })
 
-    await new Promise((resolve) => setTimeout(resolve, 200))
+      await new Promise((resolve) => setTimeout(resolve, 200))
+    })
 
     expect(mockStdout.writes.length).toBeGreaterThan(0)
     const allOutput = mockStdout.writes.join('')
     expect(allOutput).toContain('Semi-bundled Test')
 
-    instance.unmount()
+    act(() => {
+      instance.unmount()
+    })
   })
 })
 
@@ -274,15 +296,19 @@ describe('Yoga layout engine', () => {
     const mockStdout = createMockStdout()
 
     const element = React.createElement(Box, {}, 'Test')
-    const instance = render(element, {
-      stdout: mockStdout as any,
-      stderr: mockStdout as any,
-      stdin: process.stdin as any,
-      patchConsole: false,
-      debug: false,
-    })
+    let instance: any
+    
+    await act(async () => {
+      instance = render(element, {
+        stdout: mockStdout as any,
+        stderr: mockStdout as any,
+        stdin: process.stdin as any,
+        patchConsole: false,
+        debug: false,
+      })
 
-    await new Promise((resolve) => setTimeout(resolve, 200))
+      await new Promise((resolve) => setTimeout(resolve, 200))
+    })
 
     // Check that yogaNode was created by verifying non-empty output
     expect(mockStdout.writes.length).toBeGreaterThan(0)
@@ -290,7 +316,9 @@ describe('Yoga layout engine', () => {
     expect(allOutput.length).toBeGreaterThan(0)
     // Empty output would mean yogaNode was undefined
 
-    instance.unmount()
+    act(() => {
+      instance.unmount()
+    })
   })
 
   test('layout calculations work correctly', async () => {
@@ -305,22 +333,28 @@ describe('Yoga layout engine', () => {
       React.createElement(Box, { width: 10 }, React.createElement(Text, {}, 'Right'))
     )
 
-    const instance = render(element, {
-      stdout: mockStdout as any,
-      stderr: mockStdout as any,
-      stdin: process.stdin as any,
-      patchConsole: false,
-      debug: false,
-    })
+    let instance: any
+    
+    await act(async () => {
+      instance = render(element, {
+        stdout: mockStdout as any,
+        stderr: mockStdout as any,
+        stdin: process.stdin as any,
+        patchConsole: false,
+        debug: false,
+      })
 
-    await new Promise((resolve) => setTimeout(resolve, 200))
+      await new Promise((resolve) => setTimeout(resolve, 200))
+    })
 
     expect(mockStdout.writes.length).toBeGreaterThan(0)
     const allOutput = mockStdout.writes.join('')
     expect(allOutput).toContain('Left')
     expect(allOutput).toContain('Right')
 
-    instance.unmount()
+    act(() => {
+      instance.unmount()
+    })
   })
 })
 
