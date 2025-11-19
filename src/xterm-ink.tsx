@@ -21,6 +21,8 @@ export interface InkWebOptions {
 //
 
 export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions) {
+  console.log('🚀 mountInkInXterm CALLED - This is the updated version with logging!')
+
   // Get container dimensions to set initial terminal size
   const containerWidth = opts.container.clientWidth
   const containerHeight = opts.container.clientHeight
@@ -58,23 +60,51 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
   // Create stdout stream that writes into xterm
   const stdoutBase = new Writable()
 
+  // Listen to all possible events
+  stdoutBase.on('data', (data) => {
+    console.log('🔵 data event fired:', data)
+  })
+
+  // Override the write method
+  stdoutBase.write = (chunk: unknown, encoding?: any, cb?: any) => {
+    const str = typeof chunk === 'string' ? chunk : String(chunk)
+
+    // Log line lengths for each row (always log, even for empty lines)
+    console.log('=== Terminal Write Called ===')
+    console.log('Raw output:', JSON.stringify(str))
+    const lines = str.split('\n')
+    console.log(`Total lines in this write: ${lines.length}`)
+    lines.forEach((line, index) => {
+      // Remove ANSI escape codes to get actual text length
+      const cleanLine = line.replace(/\x1b\[[0-9;]*m/g, '')
+      console.log(`Row ${index} text length: ${cleanLine.length} chars (raw: "${cleanLine}")`)
+    })
+
+    term.write(str)
+
+    // Emit data event for compatibility
+    stdoutBase.emit('data', str)
+
+    if (typeof encoding === 'function') {
+      encoding() // encoding is actually the callback
+    } else if (cb) {
+      cb()
+    }
+    return true
+  }
+
   const stdout = Object.assign(stdoutBase, {
     columns: term.cols,
     rows: term.rows,
     isTTY: true,
-    write: (str: string, encoding?: any, cb?: any) => {
-      term.write(str)
-      if (typeof encoding === 'function') {
-        encoding() // encoding is actually the callback
-      } else if (cb) {
-        cb()
-      }
-      return true
-    },
     setDefaultEncoding: (_enc: string) => stdout,
     cork: () => {},
     uncork: () => {},
   }) as unknown as NodeJS.WriteStream
+
+  console.log('📝 stdout object created with custom write function')
+  console.log('📝 stdout.write is:', stdout.write)
+  console.log('📝 stdout.columns:', stdout.columns, 'stdout.rows:', stdout.rows, 'stdout.isTTY:', stdout.isTTY)
 
   // Create stdin stream that emits data from xterm keystrokes
   const stdinBase = new Readable()
@@ -117,13 +147,23 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
 
   getYogaInit()
     .then(() => {
+      console.log('✅ Yoga initialized, about to render Ink element')
+      console.log('📝 Passing stdout to Ink:', stdout)
+      console.log('📝 Element to render:', element)
       instance = render(element, {
         stdout,
         stderr: stdout,
         stdin,
         patchConsole: false,
-        debug: false,
+        debug: true, // Enable debug mode
       })
+      console.log('✅ Ink render() called, instance created:', instance)
+
+      // Try manually triggering a write to test
+      setTimeout(() => {
+        console.log('🧪 Testing manual write to stdout...')
+        stdout.write('TEST WRITE\n')
+      }, 1000)
     })
     .catch((e: Error) => {
       console.error('Error initializing Yoga or rendering Ink:', e)
