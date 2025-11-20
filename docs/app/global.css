@@ -2,6 +2,10 @@
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
 
+:root {
+  --radius: 1rem; /* 16px - matches rounded-2xl */
+}
+
 @font-face {
   font-family: 'Monaspace Neon';
   src: url('/fonts/monaspace/MonaspaceNeonVar.woff2') format('woff2'), url('/fonts/monaspace/MonaspaceNeonVar.woff') format('woff');

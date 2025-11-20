@@ -3,6 +3,7 @@
 import { Accordion, Accordions } from 'fumadocs-ui/components/accordion'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
+import { MacWindow } from '../components/MacWindow'
 
 const InkDemo = dynamic(() => import('../components/InkDemo').then((mod) => ({ default: mod.InkDemo })), {
   ssr: false,
@@ -22,9 +23,9 @@ export default function HomePage() {
           .
         </p>
       </div>
-      <div className="w-full max-w-3xl">
+      <MacWindow className="w-full max-w-3xl">
         <InkDemo />
-      </div>
+      </MacWindow>
       <Link
         href="/docs"
         className="inline-flex items-center justify-center px-8 py-3 text-base font-semibold text-white bg-black dark:bg-white dark:text-black rounded-lg hover:opacity-90 transition-opacity"

@@ -5,6 +5,10 @@ const withMDX = createMDX();
 /** @type {import('next').NextConfig} */
 const config = {
   reactStrictMode: true,
+  transpilePackages: ['ink-web'],
+  experimental: {
+    externalDir: true,
+  },
 };
 
 export default withMDX(config);
