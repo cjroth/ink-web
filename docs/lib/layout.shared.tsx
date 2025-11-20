@@ -5,6 +5,12 @@ export function baseOptions(): BaseLayoutProps {
     nav: {
       title: 'Ink Web',
     },
+    links: [
+      {
+        text: 'Docs',
+        url: '/docs',
+      },
+    ],
     githubUrl: 'https://github.com/cjroth/ink-web',
   };
 }

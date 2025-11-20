@@ -2,7 +2,6 @@
 
 import { Accordion, Accordions } from 'fumadocs-ui/components/accordion'
 import dynamic from 'next/dynamic'
-import Link from 'next/link'
 import { MacWindow } from '../components/MacWindow'
 
 const InkDemo = dynamic(() => import('../components/InkDemo').then((mod) => ({ default: mod.InkDemo })), {
@@ -23,16 +22,10 @@ export default function HomePage() {
           .
         </p>
       </div>
-      <MacWindow className="w-full max-w-3xl">
+      <MacWindow className="w-full max-w-3xl mt-4">
         <InkDemo />
       </MacWindow>
-      <Link
-        href="/docs"
-        className="inline-flex items-center justify-center px-8 py-3 text-base font-semibold text-white bg-black dark:bg-white dark:text-black rounded-lg hover:opacity-90 transition-opacity"
-      >
-        View Docs
-      </Link>
-      <Accordions type="single" className="w-full max-w-3xl text-left">
+      <Accordions type="single" className="w-full max-w-3xl text-left mt-8">
         <Accordion title="How does it work?">Ink Web wraps Ink, polyfills the necessary Node.js APIs, and connects Ink to Xterm.js.</Accordion>
         <Accordion title="Is it compatible with existing Ink apps?">
           In theory! The React part of existing Ink apps should work with Ink Web - but if you've used other Node.js APIs - you'll need to modify those parts to work in a browser environment.
