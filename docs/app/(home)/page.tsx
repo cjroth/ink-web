@@ -42,6 +42,13 @@ export default function HomePage() {
             web containers
           </a> are often a better choice since they offer a fully containerized Node.js environment. Ink Web is more of a lightweight solution with slightly faster load time if you don't need Node.js APIs and want to build cross-platform React-based CLIs using TSX right into your existing page. If you want to avoid including the webcontainers wasm bundle and proxing data between a container and your app, Ink Web could be a better option.
         </Accordion>
+        <Accordion title="What about filesystem access?">
+          You can use a library like <a href="https://github.com/isomorphic-git/lightning-fs" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
+            lightning-fs
+          </a> or build an abstraction that uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/File_System_API/Origin_private_file_system" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
+            OPFS
+          </a> in the browser and the fs module in Node.js.
+        </Accordion>
         <Accordion title="Is Ink Web production-ready?">No. This is a new and untested project that should be considered experimental.</Accordion>
         <Accordion title="What is Ink Web's relation to Ink?">
           Ink is a project by{' '}
