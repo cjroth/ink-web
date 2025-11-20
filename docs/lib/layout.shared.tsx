@@ -3,14 +3,8 @@ import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
 export function baseOptions(): BaseLayoutProps {
   return {
     nav: {
-      title: 'ink-web',
+      title: 'Ink Web',
     },
-    links: [
-      {
-        text: 'GitHub',
-        url: 'https://github.com/yourusername/ink-web',
-        external: true,
-      },
-    ],
+    githubUrl: 'https://github.com/cjroth/ink-web',
   };
 }

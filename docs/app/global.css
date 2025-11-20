@@ -10,3 +10,12 @@
   font-style: normal;
   font-display: swap;
 }
+
+/* Terminal uses Monaspace */
+.font-mono, code, pre, kbd, samp {
+  font-family: var(--font-monaspace), 'Monaspace Neon', ui-monospace, monospace;
+}
+
+[data-orientation][data-state] > button {
+  cursor: pointer;
+}
