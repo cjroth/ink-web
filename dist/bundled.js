@@ -6801,6 +6801,7 @@ function mountInkInXterm(element, opts) {
     disableStdin: false,
     cols: initialCols,
     rows: initialRows,
+    fontFamily: "Monaspace Neon, monospace",
     ...opts.termOptions
   });
   const fitAddon = new FitAddon();

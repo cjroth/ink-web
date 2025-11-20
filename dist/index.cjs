@@ -160,6 +160,7 @@ function mountInkInXterm(element, opts) {
     disableStdin: false,
     cols: initialCols,
     rows: initialRows,
+    fontFamily: "Monaspace Neon, monospace",
     ...opts.termOptions
   });
   const fitAddon = new import_addon_fit.FitAddon();

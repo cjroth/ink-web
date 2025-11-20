@@ -12,7 +12,7 @@ export function InkDemo() {
     import('ink-web/bundled').then((mod) => {
       const { InkTerminalBox, DemoApp } = mod
       const DemoComp = () => (
-        <InkTerminalBox focus>
+        <InkTerminalBox focus termOptions={{ fontFamily: 'Monaspace Neon, monospace' }}>
           <DemoApp />
         </InkTerminalBox>
       )
