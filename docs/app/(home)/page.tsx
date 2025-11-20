@@ -14,7 +14,7 @@ export default function HomePage() {
     <div className="flex flex-col justify-center items-center text-center flex-1 gap-8 p-8">
       <div>
         <p className="text-4xl text-muted-foreground mb-2">
-          CLIs for the browser <em>and</em> terminal.
+          CLIs in the browser & terminal.
         </p>
         <p className="text-lg text-muted-foreground mb-2">Ink Web is a browser runtime and cross-platform toolkit for <a href="https://github.com/vadimdemedes/ink" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">Ink</a>.</p>
       </div>
