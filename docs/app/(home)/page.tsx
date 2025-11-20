@@ -37,6 +37,11 @@ export default function HomePage() {
         <Accordion title="Is it compatible with existing Ink apps?">
           In theory! The React part of existing Ink apps should work with Ink Web - but if you've used other Node.js APIs - you'll need to modify those parts to work in a browser environment.
         </Accordion>
+        <Accordion title="Why not webcontainers.io?">
+          To be honest, <a href="https://webcontainers.io/" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
+            web containers
+          </a> are often a better choice since they offer a fully containerized Node.js environment. Ink Web is more of a lightweight solution with slightly faster load time if you don't need Node.js APIs and want to build cross-platform React-based CLIs using TSX right into your existing page. If you want to avoid including the webcontainers wasm bundle and proxing data between a container and your app, Ink Web could be a better option.
+        </Accordion>
         <Accordion title="Is Ink Web production-ready?">No. This is a new and untested project that should be considered experimental.</Accordion>
         <Accordion title="What is Ink Web's relation to Ink?">
           Ink is a project by{' '}
