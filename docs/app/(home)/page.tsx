@@ -58,8 +58,7 @@ export default function HomePage() {
           . Ink Web is a separate project by{' '}
           <a href="https://cjroth.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
             Chris Roth
-          </a>
-          , a different author.
+          </a>.
         </Accordion>
       </Accordions>
     </div>
