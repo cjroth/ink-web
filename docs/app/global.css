@@ -6,6 +6,11 @@
   --radius: 1rem; /* 16px - matches rounded-2xl */
 }
 
+/* Override default border radius for accordion container */
+[data-orientation="vertical"].rounded-lg {
+  border-radius: 1rem;
+}
+
 @font-face {
   font-family: 'Monaspace Neon';
   src: url('/fonts/monaspace/MonaspaceNeonVar.woff2') format('woff2'), url('/fonts/monaspace/MonaspaceNeonVar.woff') format('woff');
