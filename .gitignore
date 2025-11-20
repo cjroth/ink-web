@@ -4,3 +4,4 @@ dist
 *.log
 ink/
 .playwright*
+.vercel
