@@ -1,0 +1,30 @@
+@import 'tailwindcss';
+@import 'fumadocs-ui/css/neutral.css';
+@import 'fumadocs-ui/css/preset.css';
+
+:root {
+  --radius: 1rem; /* 16px - matches rounded-2xl */
+}
+
+/* Override default border radius for accordion container */
+[data-orientation="vertical"].rounded-lg {
+  border-radius: 1rem;
+}
+
+@font-face {
+  font-family: 'Monaspace Neon';
+  src: url('/fonts/monaspace/MonaspaceNeonVar.woff2') format('woff2'), url('/fonts/monaspace/MonaspaceNeonVar.woff') format('woff');
+  font-weight: 200 800;
+  font-stretch: 75% 125%;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Terminal uses Monaspace */
+.font-mono, code, pre, kbd, samp {
+  font-family: var(--font-monaspace), 'Monaspace Neon', ui-monospace, monospace;
+}
+
+[data-orientation][data-state] > button {
+  cursor: pointer;
+}

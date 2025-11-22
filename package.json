@@ -1,36 +1,19 @@
 {
-  "name": "thoughtful",
-  "private": true,
+  "name": "ink-web",
   "version": "0.1.0",
-  "type": "module",
+  "author": "Chris Roth <chris@cjroth.com>",
+  "repository": {
+    "url": "https://github.com/cjroth/ink-web.git"
+  },
+  "workspaces": [
+    "packages/*",
+    "docs"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "tauri": "tauri"
-  },
-  "dependencies": {
-    "@radix-ui/react-slot": "^1.2.3",
-    "@tailwindcss/vite": "^4.1.13",
-    "@tauri-apps/api": "^2",
-    "@tauri-apps/plugin-opener": "^2",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "lucide-react": "^0.543.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "react-router": "^7.8.2",
-    "tailwind-merge": "^3.3.1",
-    "tailwindcss": "^4.1.13"
-  },
-  "devDependencies": {
-    "@tauri-apps/cli": "^2",
-    "@types/node": "^24.3.1",
-    "@types/react": "^19.1.8",
-    "@types/react-dom": "^19.1.6",
-    "@vitejs/plugin-react": "^4.6.0",
-    "tw-animate-css": "^1.3.8",
-    "typescript": "~5.8.3",
-    "vite": "^7.0.4"
+    "build": "bun run --cwd packages/ink-web build",
+    "dev": "bun run --cwd packages/ink-web dev",
+    "test": "bun run --cwd packages/ink-web test",
+    "docs": "bun run --cwd docs dev",
+    "docs:build": "bun run build && bun run --cwd docs build"
   }
 }

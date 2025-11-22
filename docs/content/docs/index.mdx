@@ -1,0 +1,91 @@
+---
+title: Quick Start
+---
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+There are two ways to install `ink-web`:
+1. **Bundled (Recommended)** - encapsulates required polyfills and dependencies to avoid global conflicts.
+2. **Standalone** - allows more flexibility in how dependencies are managed but requires some Vite / Webpack configuration.
+
+
+# Bundled Installation (Recommended)
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npm install ink-web xterm
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    yarn add ink-web xterm
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm add ink-web xterm
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bun add ink-web xterm
+    ```
+  </Tab>
+</Tabs>
+
+
+```typescript
+import { InkTerminalBox, Box, Text } from 'ink-web/bundled'
+import 'ink-web/bundled/css'
+import 'xterm/css/xterm.css'
+
+const App = () => (
+  <InkTerminalBox focus>
+    <Box flexDirection="column">
+      <Text color="green">Hello from Ink in the browser!</Text>
+    </Box>
+  </InkTerminalBox>
+)
+```
+
+# Standalone Installation
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npm install ink-web ink xterm
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    yarn add ink-web ink xterm
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm add ink-web ink xterm
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bun add ink-web ink xterm
+    ```
+  </Tab>
+</Tabs>
+
+Next, you'll need to set up the required polyfills - see the installation instructions for [Vite](docs/installation/vite). Currently Next.js only works with the bundled approach.
+
+```typescript
+import { InkTerminalBox, Box, Text } from 'ink-web'
+import 'xterm/css/xterm.css'
+
+const App = () => (
+  <InkTerminalBox focus>
+    <Box flexDirection="column">
+      <Text color="green">Hello from Ink in the browser!</Text>
+    </Box>
+  </InkTerminalBox>
+)
+```
+
+#
