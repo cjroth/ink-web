@@ -28,20 +28,20 @@ import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 </Tabs>
 
 ```tsx
-'use client';
+"use client";
 
-import { InkTerminalBox, Box, Text, useInput } from 'ink-web/bundled';
-import 'ink-web/bundled/css';
-import 'xterm/css/xterm.css';
-import { useState } from 'react';
+import { InkXterm, Box, Text } from "ink-web/bundled";
+import "ink-web/bundled/css";
+import "xterm/css/xterm.css";
 
-const App = () => (
+export const Terminal = () => (
   <InkXterm focus>
     <Box flexDirection="column">
       <Text color="green">Hello from Ink!</Text>
     </Box>
   </InkXterm>
-)
+);
+
 ```
 
 ## Client-Side Only Rendering

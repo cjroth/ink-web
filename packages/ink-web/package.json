@@ -1,6 +1,6 @@
 {
   "name": "ink-web",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Run Ink (React for CLIs) in the browser using Xterm.js",
   "type": "module",
   "workspaces": [
@@ -43,6 +43,14 @@
       "types": "./dist/vite-plugin.d.ts",
       "import": "./dist/vite-plugin.js",
       "require": "./dist/vite-plugin.cjs"
+    },
+    "./next": {
+      "types": "./dist/next.d.ts",
+      "import": "./dist/next.js"
+    },
+    "./ui": {
+      "types": "./dist/ui.d.ts",
+      "import": "./dist/ui.js"
     }
   },
   "files": [
@@ -67,6 +75,7 @@
     "@types/bun": "^1.2.20",
     "@types/node": "^24.10.1",
     "@types/react": "^19.0.0",
+    "next": "^15.0.0",
     "@vitejs/plugin-react": "^5.1.1",
     "chalk": "^5.4.1",
     "ink": "^6.0.0",

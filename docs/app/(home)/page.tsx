@@ -2,7 +2,7 @@
 
 import { Accordion, Accordions } from 'fumadocs-ui/components/accordion'
 import dynamic from 'next/dynamic'
-import { MacWindow } from '../components/MacWindow'
+import { MacWindow } from 'ink-web/ui'
 
 const InkDemo = dynamic(() => import('../components/InkDemo').then((mod) => ({ default: mod.InkDemo })), {
   ssr: false,

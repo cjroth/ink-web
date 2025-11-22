@@ -1,12 +1,16 @@
-import { cn } from '../../lib/utils'
+import type { ReactNode } from 'react'
 
 export interface MacWindowProps {
-  children: React.ReactNode
+  children: ReactNode
   className?: string
   title?: string
   onClose?: () => void
   onMinimize?: () => void
   onMaximize?: () => void
+}
+
+function cn(...classes: (string | undefined | false)[]) {
+  return classes.filter(Boolean).join(' ')
 }
 
 export const MacWindow = ({ children, className, title, onClose, onMinimize, onMaximize }: MacWindowProps) => {
