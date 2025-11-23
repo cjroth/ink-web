@@ -1,26 +1,10 @@
 "use client";
 
-import { Box, Text, InkTerminalBox } from "ink-web/bundled";
+import { Box, InkTerminalBox } from "ink-web/bundled";
 import "ink-web/bundled/css";
 import "xterm/css/xterm.css";
-import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
-
-const frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
-
-const Spinner = () => {
-  const [frame, setFrame] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setFrame((prev) => (prev + 1) % frames.length);
-    }, 100);
-
-    return () => clearInterval(interval);
-  }, []);
-
-  return <Text color="gray">{frames[frame]} Thinking</Text>;
-};
+import { Spinner } from "@/components/ui/spinner";
 
 export default function SpinnerDemo() {
   return (
@@ -29,7 +13,7 @@ export default function SpinnerDemo() {
       loading={<Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />}
     >
       <Box flexDirection="column">
-        <Spinner />
+        <Spinner text="Thinking" />
       </Box>
     </InkTerminalBox>
   );
