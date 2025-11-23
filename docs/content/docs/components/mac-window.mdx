@@ -1,0 +1,110 @@
+---
+title: MacWindow
+---
+
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import { MacWindow } from '@/components/ui/mac-window';
+
+A macOS-style window container with traffic light buttons (close, minimize, maximize) and an optional title bar.
+
+<MacWindow title="Preview" className="my-8">
+  <div className="p-8 text-center text-muted-foreground">
+    Your content here
+  </div>
+</MacWindow>
+
+## Installation
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/mac-window.json
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/mac-window.json
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/mac-window.json
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bunx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/mac-window.json
+    ```
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx title="app/terminal.tsx"
+"use client";
+
+import { MacWindow } from '@/components/ui/mac-window'
+import { InkXterm, Box, Text } from "ink-web/bundled";
+import "ink-web/bundled/css";
+import "xterm/css/xterm.css";
+
+export default function Terminal() {
+  return (
+    <MacWindow title="Terminal">
+      <InkXterm focus>
+        <Box flexDirection="column">
+          <Text color="green">Hello from Ink!</Text>
+        </Box>
+      </InkXterm>
+    </MacWindow>
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `children` | `ReactNode` | Content to render inside the window |
+| `className` | `string` | Additional CSS classes |
+| `title` | `string` | Optional title displayed in the center of the title bar |
+| `onClose` | `() => void` | Callback when close button is clicked |
+| `onMinimize` | `() => void` | Callback when minimize button is clicked |
+| `onMaximize` | `() => void` | Callback when maximize button is clicked |
+
+## Examples
+
+### Basic Window
+
+```tsx
+<MacWindow>
+  <div className="p-4">
+    <p>Window content</p>
+  </div>
+</MacWindow>
+```
+
+### With Title
+
+```tsx
+<MacWindow title="My App">
+  <div className="p-4">
+    <p>Window with title</p>
+  </div>
+</MacWindow>
+```
+
+### With Button Handlers
+
+```tsx
+<MacWindow
+  title="Terminal"
+  onClose={() => console.log('Close clicked')}
+  onMinimize={() => console.log('Minimize clicked')}
+  onMaximize={() => console.log('Maximize clicked')}
+>
+  <div className="p-4">
+    <p>Interactive window</p>
+  </div>
+</MacWindow>
+```
