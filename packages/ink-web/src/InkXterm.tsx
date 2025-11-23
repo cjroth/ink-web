@@ -7,21 +7,22 @@ interface InkXtermProps {
   focus?: boolean
   termOptions?: ITerminalOptions
   children: React.ReactElement
+  onReady?: () => void
 }
 
-export const InkXterm: React.FC<InkXtermProps> = ({ className = '', focus, termOptions, children }) => {
+export const InkXterm: React.FC<InkXtermProps> = ({ className = '', focus, termOptions, children, onReady }) => {
   const containerRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     if (!containerRef.current) return
-    
+
     // Ensure container is fully mounted before initializing xterm
     // This prevents the "Cannot read properties of undefined (reading 'dimensions')" error
     const initTimeout = setTimeout(() => {
       if (!containerRef.current) return
-      
-      const { unmount } = mountInkInXterm(children, { container: containerRef.current, focus, termOptions })
-      
+
+      const { unmount } = mountInkInXterm(children, { container: containerRef.current, focus, termOptions, onReady })
+
       // Store unmount for cleanup
       ;(containerRef.current as any)._unmount = unmount
     }, 100)
@@ -33,7 +34,7 @@ export const InkXterm: React.FC<InkXtermProps> = ({ className = '', focus, termO
         void unmount()
       }
     }
-  }, [children, focus, termOptions])
+  }, [children, focus, termOptions, onReady])
 
   return <div className={className} ref={containerRef} style={{ width: '100%', height: '100%' }} />
 }

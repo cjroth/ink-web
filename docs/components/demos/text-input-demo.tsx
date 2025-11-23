@@ -2,10 +2,9 @@
 
 import "ink-web/bundled/css";
 import "xterm/css/xterm.css";
-import { useEffect, useState } from "react";
-import { MacWindow } from "@/components/ui/mac-window";
 import { Box, Text, InkTerminalBox } from "ink-web/bundled";
 import { useTextInput } from "@/components/ui/text-input";
+import { Loader2 } from "lucide-react";
 
 function TextInputApp() {
   const { value, history } = useTextInput();
@@ -34,21 +33,13 @@ function TextInputApp() {
 }
 
 export default function TextInputDemo() {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) {
-    return <div className="w-full h-48 bg-muted animate-pulse rounded-lg" />;
-  }
-
   return (
-    <MacWindow title="Terminal">
-      <InkTerminalBox focus>
-        <TextInputApp />
-      </InkTerminalBox>
-    </MacWindow>
+    <InkTerminalBox
+      rows={10}
+      focus
+      loading={<Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />}
+    >
+      <TextInputApp />
+    </InkTerminalBox>
   );
 }

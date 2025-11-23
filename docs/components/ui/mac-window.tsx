@@ -3,6 +3,7 @@ import type { ReactNode } from 'react'
 export interface MacWindowProps {
   children: ReactNode
   className?: string
+  contentClassName?: string
   title?: string
   onClose?: () => void
   onMinimize?: () => void
@@ -13,7 +14,7 @@ function cn(...classes: (string | undefined | false)[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export const MacWindow = ({ children, className, title, onClose, onMinimize, onMaximize }: MacWindowProps) => {
+export const MacWindow = ({ children, className, contentClassName, title, onClose, onMinimize, onMaximize }: MacWindowProps) => {
   return (
     <div className={cn('rounded-2xl border bg-card shadow-lg overflow-hidden', className)}>
       {/* Window Title Bar */}
@@ -30,7 +31,7 @@ export const MacWindow = ({ children, className, title, onClose, onMinimize, onM
         <div />
       </div>
       {/* Window Content */}
-      <div className="overflow-hidden">{children}</div>
+      <div className={cn('overflow-hidden', contentClassName)}>{children}</div>
     </div>
   )
 }

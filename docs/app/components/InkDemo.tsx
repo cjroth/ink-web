@@ -1,28 +1,19 @@
 'use client'
 
 import 'ink-web/bundled/css'
-import { useEffect, useState } from 'react'
 import 'xterm/css/xterm.css'
+import { InkTerminalBox, DemoApp } from 'ink-web/bundled'
+import { Loader2 } from 'lucide-react'
 
 export function InkDemo() {
-  const [Component, setComponent] = useState<any>(null)
-
-  useEffect(() => {
-    // Ensure this only runs on the client
-    import('ink-web/bundled').then((mod) => {
-      const { InkTerminalBox, DemoApp } = mod
-      const DemoComp = () => (
-        <InkTerminalBox focus termOptions={{ fontFamily: 'Monaspace Neon, monospace' }}>
-          <DemoApp />
-        </InkTerminalBox>
-      )
-      setComponent(() => DemoComp)
-    })
-  }, [])
-
-  if (!Component) {
-    return <div className="w-full h-96 bg-muted animate-pulse rounded-lg" />
-  }
-
-  return <Component />
+  return (
+    <InkTerminalBox
+      rows={15}
+      focus
+      termOptions={{ fontFamily: 'Monaspace Neon, monospace' }}
+      loading={<Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />}
+    >
+      <DemoApp />
+    </InkTerminalBox>
+  )
 }

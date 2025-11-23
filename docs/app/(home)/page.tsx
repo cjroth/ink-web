@@ -1,13 +1,6 @@
-'use client'
-
 import { MacWindow } from '@/components/ui/mac-window'
 import { Accordion, Accordions } from 'fumadocs-ui/components/accordion'
-import dynamic from 'next/dynamic'
-
-const InkDemo = dynamic(() => import('../components/InkDemo').then((mod) => ({ default: mod.InkDemo })), {
-  ssr: false,
-  loading: () => <div className="w-full h-96 bg-muted animate-pulse rounded-lg" />,
-})
+import { HomeDemo } from './home-demo'
 
 export default function HomePage() {
   return (
@@ -21,7 +14,7 @@ export default function HomePage() {
         </p>
       </div>
       <MacWindow className="w-full max-w-3xl mt-4">
-        <InkDemo />
+        <HomeDemo />
       </MacWindow>
       <Accordions type="single" className="w-full max-w-3xl text-left mt-8">
         <Accordion title="How does it work?">Ink Web wraps Ink, polyfills the necessary Node.js APIs, and connects Ink to Xterm.js.</Accordion>

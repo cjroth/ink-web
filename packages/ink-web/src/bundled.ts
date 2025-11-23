@@ -7,7 +7,7 @@ import './InkTerminalBox.css'
 
 // Re-export everything from the main package
 export { DemoApp } from './DemoApp'
-export { InkTerminalBox } from './InkTerminalBox'
+export { InkTerminalBox, getTerminalHeight } from './InkTerminalBox'
 export { InkXterm } from './InkXterm'
 export { mountInkInXterm } from './xterm-ink'
 export type { InkWebOptions } from './xterm-ink'

@@ -16,6 +16,7 @@ export interface InkWebOptions {
   termOptions?: ITerminalOptions
   container: HTMLElement
   focus?: boolean
+  onReady?: () => void
 }
 
 //
@@ -156,9 +157,10 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
   const onWindowResize = () => resize()
   window.addEventListener('resize', onWindowResize)
 
-  // Try initial resize after a delay
+  // Try initial resize after a delay, then signal ready
   setTimeout(() => {
     resize()
+    opts.onReady?.()
   }, 200)
 
   return {

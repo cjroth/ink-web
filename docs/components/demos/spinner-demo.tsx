@@ -4,7 +4,7 @@ import { Box, Text, InkTerminalBox } from "ink-web/bundled";
 import "ink-web/bundled/css";
 import "xterm/css/xterm.css";
 import { useEffect, useState } from "react";
-import { MacWindow } from "@/components/ui/mac-window";
+import { Loader2 } from "lucide-react";
 
 const frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
 
@@ -24,12 +24,13 @@ const Spinner = () => {
 
 export default function SpinnerDemo() {
   return (
-    <MacWindow title="Terminal">
-      <InkTerminalBox>
-        <Box flexDirection="column">
-          <Spinner />
-        </Box>
-      </InkTerminalBox>
-    </MacWindow>
+    <InkTerminalBox
+      rows={10}
+      loading={<Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />}
+    >
+      <Box flexDirection="column">
+        <Spinner />
+      </Box>
+    </InkTerminalBox>
   );
 }
