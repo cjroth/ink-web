@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "mac-window",
+  "type": "registry:ui",
+  "title": "Mac Window",
+  "description": "A macOS-style window component with traffic light buttons",
+  "files": [
+    {
+      "path": "ui/mac-window.tsx",
+      "type": "registry:ui",
+      "target": "components/ui/mac-window.tsx"
+    }
+  ]
+}
