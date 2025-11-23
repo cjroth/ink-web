@@ -1,0 +1,164 @@
+---
+title: Multi Select
+---
+
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import MultiSelectDemo from '@/components/demos/multi-select-demo-wrapper';
+
+A terminal multi-select input component with keyboard navigation. Navigate with arrow keys or j/k, press Space to toggle selection, and Enter to submit.
+
+<div className="my-8">
+  <MultiSelectDemo />
+</div>
+
+## Installation
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/multi-select.json
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/multi-select.json
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/multi-select.json
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bunx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/multi-select.json
+    ```
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx title="app/page.tsx"
+"use client";
+
+import dynamic from "next/dynamic";
+
+const Terminal = dynamic(() => import("./terminal"), {
+  ssr: false,
+});
+
+export default function Home() {
+  return <Terminal />;
+}
+```
+
+```tsx title="app/terminal.tsx"
+"use client";
+
+import { InkXterm, Box, Text } from "ink-web/bundled";
+import { MultiSelect } from '@/components/ui/multi-select'
+import "ink-web/bundled/css";
+import "xterm/css/xterm.css";
+
+const items = [
+  { label: 'Apple', value: 'apple' },
+  { label: 'Banana', value: 'banana' },
+  { label: 'Cherry', value: 'cherry' },
+];
+
+export default function Terminal() {
+  return (
+    <InkXterm focus>
+      <Box flexDirection="column">
+        <Text>Select fruits:</Text>
+        <MultiSelect
+          items={items}
+          onSubmit={(selected) => console.log('Selected:', selected)}
+        />
+      </Box>
+    </InkXterm>
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `items` | `MultiSelectItem<V>[]` | `[]` | Items to display. Each item must have `label` and `value`, optionally `key` |
+| `selected` | `MultiSelectItem<V>[]` | - | Controlled selection state |
+| `defaultSelected` | `MultiSelectItem<V>[]` | `[]` | Initial selected items (uncontrolled) |
+| `focus` | `boolean` | `true` | Whether the component listens to user input |
+| `initialIndex` | `number` | `0` | Index of initially-highlighted item |
+| `limit` | `number` | - | Number of items to display at once (enables scrolling) |
+| `indicatorComponent` | `FC<IndicatorProps>` | - | Custom indicator component |
+| `checkboxComponent` | `FC<CheckboxProps>` | - | Custom checkbox component |
+| `itemComponent` | `FC<ItemProps>` | - | Custom item component |
+| `onSelect` | `(item) => void` | - | Called when an item is selected |
+| `onUnselect` | `(item) => void` | - | Called when an item is unselected |
+| `onSubmit` | `(items) => void` | - | Called when user presses Enter with selected items |
+| `onHighlight` | `(item) => void` | - | Called when user highlights an item |
+
+## Examples
+
+### Basic Multi-Select
+
+```tsx
+const items = [
+  { label: 'Option 1', value: '1' },
+  { label: 'Option 2', value: '2' },
+  { label: 'Option 3', value: '3' },
+];
+
+<MultiSelect
+  items={items}
+  onSubmit={(selected) => console.log(selected)}
+/>
+```
+
+### With Default Selection
+
+```tsx
+const items = [
+  { label: 'Red', value: 'red' },
+  { label: 'Green', value: 'green' },
+  { label: 'Blue', value: 'blue' },
+];
+
+<MultiSelect
+  items={items}
+  defaultSelected={[items[1]]} // Green pre-selected
+  onSubmit={handleSubmit}
+/>
+```
+
+### Controlled Selection
+
+```tsx
+const [selected, setSelected] = useState([]);
+
+<MultiSelect
+  items={items}
+  selected={selected}
+  onSelect={(item) => setSelected([...selected, item])}
+  onUnselect={(item) => setSelected(selected.filter(s => s.value !== item.value))}
+  onSubmit={handleSubmit}
+/>
+```
+
+### With Limit (Scrollable)
+
+```tsx
+<MultiSelect
+  items={items}
+  limit={5}
+  onSubmit={handleSubmit}
+/>
+```
+
+## Keyboard Navigation
+
+- **↑/k** - Move highlight up
+- **↓/j** - Move highlight down
+- **Space** - Toggle selection of highlighted item
+- **Enter** - Submit selected items

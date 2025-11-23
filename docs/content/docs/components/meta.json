@@ -3,6 +3,9 @@
   "defaultOpen": false,
   "pages": [
     "text-input",
+    "select-input",
+    "multi-select",
+    "table",
     "spinner",
     "mac-window"
   ]

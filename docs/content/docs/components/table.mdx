@@ -1,0 +1,162 @@
+---
+title: Table
+---
+
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import TableDemo from '@/components/demos/table-demo-wrapper';
+
+A terminal table component for displaying tabular data with customizable styling.
+
+<div className="my-8">
+  <TableDemo />
+</div>
+
+## Installation
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/table.json
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/table.json
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/table.json
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bunx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/table.json
+    ```
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx title="app/page.tsx"
+"use client";
+
+import dynamic from "next/dynamic";
+
+const Terminal = dynamic(() => import("./terminal"), {
+  ssr: false,
+});
+
+export default function Home() {
+  return <Terminal />;
+}
+```
+
+```tsx title="app/terminal.tsx"
+"use client";
+
+import { InkXterm, Box } from "ink-web/bundled";
+import { Table } from '@/components/ui/table'
+import "ink-web/bundled/css";
+import "xterm/css/xterm.css";
+
+const data = [
+  { name: 'Alice', age: 30, city: 'NYC' },
+  { name: 'Bob', age: 25, city: 'LA' },
+  { name: 'Charlie', age: 35, city: 'Chicago' },
+];
+
+export default function Terminal() {
+  return (
+    <InkXterm focus>
+      <Box flexDirection="column">
+        <Table data={data} />
+      </Box>
+    </InkXterm>
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `data` | `T[]` | required | Array of objects to display as rows |
+| `columns` | `(keyof T)[]` | all keys | Which columns to display |
+| `padding` | `number` | `1` | Cell padding |
+| `header` | `Component` | `Header` | Custom header cell component |
+| `cell` | `Component` | `Cell` | Custom data cell component |
+| `skeleton` | `Component` | `Skeleton` | Custom border/structure component |
+
+## Examples
+
+### Basic Table
+
+```tsx
+const data = [
+  { id: 1, name: 'Item 1', price: 10 },
+  { id: 2, name: 'Item 2', price: 20 },
+];
+
+<Table data={data} />
+```
+
+### Specific Columns
+
+```tsx
+const data = [
+  { id: 1, name: 'Alice', email: 'alice@example.com', age: 30 },
+  { id: 2, name: 'Bob', email: 'bob@example.com', age: 25 },
+];
+
+// Only show name and email columns
+<Table data={data} columns={['name', 'email']} />
+```
+
+### Custom Padding
+
+```tsx
+<Table data={data} padding={2} />
+```
+
+### Custom Cell Styling
+
+```tsx
+import { Text } from 'ink-web/bundled'
+
+const CustomCell = ({ children, column }) => (
+  <Text color={column === 0 ? 'green' : undefined}>
+    {children}
+  </Text>
+)
+
+<Table data={data} cell={CustomCell} />
+```
+
+### Custom Header Styling
+
+```tsx
+import { Text } from 'ink-web/bundled'
+
+const CustomHeader = ({ children }) => (
+  <Text bold color="yellow" underline>
+    {children}
+  </Text>
+)
+
+<Table data={data} header={CustomHeader} />
+```
+
+## Output Format
+
+The table renders with box-drawing characters:
+
+```
+┌─────────┬─────┬─────────┐
+│ name    │ age │ city    │
+├─────────┼─────┼─────────┤
+│ Alice   │ 30  │ NYC     │
+├─────────┼─────┼─────────┤
+│ Bob     │ 25  │ LA      │
+└─────────┴─────┴─────────┘
+```

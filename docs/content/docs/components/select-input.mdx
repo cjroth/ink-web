@@ -1,0 +1,158 @@
+---
+title: Select Input
+---
+
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import SelectInputDemo from '@/components/demos/select-input-demo-wrapper';
+
+A terminal select input component with keyboard navigation. Navigate with arrow keys or j/k, press Enter to select.
+
+<div className="my-8">
+  <SelectInputDemo />
+</div>
+
+## Installation
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/select-input.json
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/select-input.json
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/select-input.json
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bunx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/select-input.json
+    ```
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx title="app/page.tsx"
+"use client";
+
+import dynamic from "next/dynamic";
+
+const Terminal = dynamic(() => import("./terminal"), {
+  ssr: false,
+});
+
+export default function Home() {
+  return <Terminal />;
+}
+```
+
+```tsx title="app/terminal.tsx"
+"use client";
+
+import { InkXterm, Box, Text } from "ink-web/bundled";
+import { SelectInput } from '@/components/ui/select-input'
+import "ink-web/bundled/css";
+import "xterm/css/xterm.css";
+
+const items = [
+  { label: 'First', value: 'first' },
+  { label: 'Second', value: 'second' },
+  { label: 'Third', value: 'third' },
+];
+
+export default function Terminal() {
+  return (
+    <InkXterm focus>
+      <Box flexDirection="column">
+        <Text>Select an option:</Text>
+        <SelectInput
+          items={items}
+          onSelect={(item) => console.log('Selected:', item.value)}
+        />
+      </Box>
+    </InkXterm>
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `items` | `SelectInputItem<V>[]` | `[]` | Items to display. Each item must have `label` and `value`, optionally `key` |
+| `isFocused` | `boolean` | `true` | Whether the component listens to user input |
+| `initialIndex` | `number` | `0` | Index of initially-selected item |
+| `limit` | `number` | - | Number of items to display at once (enables scrolling) |
+| `indicatorComponent` | `FC<IndicatorProps>` | - | Custom indicator component |
+| `itemComponent` | `FC<ItemProps>` | - | Custom item component |
+| `onSelect` | `(item) => void` | - | Called when user selects an item (Enter key) |
+| `onHighlight` | `(item) => void` | - | Called when user highlights an item (navigation) |
+
+## Examples
+
+### Basic Select
+
+```tsx
+const items = [
+  { label: 'Apple', value: 'apple' },
+  { label: 'Banana', value: 'banana' },
+  { label: 'Cherry', value: 'cherry' },
+];
+
+<SelectInput items={items} onSelect={handleSelect} />
+```
+
+### With Limit (Scrollable)
+
+```tsx
+<SelectInput
+  items={items}
+  limit={5}
+  onSelect={handleSelect}
+/>
+```
+
+### With Initial Selection
+
+```tsx
+<SelectInput
+  items={items}
+  initialIndex={2}
+  onSelect={handleSelect}
+/>
+```
+
+### Multiple Select Inputs
+
+Use `isFocused` to route input between multiple components:
+
+```tsx
+const [activeInput, setActiveInput] = useState<'first' | 'second'>('first');
+
+<SelectInput
+  items={firstItems}
+  isFocused={activeInput === 'first'}
+  onSelect={(item) => {
+    handleFirst(item);
+    setActiveInput('second');
+  }}
+/>
+<SelectInput
+  items={secondItems}
+  isFocused={activeInput === 'second'}
+  onSelect={handleSecond}
+/>
+```
+
+## Keyboard Navigation
+
+- **↑/k** - Move selection up
+- **↓/j** - Move selection down
+- **Enter** - Select highlighted item
+- **1-9** - Instantly select item by number
