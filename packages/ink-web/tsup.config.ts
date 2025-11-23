@@ -215,16 +215,4 @@ const require = globalThis.__bundled_require__;
     platform: 'browser',
     external: ['react', 'react-dom', 'next', 'next/dynamic', 'xterm', 'xterm/css/xterm.css', '@xterm/addon-fit', 'ink-web/bundled', 'ink-web/bundled/css'],
   },
-  // UI components
-  {
-    entry: {
-      ui: 'src/ui.ts',
-    },
-    format: ['esm'],
-    dts: true,
-    sourcemap: true,
-    target: 'es2020',
-    platform: 'browser',
-    external: ['react', 'react-dom'],
-  },
 ])
