@@ -1,7 +1,6 @@
 {
   "title": "Components",
-  "icon": "LayoutGrid",
-  "defaultOpen": true,
+  "defaultOpen": false,
   "pages": [
     "spinner",
     "mac-window"
