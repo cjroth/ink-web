@@ -10,6 +10,10 @@ export function baseOptions(): BaseLayoutProps {
         text: 'Docs',
         url: '/docs',
       },
+      {
+        text: 'Components',
+        url: '/docs/components',
+      },
     ],
     githubUrl: 'https://github.com/cjroth/ink-web',
   };
