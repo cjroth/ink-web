@@ -49,7 +49,7 @@
     },
     "packages/ink-web": {
       "name": "ink-web",
-      "version": "0.1.4",
+      "version": "0.1.8",
       "dependencies": {
         "@xterm/addon-fit": "^0.10.0",
       },
