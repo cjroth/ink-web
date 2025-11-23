@@ -1,0 +1,16 @@
+{
+  "name": "ink-ui",
+  "version": "0.0.1",
+  "description": "UI components for ink-web, installable via shadcn registry",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "echo 'Registry package - no build needed'"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "react": "^19.0.0",
+    "typescript": "^5.7.2"
+  },
+  "license": "MIT"
+}

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "ink-ui",
+  "homepage": "https://github.com/yourusername/ink-web",
+  "items": [
+    {
+      "name": "mac-window",
+      "type": "registry:ui",
+      "title": "Mac Window",
+      "description": "A macOS-style window component with traffic light buttons",
+      "files": [
+        {
+          "path": "registry/ui/mac-window.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/mac-window.tsx"
+        }
+      ],
+      "tailwind": {
+        "config": {}
+      }
+    }
+  ]
+}
