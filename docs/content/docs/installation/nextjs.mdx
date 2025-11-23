@@ -32,7 +32,6 @@ import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 ```tsx title="app/page.tsx"
 "use client";
 
-import { InkWebDynamic } from "ink-web/next";
 import dynamic from "next/dynamic";
 
 const Terminal = dynamic(() => import("./terminal"), {
@@ -40,9 +39,7 @@ const Terminal = dynamic(() => import("./terminal"), {
 });
 
 export default function Home() {
-  return (
-    <Terminal />
-  );
+  return <Terminal />;
 }
 ```
 
@@ -60,6 +57,8 @@ export const Terminal = () => (
     </Box>
   </InkXterm>
 );
+
+export default Terminal;
 ```
 
 ## Client-Side Only Rendering
