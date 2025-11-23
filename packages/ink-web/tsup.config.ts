@@ -184,4 +184,15 @@ const require = globalThis.__bundled_require__;
     platform: 'browser',
     external: ['react', 'react-dom', 'next', 'next/dynamic', 'xterm', 'xterm/css/xterm.css', '@xterm/addon-fit', 'ink-web/bundled', 'ink-web/bundled/css'],
   },
+  // SSR-safe utilities (pure functions, no browser dependencies)
+  {
+    entry: {
+      utils: 'src/utils.ts',
+    },
+    format: ['esm', 'cjs'],
+    dts: true,
+    sourcemap: true,
+    target: 'es2020',
+    platform: 'neutral',
+  },
 ])

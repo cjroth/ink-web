@@ -41,6 +41,11 @@
     "./next": {
       "types": "./dist/next.d.ts",
       "import": "./dist/next.js"
+    },
+    "./utils": {
+      "types": "./dist/utils.d.ts",
+      "import": "./dist/utils.js",
+      "require": "./dist/utils.cjs"
     }
   },
   "files": [

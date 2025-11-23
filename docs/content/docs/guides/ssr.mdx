@@ -1,0 +1,184 @@
+---
+title: SSR & Loading States
+description: How to handle server-side rendering and prevent layout flickering
+---
+
+When using Ink Web in the browser with SSR/SSG frameworks like Next.js, you need to handle the transition from server to client carefully to prevent layout shifts and flickering.
+
+## The Problem
+
+When using Next.js or other SSR frameworks, you'll encounter issues because:
+
+1. The browser components use browser APIs (`document`, `window`, etc.) that don't exist on the server
+2. The terminal needs time to initialize after mounting
+3. Without proper handling, you'll see layout shifts and flickering
+
+## The Solution
+
+Use a three-part approach:
+
+1. **Dynamic import** with `ssr: false` to prevent server-side rendering
+2. **Height placeholder** during dynamic import loading
+3. **Loading prop** on `InkTerminalBox` to show a spinner until the terminal is ready
+
+## Complete Example
+
+### 1. Create the Terminal Component
+
+```tsx title="components/my-terminal.tsx"
+"use client";
+
+import { InkTerminalBox, Box, Text } from "ink-web/bundled";
+import "ink-web/bundled/css";
+import "xterm/css/xterm.css";
+import { Loader2 } from "lucide-react";
+
+export function MyTerminal() {
+  return (
+    <InkTerminalBox
+      rows={10}
+      focus
+      loading={<Loader2 className="h-6 w-6 animate-spin text-gray-400" />}
+    >
+      <Box flexDirection="column">
+        <Text color="green">Hello from Ink!</Text>
+      </Box>
+    </InkTerminalBox>
+  );
+}
+```
+
+Key points:
+- Use the `rows` prop to set a fixed height
+- Use the `loading` prop to show a centered spinner while the terminal initializes
+- The spinner will automatically disappear when the terminal is ready
+
+### 2. Create the Wrapper Component
+
+```tsx title="components/terminal-wrapper.tsx"
+"use client";
+
+import dynamic from "next/dynamic";
+import { getTerminalHeight } from "ink-web/utils";
+
+// Must match the rows prop in MyTerminal
+const ROWS = 10;
+const HEIGHT = getTerminalHeight(ROWS);
+
+const MyTerminal = dynamic(
+  () => import("./my-terminal").then((mod) => ({ default: mod.MyTerminal })),
+  {
+    ssr: false,
+    loading: () => <div style={{ height: HEIGHT, background: "#1a1a1a" }} />,
+  }
+);
+
+export function TerminalWrapper() {
+  return <MyTerminal />;
+}
+```
+
+Key points:
+- Import `getTerminalHeight` from `ink-web/utils` (this is SSR-safe)
+- The `loading` placeholder ensures no layout shift while the component loads
+- Keep `ROWS` in sync between the wrapper and the terminal component
+
+### 3. Use in Your Page
+
+```tsx title="app/page.tsx"
+import { TerminalWrapper } from "@/components/terminal-wrapper";
+
+export default function Page() {
+  return (
+    <div className="p-8">
+      <h1>My App</h1>
+      <TerminalWrapper />
+    </div>
+  );
+}
+```
+
+## How It Works
+
+The loading sequence is:
+
+1. **Server render**: The page renders with the height placeholder (dark background, correct height)
+2. **Dynamic import**: The terminal component loads (placeholder still visible)
+3. **Terminal mount**: `InkTerminalBox` renders with its loading spinner centered
+4. **Terminal ready**: xterm.js is fully initialized and the spinner disappears
+
+This ensures a smooth transition with no layout shifts or white flashes.
+
+## The `getTerminalHeight` Utility
+
+The `ink-web/utils` package exports a helper function to calculate terminal height:
+
+```tsx
+import { getTerminalHeight } from "ink-web/utils";
+
+// Calculate height for 10 rows
+const height = getTerminalHeight(10); // Returns 200 (10 * 18 + 20)
+```
+
+This is SSR-safe and can be used at module level without causing hydration errors.
+
+The formula is: `rows * 18 + 20` where:
+- 18px is the default line height
+- 20px is the terminal padding (top + bottom)
+
+## Common Mistakes
+
+### Don't import from `ink-web/bundled` at module level
+
+```tsx
+// BAD - will cause "self is not defined" error during SSR
+import { getTerminalHeight } from "ink-web/bundled";
+
+// GOOD - use the SSR-safe utils package
+import { getTerminalHeight } from "ink-web/utils";
+```
+
+### Don't forget the height placeholder
+
+```tsx
+// BAD - will cause layout shift
+const Terminal = dynamic(() => import("./terminal"), {
+  ssr: false,
+});
+
+// GOOD - provides height during loading
+const Terminal = dynamic(() => import("./terminal"), {
+  ssr: false,
+  loading: () => <div style={{ height: HEIGHT, background: "#1a1a1a" }} />,
+});
+```
+
+### Keep rows in sync
+
+If your terminal uses `rows={15}` but your wrapper calculates height for 10 rows, you'll see a jump when the terminal mounts. Always keep them in sync:
+
+```tsx
+// In wrapper
+const ROWS = 15;
+const HEIGHT = getTerminalHeight(ROWS);
+
+// In terminal component
+<InkTerminalBox rows={15} ... />
+```
+
+## Custom Loading Indicators
+
+You can use any React element for the loading indicator:
+
+```tsx
+// Simple text
+<InkTerminalBox loading={<span>Loading...</span>}>
+
+// Animated spinner
+<InkTerminalBox loading={<Loader2 className="animate-spin" />}>
+
+// Custom component
+<InkTerminalBox loading={<MyCustomLoader />}>
+```
+
+The loading indicator will be automatically centered in the terminal area.

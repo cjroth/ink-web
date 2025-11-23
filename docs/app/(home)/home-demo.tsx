@@ -1,7 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { getTerminalHeight } from 'ink-web/bundled'
+import { getTerminalHeight } from 'ink-web/utils'
 
 // Must match the rows prop in InkDemo.tsx
 const ROWS = 15

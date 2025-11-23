@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic';
 import { MacWindow } from "@/components/ui/mac-window";
-import { getTerminalHeight } from "ink-web/bundled";
+import { getTerminalHeight } from 'ink-web/utils';
 
 // Must match the rows prop in spinner-demo.tsx
 const ROWS = 10;

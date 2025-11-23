@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react'
 import type { ITerminalOptions } from 'xterm'
 import './InkTerminalBox.css'
 import { InkXterm } from './InkXterm'
+import { getTerminalHeight } from './utils'
 
 export interface InkTerminalBoxProps {
   className?: string
@@ -16,17 +17,8 @@ export interface InkTerminalBoxProps {
   loading?: React.ReactNode
 }
 
-// Default line height in pixels (fontSize 15 * lineHeight ~1.2)
-const DEFAULT_LINE_HEIGHT = 18
-// Padding inside terminal (top + bottom)
-const TERMINAL_PADDING = 20
-
-/**
- * Calculate pixel height from number of rows
- */
-export function getTerminalHeight(rows: number): number {
-  return rows * DEFAULT_LINE_HEIGHT + TERMINAL_PADDING
-}
+// Re-export for convenience
+export { getTerminalHeight }
 
 /**
  * A wrapper component that provides proper styling and containment for InkXterm.
