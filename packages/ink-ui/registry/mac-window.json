@@ -8,7 +8,8 @@
     {
       "path": "ui/mac-window.tsx",
       "type": "registry:ui",
-      "target": "components/ui/mac-window.tsx"
+      "target": "components/ui/mac-window.tsx",
+      "content": "import type { ReactNode } from 'react'\n\nexport interface MacWindowProps {\n  children: ReactNode\n  className?: string\n  title?: string\n  onClose?: () => void\n  onMinimize?: () => void\n  onMaximize?: () => void\n}\n\nfunction cn(...classes: (string | undefined | false)[]) {\n  return classes.filter(Boolean).join(' ')\n}\n\nexport const MacWindow = ({ children, className, title, onClose, onMinimize, onMaximize }: MacWindowProps) => {\n  return (\n    <div className={cn('rounded-2xl border bg-card shadow-lg overflow-hidden', className)}>\n      {/* Window Title Bar */}\n      <div className=\"grid grid-cols-3 items-center px-3 py-2.5 border-b bg-muted/50\">\n        {/* Traffic Light Buttons */}\n        <div className=\"flex gap-2\">\n          <button onClick={onClose} className=\"w-3 h-3 bg-red-500 hover:bg-red-600 rounded-full transition-colors\" aria-label=\"Close\" type=\"button\" />\n          <button onClick={onMinimize} className=\"w-3 h-3 bg-yellow-500 hover:bg-yellow-600 rounded-full transition-colors\" aria-label=\"Minimize\" type=\"button\" />\n          <button onClick={onMaximize} className=\"w-3 h-3 bg-green-500 hover:bg-green-600 rounded-full transition-colors\" aria-label=\"Maximize\" type=\"button\" />\n        </div>\n        {/* Optional Title - Centered */}\n        {title && <div className=\"text-center text-sm text-muted-foreground select-none\">{title}</div>}\n        {/* Empty right column for balance */}\n        <div />\n      </div>\n      {/* Window Content */}\n      <div className=\"overflow-hidden\">{children}</div>\n    </div>\n  )\n}\n"
     }
   ]
 }
