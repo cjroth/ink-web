@@ -4,6 +4,9 @@
   "workspaces": {
     "": {
       "name": "ink-web-monorepo",
+      "dependencies": {
+        "ink-web-monorepo": ".",
+      },
     },
     "docs": {
       "name": "docs2",
@@ -672,6 +675,8 @@
     "ink-ui": ["ink-ui@workspace:packages/ink-ui"],
 
     "ink-web": ["ink-web@workspace:packages/ink-web"],
+
+    "ink-web-monorepo": ["ink-web-monorepo@root:", {}],
 
     "inline-style-parser": ["inline-style-parser@0.2.7", "", {}, "sha512-Nb2ctOyNR8DqQoR0OwRG95uNWIC0C1lCgf5Naz5H6Ji72KZ8OcFZLz2P5sNgwlyoJ8Yif11oMuYs5pBQa86csA=="],
 

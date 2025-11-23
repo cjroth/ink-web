@@ -3,11 +3,7 @@ title: Spinner
 ---
 
 import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
-import dynamic from 'next/dynamic';
-
-export const SpinnerDemo = dynamic(() => import('@/components/demos/spinner-demo'), {
-  ssr: false,
-});
+import SpinnerDemo from '@/components/demos/spinner-demo-wrapper';
 
 An animated loading spinner for terminal-style interfaces.
 

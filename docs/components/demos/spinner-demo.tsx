@@ -1,12 +1,14 @@
 "use client";
 
-import { InkWeb, Box, Text } from "ink-web/bundled";
+import { Box, Text, InkTerminalBox } from "ink-web/bundled";
 import "ink-web/bundled/css";
+import "xterm/css/xterm.css";
 import { useEffect, useState } from "react";
+import { MacWindow } from "@/components/ui/mac-window";
 
 const frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
 
-const Spinner = ({ text = 'Thinking', color = 'gray' }: { text?: string; color?: string }) => {
+const Spinner = () => {
   const [frame, setFrame] = useState(0);
 
   useEffect(() => {
@@ -17,15 +19,17 @@ const Spinner = ({ text = 'Thinking', color = 'gray' }: { text?: string; color?:
     return () => clearInterval(interval);
   }, []);
 
-  return <Text color={color}>{frames[frame]} {text}</Text>;
+  return <Text color="gray">{frames[frame]} Thinking</Text>;
 };
 
 export default function SpinnerDemo() {
   return (
-    <InkWeb>
-      <Box flexDirection="column">
-        <Spinner />
-      </Box>
-    </InkWeb>
+    <MacWindow title="Terminal">
+      <InkTerminalBox>
+        <Box flexDirection="column">
+          <Spinner />
+        </Box>
+      </InkTerminalBox>
+    </MacWindow>
   );
 }
