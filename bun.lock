@@ -38,7 +38,7 @@
     },
     "packages/ink-web": {
       "name": "ink-web",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "dependencies": {
         "@xterm/addon-fit": "^0.10.0",
       },

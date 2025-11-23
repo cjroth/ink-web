@@ -1,27 +1,34 @@
 'use client'
 
+// CSS imports - these are loaded at runtime, externalized during build
 import 'ink-web/bundled/css'
-import dynamic from 'next/dynamic'
-import React, { useEffect, useState, type ReactNode } from 'react'
 import 'xterm/css/xterm.css'
 
-type InkModule = typeof import('ink-web/bundled')
+import dynamic from 'next/dynamic'
+import React, { useEffect, useState, type ReactNode } from 'react'
+
+// Import types from local source to avoid circular dependency during parallel DTS builds
+import type { InkTerminalBox as InkTerminalBoxType, InkTerminalBoxProps } from './InkTerminalBox'
+
+// Define what we need from the bundled module
+interface InkModule {
+  InkTerminalBox: typeof InkTerminalBoxType
+  [key: string]: any
+}
 
 export interface InkWebDynamicProps {
   children: ReactNode | ((ink: InkModule) => ReactNode)
   focus?: boolean
-  termOptions?: {
-    fontFamily?: string
-    fontSize?: number
-    [key: string]: any
-  }
+  termOptions?: InkTerminalBoxProps['termOptions']
 }
 
 function InkWebDynamicInner({ children, focus = true, termOptions }: InkWebDynamicProps) {
   const [inkModule, setInkModule] = useState<InkModule | null>(null)
 
   useEffect(() => {
-    import('ink-web/bundled').then((mod) => {
+    // Dynamic import from package path - kept external by tsup
+    // @ts-ignore - module types may not be available during parallel DTS builds
+    import('ink-web/bundled').then((mod: InkModule) => {
       setInkModule(mod)
     })
   }, [])

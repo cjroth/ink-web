@@ -16,9 +16,9 @@ beforeAll(() => {
   }
 })
 
-describe('Semi-bundled imports', () => {
-  test('can import from semi-bundled', async () => {
-    const mod = await import('./semi-bundled')
+describe('Bundled imports', () => {
+  test('can import from bundled', async () => {
+    const mod = await import('./bundled')
     expect(mod.Box).toBeDefined()
     expect(mod.Text).toBeDefined()
     expect(mod.InkTerminalBox).toBeDefined()
@@ -26,7 +26,7 @@ describe('Semi-bundled imports', () => {
   })
 
   test('Ink components are properly imported', async () => {
-    const { Box: BoxImport, Text: TextImport } = await import('./semi-bundled')
+    const { Box: BoxImport, Text: TextImport } = await import('./bundled')
     // Verify they're actually React components
     const boxElement = React.createElement(BoxImport, {}, 'test')
     const textElement = React.createElement(TextImport, {}, 'test')
@@ -97,7 +97,7 @@ describe('Ink rendering', () => {
 
   test('Ink Box and Text render correctly', async () => {
     const { render } = await import('ink')
-    const { Box, Text } = await import('./semi-bundled')
+    const { Box, Text } = await import('./bundled')
     const { Writable } = await import('./shims/stream')
     
     const stdout = new Writable()

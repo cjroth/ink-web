@@ -60,11 +60,13 @@ const nodeShimsPlugin = (rootDir: string): Plugin => ({
         const key = args.path.startsWith('node:') ? args.path : builtin
         const replacement = aliases[key] || aliases[builtin]
 
-        if (replacement && (replacement.startsWith('/') || replacement.includes(rootDir))) {
+        if (replacement) {
           console.log(`[node-shims] Resolving ${args.path} -> ${replacement}`)
           return { path: replacement, external: false }
         }
-        return undefined
+        // Fallback to empty shim if no replacement found
+        console.warn(`[node-shims] No replacement found for ${args.path}, marking as external`)
+        return { path: args.path, external: true }
       })
     })
 

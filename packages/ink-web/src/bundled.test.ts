@@ -11,17 +11,17 @@ beforeAll(() => {
   }
 })
 
-describe('Semi-bundled without browser', () => {
-  test('Can import Ink components from semi-bundled', async () => {
+describe('Bundled without browser', () => {
+  test('Can import Ink components from bundled', async () => {
     // This should work with happy-dom providing document/window
-    const { Box, Text, render } = await import('./semi-bundled')
+    const { Box, Text, render } = await import('./bundled')
     expect(Box).toBeDefined()
     expect(Text).toBeDefined()
     expect(render).toBeDefined()
   })
 
-  test('Ink from semi-bundled renders to stream', async () => {
-    const { Box, Text, render } = await import('./semi-bundled')
+  test('Ink from bundled renders to stream', async () => {
+    const { Box, Text, render } = await import('./bundled')
     const { Writable } = await import('./shims/stream')
     
     const stdout = new Writable()
@@ -57,7 +57,7 @@ describe('Semi-bundled without browser', () => {
         console.log('Yoga promise resolved')
       }
       
-      const element = React.createElement(Text, {}, 'Hello Semi-bundled!')
+      const element = React.createElement(Text, {}, 'Hello Bundled!')
       const instance = render(element, {
         stdout: stdout as any,
         stderr: stdout as any,
@@ -69,7 +69,7 @@ describe('Semi-bundled without browser', () => {
       // Wait for Ink to render
       await new Promise(resolve => setTimeout(resolve, 200))
       
-      console.log('Semi-bundled writes:', writes)
+      console.log('Bundled writes:', writes)
       console.log('First write:', writes[0])
       
       expect(writes.length).toBeGreaterThan(0)

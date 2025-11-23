@@ -253,42 +253,6 @@ describe('Ink rendering via bundled in browser-like environment', () => {
   })
 })
 
-describe('Ink rendering via semi-bundled', () => {
-  test('can import from semi-bundled', async () => {
-    const mod = await import('./semi-bundled')
-    expect(mod.Box).toBeDefined()
-    expect(mod.Text).toBeDefined()
-    expect(mod.render).toBeDefined()
-  })
-
-  test('can render via semi-bundled', async () => {
-    const { render, Text } = await import('./semi-bundled')
-    const mockStdout = createMockStdout()
-
-    const element = React.createElement(Text, {}, 'Semi-bundled Test')
-    let instance: any
-    
-    await act(async () => {
-      instance = render(element, {
-        stdout: mockStdout as any,
-        stderr: mockStdout as any,
-        stdin: process.stdin as any,
-        patchConsole: false,
-        debug: false,
-      })
-
-      await new Promise((resolve) => setTimeout(resolve, 200))
-    })
-
-    expect(mockStdout.writes.length).toBeGreaterThan(0)
-    const allOutput = mockStdout.writes.join('')
-    expect(allOutput).toContain('Semi-bundled Test')
-
-    act(() => {
-      instance.unmount()
-    })
-  })
-})
 
 describe('Yoga layout engine', () => {
   test('yogaNode is created when using bundled', async () => {

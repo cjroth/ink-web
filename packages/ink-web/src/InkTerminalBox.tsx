@@ -3,7 +3,7 @@ import type { ITerminalOptions } from 'xterm'
 import './InkTerminalBox.css'
 import { InkXterm } from './InkXterm'
 
-interface InkTerminalBoxProps {
+export interface InkTerminalBoxProps {
   className?: string
   focus?: boolean
   termOptions?: ITerminalOptions
