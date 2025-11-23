@@ -1,6 +1,6 @@
 {
   "name": "ink-web",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "Run Ink (React for CLIs) in the browser using Xterm.js",
   "type": "module",
   "workspaces": [

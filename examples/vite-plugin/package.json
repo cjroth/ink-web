@@ -1,5 +1,5 @@
 {
-  "name": "vite-project",
+  "name": "ink-vite-plugin",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -10,14 +10,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@xterm/addon-fit": "^0.10.0",
-    "events": "^3.3.0",
-    "ink-web": "0.1.7a",
+    "ink": "^6.5.1",
+    "ink-web": "^0.1.7-a",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-reconciler": "^0.33.0",
-    "scheduler": "^0.27.0",
-    "stream-browserify": "^3.0.0",
     "xterm": "^5.3.0"
   },
   "devDependencies": {

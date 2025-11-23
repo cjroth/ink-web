@@ -28,24 +28,11 @@ import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
   </Tab>
 </Tabs>
 
-
-**Vite Configuration:**
-
-```tsx
-import { inkWebPlugin } from 'ink-web/vite'
-import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
-
-export default defineConfig({
-  plugins: [react(), inkWebPlugin()],
-})
-```
-
 **Usage:**
 
 ```tsx
 import { Box, Text } from "ink";
-import { InkXterm } from "ink-web";
+import { InkXterm } from "ink-web/bundled";
 import "xterm/css/xterm.css";
 
 const App = () => (
