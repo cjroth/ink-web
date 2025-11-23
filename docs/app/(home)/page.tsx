@@ -19,12 +19,12 @@ export default function HomePage() {
       <Accordions type="single" className="w-full max-w-3xl text-left mt-8">
         <Accordion title="How does it work?">Ink Web wraps Ink, polyfills the necessary Node.js APIs, and connects Ink to Xterm.js.</Accordion>
         <Accordion title="Is it compatible with existing Ink apps?">
-          In theory! The React part of existing Ink apps should work with Ink Web - but if you've used other Node.js APIs - you'll need to modify those parts to work in a browser environment.
+          The React part of existing Ink apps should work with Ink Web - but you'll need to modify any Node.js-specific code to work in a browser environment.
         </Accordion>
         <Accordion title="Why not webcontainers.io?">
-          To be honest, <a href="https://webcontainers.io/" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
-            web containers
-          </a> are often a better choice since they offer a fully containerized Node.js environment. Ink Web is more of a lightweight solution with slightly faster load time if you don't need Node.js APIs and want to build cross-platform React-based CLIs using TSX right into your existing page. If you want to avoid including the webcontainers wasm bundle and proxing data between a container and your app, Ink Web could be a better option.
+          <a href="https://webcontainers.io/" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
+            Web Containers
+          </a> are a better choice for many use cases since they offer a fully containerized Node.js environment. Ink Web is a lighter-weight solution if you don't need Node.js APIs and want to build cross-platform React-based CLIs using TSX right into your existing page.
         </Accordion>
         <Accordion title="What about filesystem access?">
           You can use a library like <a href="https://github.com/isomorphic-git/lightning-fs" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
@@ -33,16 +33,15 @@ export default function HomePage() {
             OPFS
           </a> in the browser and the fs module in Node.js.
         </Accordion>
-        <Accordion title="Is Ink Web production-ready?">No. This is a new and untested project that should be considered experimental.</Accordion>
+        <Accordion title="Is Ink Web production-ready?">No. This is a new and untested project that should be considered experimental. Use it at your own risk.</Accordion>
         <Accordion title="What is Ink Web's relation to Ink?">
-          Ink is a project by{' '}
-          <a href="https://vadimdemedes.com/" className="underline hover:text-foreground">
-            Vadim Demedes
-          </a>
-          . Ink Web is a separate project by{' '}
+         Ink Web is not affiliated with or endorsed by the maintainers of Ink. Ink Web is a separate project by{' '}
           <a href="https://cjroth.com" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
             Chris Roth
           </a>.
+        </Accordion>
+        <Accordion title="Why not rewrite Ink for web environments?">
+          When building Ink Web, I experimented with this. Ultimately, I concluded that Ink is a mature, battle-tested library used by Claude Code, Gemeni CLI, and many others and that it would be better to build on the existing Ink ecosystem. Ink has put a lot of work into dealing with tricky edge cases and creating a custom React renderer for Yoga.
         </Accordion>
       </Accordions>
     </div>
