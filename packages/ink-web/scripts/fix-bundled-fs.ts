@@ -10,6 +10,50 @@ const fs = {
 };
 `
 
+// Minimal process shim for destructured imports like { env }
+const processShim = `
+const process = {
+  cwd: () => '/',
+  env: typeof window !== 'undefined' ? (window).__ENV__ ?? {} : {},
+};
+`
+
+// EventEmitter shim for imports that reference it before the bundled shim is defined
+const eventEmitterShim = `
+class EventEmitter {
+  constructor() { this._listeners = new Map(); }
+  on(e, l) { let s = this._listeners.get(e); if (!s) { s = new Set(); this._listeners.set(e, s); } s.add(l); return this; }
+  off(e, l) { const s = this._listeners.get(e); if (s) s.delete(l); return this; }
+  emit(e, ...a) { const s = this._listeners.get(e); if (!s) return false; for (const l of s) l(...a); return true; }
+  addListener(e, l) { return this.on(e, l); }
+  removeListener(e, l) { return this.off(e, l); }
+  removeAllListeners(e) { if (e) this._listeners.delete(e); else this._listeners.clear(); return this; }
+  once(e, l) { const w = (...a) => { this.off(e, w); l(...a); }; return this.on(e, w); }
+}
+`
+
+// Stream shim - uses unique internal names to avoid conflicts with bundled shim
+// The bundled shim also defines Readable/Writable but later in the file
+const streamShim = `
+const __InkStream = class extends EventEmitter {};
+const __InkWritable = class extends __InkStream {
+  constructor() { super(); this.writable = true; }
+  write(c, e, cb) { this.emit('data', typeof c === 'string' ? c : String(c)); if (cb) cb(); return true; }
+  end() { this.emit('end'); }
+};
+const __InkReadable = class extends __InkStream {
+  constructor() { super(); this.readable = true; }
+  setEncoding() { return this; }
+  resume() { return this; }
+  pause() { return this; }
+  pipe(d) { return d; }
+};
+const __InkPassThrough = class extends __InkWritable {};
+var Stream = __InkStream;
+var PassThrough = __InkPassThrough;
+`
+
+
 function fixFile(filePath: string, fileName: string, fixReact: boolean = true) {
   let content = readFileSync(filePath, 'utf-8')
 
@@ -113,6 +157,77 @@ if (typeof globalThis !== 'undefined') {
 
   // Also handle node:fs
   content = content.replace(/import \* as fs from ['"]node:fs['"];/g, fsShim.trim())
+
+  // Fix node builtin imports (process, events, stream)
+  // The actual shim files (src/shims/*.ts) are already bundled by esbuild
+  // We just need to remove any remaining external imports that weren't resolved
+
+  // Remove any remaining external imports for process/events/stream
+  // These should have been resolved to shims but some may slip through
+  const removedImports: string[] = []
+
+  // Handle process imports - need to preserve named imports like { env }
+  // Replace: import { env } from "process" -> const { env } = process
+  let needsProcessShim = false
+  if (content.match(/import \{ ([^}]+) \} from ['"](?:node:)?process['"];/)) {
+    content = content.replace(/import \{ ([^}]+) \} from ['"](?:node:)?process['"];/g, (match, imports) => {
+      return `const { ${imports} } = process;`
+    })
+    needsProcessShim = true
+    removedImports.push('process (named)')
+  }
+
+  // Replace default process imports with assignments to our shim
+  // e.g., import process3 from "process" -> const process3 = process
+  if (content.match(/import (\w+) from ['"](?:node:)?process['"];/)) {
+    content = content.replace(/import (\w+) from ['"](?:node:)?process['"];/g, (match, varName) => {
+      return `const ${varName} = process;`
+    })
+    needsProcessShim = true
+    removedImports.push('process')
+  }
+
+  // Handle events imports - need EventEmitter to be defined
+  let needsEventEmitterShim = false
+  if (content.match(/import .* from ['"](?:node:)?events['"];/)) {
+    // Replace aliased imports: import { EventEmitter as EventEmitter2 } -> const EventEmitter2 = EventEmitter
+    content = content.replace(/import \{ EventEmitter as (\w+) \} from ['"](?:node:)?events['"];/g, (match, alias) => {
+      return `const ${alias} = EventEmitter;`
+    })
+    // Remove plain imports: import { EventEmitter } from "events"
+    content = content.replace(/import \{ EventEmitter \} from ['"](?:node:)?events['"];/g, '')
+    needsEventEmitterShim = true
+    removedImports.push('events')
+  }
+
+  // Handle stream imports - need to provide Stream/PassThrough early
+  // The bundled shim defines Readable/Writable later
+  let needsStreamShim = false
+  if (content.match(/import .* from ['"](?:node:)?stream['"];/)) {
+    content = content.replace(/import \{[^}]+\} from ['"](?:node:)?stream['"];/g, '')
+    needsStreamShim = true
+    needsEventEmitterShim = true // Stream depends on EventEmitter
+    removedImports.push('stream')
+  }
+
+  // Insert shims at the top in correct order: process, EventEmitter, Stream
+  const bannerEndMarker = 'const require = globalThis.__bundled_require__;'
+  let shimsToInsert = ''
+  if (needsProcessShim) shimsToInsert += processShim.trim() + '\n'
+  if (needsEventEmitterShim) shimsToInsert += eventEmitterShim.trim() + '\n'
+  if (needsStreamShim) shimsToInsert += streamShim.trim() + '\n'
+
+  if (shimsToInsert) {
+    if (content.includes(bannerEndMarker)) {
+      content = content.replace(bannerEndMarker, bannerEndMarker + '\n' + shimsToInsert.trim())
+    } else {
+      content = shimsToInsert.trim() + '\n' + content
+    }
+  }
+
+  if (removedImports.length > 0) {
+    console.log(`✅ Removed external imports for: ${removedImports.join(', ')}`)
+  }
 
   // For semi-bundled: Fix dynamic require calls for external modules
   if (!fixReact) {

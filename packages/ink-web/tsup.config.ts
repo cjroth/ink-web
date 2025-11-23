@@ -51,38 +51,23 @@ const nodeShimsPlugin = (rootDir: string): Plugin => ({
   setup(build) {
     const aliases = shimAliasesForBundled(rootDir)
 
-    // Intercept node: prefixed imports and bare node built-ins
-    const nodeBuiltins = ['fs', 'process', 'buffer', 'events', 'stream', 'os', 'tty', 'module']
-
-    nodeBuiltins.forEach((builtin) => {
-      // Match both 'fs' and 'node:fs'
-      build.onResolve({ filter: new RegExp(`^(node:)?${builtin}$`) }, (args) => {
-        const key = args.path.startsWith('node:') ? args.path : builtin
-        const replacement = aliases[key] || aliases[builtin]
-
-        if (replacement) {
-          console.log(`[node-shims] Resolving ${args.path} -> ${replacement}`)
-          return { path: replacement, external: false }
-        }
-        // Fallback to empty shim if no replacement found
-        console.warn(`[node-shims] No replacement found for ${args.path}, marking as external`)
-        return { path: args.path, external: true }
-      })
-    })
-
-    // Handle other aliases (non-node-builtins)
-    Object.entries(aliases).forEach(([find, replacement]) => {
-      if (nodeBuiltins.includes(find) || find.startsWith('node:')) {
-        return // Already handled above
+    // Match ALL imports and check if they're in our alias list
+    build.onResolve({ filter: /.*/ }, (args) => {
+      // Only handle bare imports (not relative or absolute paths)
+      if (args.path.startsWith('.') || args.path.startsWith('/')) {
+        return undefined
       }
-      const escapedFind = find.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-      build.onResolve({ filter: new RegExp(`^${escapedFind}$`) }, (args) => {
-        if (!replacement.startsWith('/') && !replacement.includes(rootDir)) {
-          return undefined
+
+      const replacement = aliases[args.path]
+      if (replacement) {
+        // If replacement is a path (starts with /), use it directly
+        if (replacement.startsWith('/')) {
+          return { path: replacement }
         }
-        console.log(`[node-shims] Resolving ${find} -> ${replacement}`)
+        // For npm package references like 'path-browserify'
         return { path: replacement, external: false }
-      })
+      }
+      return undefined
     })
   },
 })
@@ -127,24 +112,8 @@ export default defineConfig([
       'ansi-escapes',
       'wrap-ansi',
       'yoga-layout', // MUST bundle yoga-layout, not externalize it
-      // Include all node built-ins so they get shimmed
-      'fs',
-      'node:fs',
-      'process',
-      'node:process',
-      'events',
-      'node:events',
-      'stream',
-      'node:stream',
-      'buffer',
-      'node:buffer',
-      'module',
-      'node:module',
-      'os',
-      'node:os',
-      'tty',
-      'path',
-      'node:path',
+      'path-browserify',
+      // Note: Node built-ins (fs, process, events, stream, etc.) are handled via esbuild alias
     ],
     esbuildPlugins: [nodeShimsPlugin(resolve(__dirname))],
     esbuildOptions(options) {
