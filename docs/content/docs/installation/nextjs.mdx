@@ -28,6 +28,25 @@ import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 </Tabs>
 
 ```tsx
+// page.tsx
+"use client";
+
+import { InkWebDynamic } from "ink-web/next";
+import dynamic from "next/dynamic";
+
+const Terminal = dynamic(() => import("./terminal"), {
+  ssr: false,
+});
+
+export default function Home() {
+  return (
+    <Terminal />
+  );
+}
+```
+
+```tsx
+// terminal.tsx
 "use client";
 
 import { InkXterm, Box, Text } from "ink-web/bundled";
@@ -41,58 +60,40 @@ export const Terminal = () => (
     </Box>
   </InkXterm>
 );
-
 ```
 
 ## Client-Side Only Rendering
 
 Since ink-web relies on browser APIs (like `document`), you need to mark components using it with `'use client'` directive at the top of the file.
 
-Alternatively, you can use Next.js dynamic imports with SSR disabled:
-
-```tsx
-import dynamic from 'next/dynamic';
-
-const MyTerminal = dynamic(() => import('./components/MyTerminal'), {
-  ssr: false,
-});
-
-export default function Page() {
-  return (
-    <div>
-      <h1>My Terminal App</h1>
-      <MyTerminal />
-    </div>
-  );
-}
-```
-
-## Edge Runtime
-
-If you want to use Next.js Edge Runtime, you can configure it in your `next.config.js`:
-
-```javascript
-/** @type {import('next').NextConfig} */
-const config = {
-  reactStrictMode: true,
-  experimental: {
-    runtime: 'edge',
-  },
-};
-
-export default config;
-```
-
-Or for specific pages/routes:
-
-```typescript
-export const runtime = 'edge';
-
-export default function Page() {
-  return <MyTerminal />;
-}
-```
-
 ## Common Issues
 
 If you see hydration errors, make sure you're using the `'use client'` directive or dynamic imports with `ssr: false`.
+
+## Inline Rendering
+
+If you want to render Ink components inline, you can use the `InkWebDynamic` component:
+
+```tsx
+// page.tsx
+"use client";
+
+import { InkWebDynamic } from "ink-web/next";
+import dynamic from "next/dynamic";
+
+const Terminal = dynamic(() => import("./terminal"), {
+  ssr: false,
+});
+
+export default function Home() {
+  return (
+    <InkWebDynamic focus>
+      {({ Box, Text }) => (
+        <Box>
+          <Text>Rendered with InkWebDynamic.</Text>
+        </Box>
+      )}
+    </InkWebDynamic>
+  );
+}
+```
