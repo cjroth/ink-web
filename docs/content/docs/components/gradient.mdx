@@ -1,0 +1,182 @@
+---
+title: Gradient
+---
+
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import GradientDemo from '@/components/demos/gradient-demo-wrapper';
+
+Apply beautiful color gradients to terminal text with no dependencies.
+
+<div className="my-8">
+  <GradientDemo />
+</div>
+
+## Installation
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/gradient.json
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/gradient.json
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/gradient.json
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bunx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/gradient.json
+    ```
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx title="app/page.tsx"
+"use client";
+
+import dynamic from "next/dynamic";
+
+const Terminal = dynamic(() => import("./terminal"), {
+  ssr: false,
+});
+
+export default function Home() {
+  return <Terminal />;
+}
+```
+
+```tsx title="app/terminal.tsx"
+"use client";
+
+import { InkXterm, Box, Text } from "ink-web/bundled";
+import { Gradient } from '@/components/ui/gradient'
+import "ink-web/bundled/css";
+import "xterm/css/xterm.css";
+
+export default function Terminal() {
+  return (
+    <InkXterm focus>
+      <Box flexDirection="column">
+        <Gradient name="rainbow">
+          <Text bold>Hello World!</Text>
+        </Gradient>
+      </Box>
+    </InkXterm>
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `name` | `GradientName` | - | Name of a built-in gradient. Mutually exclusive with `colors`. |
+| `colors` | `string[]` | - | Array of hex color strings for a custom gradient. Mutually exclusive with `name`. |
+| `children` | `ReactNode` | - | Content to apply the gradient to |
+
+### Built-in Gradients
+
+The following gradient names are available:
+
+- `rainbow` - Classic rainbow colors
+- `pastel` - Soft pastel colors
+- `instagram` - Instagram's gradient
+- `retro` - Retro color scheme
+- `cristal` - Crystal blue-green
+- `teen` - Blue, teal, and pink
+- `mind` - Purple to teal
+- `morning` - Red to orange
+- `vice` - Teal to purple
+- `passion` - Red to deep purple
+- `fruit` - Red to yellow
+- `atlas` - Orange, pink, and cyan
+- `summer` - Yellow to cyan
+
+## Examples
+
+### Basic Gradient
+
+```tsx
+<Gradient name="rainbow">
+  <Text>Rainbow text</Text>
+</Gradient>
+```
+
+### Instagram Gradient
+
+```tsx
+<Gradient name="instagram">
+  <Text bold>Instagram Style</Text>
+</Gradient>
+```
+
+### Custom Colors
+
+Create your own gradient with any hex colors:
+
+```tsx
+<Gradient colors={['#ff0000', '#00ff00', '#0000ff']}>
+  <Text>Custom RGB gradient</Text>
+</Gradient>
+```
+
+### Multi-color Gradient
+
+Use as many colors as you want:
+
+```tsx
+<Gradient colors={['#667eea', '#764ba2', '#f093fb', '#4facfe']}>
+  <Text>Multi-stop gradient</Text>
+</Gradient>
+```
+
+### With Multiple Lines
+
+Gradients work great with multiline text:
+
+```tsx
+<Gradient name="passion">
+  <Box flexDirection="column">
+    <Text>Line 1</Text>
+    <Text>Line 2</Text>
+    <Text>Line 3</Text>
+  </Box>
+</Gradient>
+```
+
+### Gradient Box Title
+
+Use gradients for section headers:
+
+```tsx
+<Box flexDirection="column" borderStyle="round" padding={1}>
+  <Gradient name="cristal">
+    <Text bold>╔══════════════╗</Text>
+  </Gradient>
+  <Text>Content goes here</Text>
+</Box>
+```
+
+### Combining with Other Styles
+
+Gradients work alongside other text properties:
+
+```tsx
+<Gradient name="retro">
+  <Text bold italic>Stylized gradient text</Text>
+</Gradient>
+```
+
+## Notes
+
+- The gradient is applied horizontally across each line of text
+- ANSI escape codes are automatically stripped from input before applying the gradient
+- The component uses 24-bit RGB color codes for maximum color fidelity in modern terminals
+- No external dependencies required - all gradient calculations are done internally

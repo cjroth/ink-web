@@ -2,11 +2,12 @@
   "title": "Components",
   "defaultOpen": false,
   "pages": [
-    "text-input",
-    "select-input",
+    "gradient",
+    "mac-window",
     "multi-select",
-    "table",
+    "select-input",
     "spinner",
-    "mac-window"
+    "table",
+    "text-input"
   ]
 }

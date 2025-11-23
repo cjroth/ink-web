@@ -31,6 +31,19 @@
           "target": "components/ui/spinner.tsx"
         }
       ]
+    },
+    {
+      "name": "gradient",
+      "type": "registry:ui",
+      "title": "Gradient",
+      "description": "A gradient color component for terminal-style interfaces with built-in presets and custom colors",
+      "files": [
+        {
+          "path": "registry/ui/gradient.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/gradient.tsx"
+        }
+      ]
     }
   ]
 }
