@@ -145,3 +145,8 @@ if (typeof globalThis !== 'undefined') {
 // Fix bundled.js (without React fixes since React is external)
 const bundledPath = resolve(import.meta.dir, '../dist/bundled.js')
 fixFile(bundledPath, 'bundled.js', false)
+
+// Create CSS type declaration file
+const cssDeclarationPath = resolve(import.meta.dir, '../dist/bundled.css.d.ts')
+writeFileSync(cssDeclarationPath, 'export {};\n', 'utf-8')
+console.log('✅ Created bundled.css.d.ts')
