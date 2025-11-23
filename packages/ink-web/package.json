@@ -25,18 +25,12 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
-    "./semi-bundled": {
-      "types": "./dist/semi-bundled.d.ts",
-      "import": "./dist/semi-bundled.js"
-    },
-    "./semi-bundled/css": {
-      "import": "./dist/bundled.css"
-    },
     "./bundled": {
       "types": "./dist/bundled.d.ts",
       "import": "./dist/bundled.js"
     },
     "./bundled/css": {
+      "types": "./dist/bundled.css.d.ts",
       "import": "./dist/bundled.css"
     },
     "./vite": {
