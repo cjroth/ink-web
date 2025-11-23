@@ -1,0 +1,173 @@
+---
+title: Text Input
+---
+
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import TextInputDemo from '@/components/demos/text-input-demo-wrapper';
+
+A terminal text input component with keyboard handling, placeholder support, and customizable prompt.
+
+<div className="my-8 p-4 bg-black rounded-lg">
+  <TextInputDemo />
+</div>
+
+## Installation
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/text-input.json
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/text-input.json
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/text-input.json
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bunx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/text-input.json
+    ```
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx title="app/page.tsx"
+"use client";
+
+import dynamic from "next/dynamic";
+
+const Terminal = dynamic(() => import("./terminal"), {
+  ssr: false,
+});
+
+export default function Home() {
+  return <Terminal />;
+}
+```
+
+```tsx title="app/terminal.tsx"
+"use client";
+
+import { InkXterm, Box, Text } from "ink-web/bundled";
+import { TextInput } from '@/components/ui/text-input'
+import "ink-web/bundled/css";
+import "xterm/css/xterm.css";
+import { useState } from "react";
+
+export default function Terminal() {
+  const [history, setHistory] = useState<string[]>([]);
+
+  return (
+    <InkXterm focus>
+      <Box flexDirection="column">
+        {history.map((item, i) => (
+          <Text key={i}>{item}</Text>
+        ))}
+        <TextInput
+          onSubmit={(value) => setHistory((prev) => [...prev, value])}
+          placeholder="Type here..."
+        />
+      </Box>
+    </InkXterm>
+  )
+}
+```
+
+## useTextInput Hook
+
+The `useTextInput` hook manages input state and history for you:
+
+```tsx
+import { useTextInput } from '@/components/ui/text-input'
+
+const { value, setValue, history, clear, clearHistory } = useTextInput({
+  onSubmit: (value) => console.log('Submitted:', value)
+})
+```
+
+### Hook Return Values
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `value` | `string` | Current input value |
+| `setValue` | `(value: string) => void` | Set the input value |
+| `history` | `string[]` | Array of submitted values |
+| `clear` | `() => void` | Clear current input |
+| `clearHistory` | `() => void` | Clear history array |
+
+## TextInput Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `value` | `string` | - | Controlled input value |
+| `onChange` | `(value: string) => void` | - | Called when input value changes |
+| `onSubmit` | `(value: string) => void` | - | Called when Enter is pressed |
+| `placeholder` | `string` | `""` | Placeholder text when empty |
+| `prompt` | `string` | `"> "` | Prompt string before input |
+| `promptColor` | `string` | `"cyan"` | Color of the prompt |
+| `cursorColor` | `string` | - | Color of the cursor |
+| `focus` | `boolean` | `true` | Whether input is focused |
+
+## Examples
+
+### Basic Input
+
+```tsx
+<TextInput onSubmit={(value) => console.log(value)} />
+```
+
+### With Placeholder
+
+```tsx
+<TextInput
+  placeholder="Enter your name..."
+  onSubmit={(value) => console.log(value)}
+/>
+```
+
+### Custom Prompt
+
+```tsx
+<TextInput
+  prompt="$ "
+  promptColor="green"
+  onSubmit={(value) => console.log(value)}
+/>
+```
+
+### Controlled Input
+
+```tsx
+const [value, setValue] = useState('')
+
+<TextInput
+  value={value}
+  onChange={setValue}
+  onSubmit={(value) => {
+    console.log(value)
+    setValue('')
+  }}
+/>
+```
+
+### With History
+
+```tsx
+const [history, setHistory] = useState<string[]>([])
+
+<Box flexDirection="column">
+  {history.map((item, i) => (
+    <Text key={i}>{item}</Text>
+  ))}
+  <TextInput
+    onSubmit={(value) => setHistory((prev) => [...prev, value])}
+  />
+</Box>
+```

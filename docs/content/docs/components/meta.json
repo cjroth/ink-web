@@ -2,6 +2,7 @@
   "title": "Components",
   "defaultOpen": false,
   "pages": [
+    "text-input",
     "spinner",
     "mac-window"
   ]
