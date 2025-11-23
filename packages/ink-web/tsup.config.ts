@@ -91,7 +91,7 @@ export default defineConfig([
   // Standalone bundle - small, requires vite plugin (ink is external)
   {
     entry: {
-      standalone: 'src/index.ts',
+      index: 'src/index.ts',
     },
     format: ['esm', 'cjs'],
     dts: true,
