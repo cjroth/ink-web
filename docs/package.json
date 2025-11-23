@@ -10,6 +10,7 @@
     "postinstall": "fumadocs-mdx"
   },
   "dependencies": {
+    "@vercel/analytics": "^1.5.0",
     "@xterm/addon-fit": "^0.10.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
