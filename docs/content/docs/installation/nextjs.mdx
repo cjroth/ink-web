@@ -29,8 +29,7 @@ import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
   </Tab>
 </Tabs>
 
-```tsx
-// page.tsx
+```tsx title="app/page.tsx"
 "use client";
 
 import { InkWebDynamic } from "ink-web/next";
@@ -47,8 +46,7 @@ export default function Home() {
 }
 ```
 
-```tsx
-// terminal.tsx
+```tsx title="app/terminal.tsx"
 "use client";
 
 import { InkXterm, Box, Text } from "ink-web/bundled";
@@ -76,8 +74,7 @@ If you see hydration errors, make sure you're using the `'use client'` directive
 
 If you want to render Ink components inline, you can use the `InkWebDynamic` component:
 
-```tsx
-// page.tsx
+```tsx title="app/page.tsx"
 "use client";
 
 import { InkWebDynamic } from "ink-web/next";
