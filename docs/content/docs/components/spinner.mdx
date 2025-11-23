@@ -1,0 +1,110 @@
+---
+title: Spinner
+---
+
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import dynamic from 'next/dynamic';
+
+export const SpinnerDemo = dynamic(() => import('@/components/demos/spinner-demo'), {
+  ssr: false,
+});
+
+An animated loading spinner for terminal-style interfaces.
+
+<div className="my-8 p-4 bg-black rounded-lg">
+  <SpinnerDemo />
+</div>
+
+## Installation
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/spinner.json
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/spinner.json
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/spinner.json
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bunx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/spinner.json
+    ```
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx title="app/page.tsx"
+"use client";
+
+import dynamic from "next/dynamic";
+
+const Terminal = dynamic(() => import("./terminal"), {
+  ssr: false,
+});
+
+export default function Home() {
+  return <Terminal />;
+}
+```
+
+```tsx title="app/terminal.tsx"
+"use client";
+
+import { InkXterm, Box } from "ink-web/bundled";
+import { Spinner } from '@/components/ui/spinner'
+import "ink-web/bundled/css";
+import "xterm/css/xterm.css";
+
+export default function Terminal() {
+  return (
+    <InkXterm focus>
+      <Box flexDirection="column">
+        <Spinner text="Loading" />
+      </Box>
+    </InkXterm>
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `text` | `string` | `"Loading"` | Text to display next to the spinner |
+| `color` | `string` | `"gray"` | Color of the spinner and text |
+| `interval` | `number` | `100` | Animation speed in milliseconds |
+
+## Examples
+
+### Basic Spinner
+
+```tsx
+<Spinner />
+```
+
+### With Custom Text
+
+```tsx
+<Spinner text="Thinking" />
+```
+
+### With Custom Color
+
+```tsx
+<Spinner text="Processing" color="cyan" />
+```
+
+### Slower Animation
+
+```tsx
+<Spinner text="Loading" interval={200} />
+```
