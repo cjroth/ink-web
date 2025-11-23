@@ -12,26 +12,51 @@ interface InkXtermProps {
 
 export const InkXterm: React.FC<InkXtermProps> = ({ className = '', focus, termOptions, children, onReady }) => {
   const containerRef = useRef<HTMLDivElement | null>(null)
+  const unmountRef = useRef<(() => Promise<void>) | null>(null)
+  const initializedRef = useRef(false)
 
   useEffect(() => {
     if (!containerRef.current) return
 
-    // Ensure container is fully mounted before initializing xterm
-    // This prevents the "Cannot read properties of undefined (reading 'dimensions')" error
-    const initTimeout = setTimeout(() => {
-      if (!containerRef.current) return
+    const container = containerRef.current
 
-      const { unmount } = mountInkInXterm(children, { container: containerRef.current, focus, termOptions, onReady })
+    const initialize = () => {
+      if (initializedRef.current || !container) return
 
-      // Store unmount for cleanup
-      ;(containerRef.current as any)._unmount = unmount
-    }, 100)
+      // Check if container has dimensions
+      if (container.clientWidth === 0 || container.clientHeight === 0) return
+
+      initializedRef.current = true
+      const { unmount } = mountInkInXterm(children, { container, focus, termOptions, onReady })
+      unmountRef.current = unmount
+    }
+
+    // Use requestAnimationFrame to ensure we're past the paint cycle
+    // This ensures the container is fully in the DOM and has dimensions
+    const rafId = requestAnimationFrame(() => {
+      initialize()
+
+      // If still not initialized (no dimensions yet), observe for changes
+      if (!initializedRef.current) {
+        ro = new ResizeObserver(() => {
+          initialize()
+          if (initializedRef.current && ro) {
+            ro.disconnect()
+          }
+        })
+        ro.observe(container)
+      }
+    })
+
+    let ro: ResizeObserver | null = null
 
     return () => {
-      clearTimeout(initTimeout)
-      const unmount = (containerRef.current as any)?._unmount
-      if (unmount) {
-        void unmount()
+      cancelAnimationFrame(rafId)
+      ro?.disconnect()
+      initializedRef.current = false
+      if (unmountRef.current) {
+        void unmountRef.current()
+        unmountRef.current = null
       }
     }
   }, [children, focus, termOptions, onReady])

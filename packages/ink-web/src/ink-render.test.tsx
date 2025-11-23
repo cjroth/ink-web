@@ -216,6 +216,13 @@ describe('Ink rendering via bundled in browser-like environment', () => {
     container.style.height = '600px'
     document.body.appendChild(container)
 
+    // Mock clientWidth/clientHeight on HTMLElement prototype since happy-dom doesn't compute layout
+    // This is needed for InkXterm to initialize properly (it checks dimensions of its inner div)
+    const originalClientWidth = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'clientWidth')
+    const originalClientHeight = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'clientHeight')
+    Object.defineProperty(HTMLElement.prototype, 'clientWidth', { value: 800, configurable: true })
+    Object.defineProperty(HTMLElement.prototype, 'clientHeight', { value: 600, configurable: true })
+
     // Track what gets written to the terminal
     const writes: string[] = []
 
@@ -230,8 +237,16 @@ describe('Ink rendering via bundled in browser-like environment', () => {
         React.createElement(Text, {}, 'Terminal Box Test')
       )
 
-    const { unmount } = rtlRender(React.createElement(TestApp), {
-      container,
+    let unmountFn: () => void
+
+    await act(async () => {
+      const { unmount } = rtlRender(React.createElement(TestApp), {
+        container,
+      })
+      unmountFn = unmount
+
+      // Wait for requestAnimationFrame to fire and xterm to initialize
+      await new Promise((resolve) => setTimeout(resolve, 100))
     })
 
     // Wait for Ink to initialize and render
@@ -247,9 +262,19 @@ describe('Ink rendering via bundled in browser-like environment', () => {
     // Additional wait for Ink rendering
     await new Promise((resolve) => setTimeout(resolve, 500))
 
+    const unmount = unmountFn!
+
     // Cleanup
     unmount()
     document.body.removeChild(container)
+
+    // Restore original clientWidth/clientHeight
+    if (originalClientWidth) {
+      Object.defineProperty(HTMLElement.prototype, 'clientWidth', originalClientWidth)
+    }
+    if (originalClientHeight) {
+      Object.defineProperty(HTMLElement.prototype, 'clientHeight', originalClientHeight)
+    }
   })
 })
 
