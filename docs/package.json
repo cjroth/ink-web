@@ -14,6 +14,7 @@
     "@xterm/addon-fit": "^0.10.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "figlet": "^1.9.4",
     "fumadocs-core": "16.0.13",
     "fumadocs-mdx": "14.0.1",
     "fumadocs-ui": "16.0.13",
@@ -31,6 +32,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.16",
+    "@types/figlet": "^1.7.0",
     "@types/mdx": "^2.0.13",
     "@types/node": "^24.10.0",
     "@types/react": "^19.2.2",

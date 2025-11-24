@@ -1,0 +1,154 @@
+---
+title: Ascii
+---
+
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import AsciiDemo from '@/components/demos/ascii-demo-wrapper';
+
+Render text as ASCII art using figlet fonts in the terminal.
+
+Based on [ink-ascii](https://github.com/hexrcs/ink-ascii) by [Xiaoru Li](https://github.com/hexrcs).
+
+<div className="my-8">
+  <AsciiDemo />
+</div>
+
+## Installation
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/ascii.json
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/ascii.json
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/ascii.json
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bunx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/ascii.json
+    ```
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx title="app/page.tsx"
+"use client";
+
+import dynamic from "next/dynamic";
+
+const Terminal = dynamic(() => import("./terminal"), {
+  ssr: false,
+});
+
+export default function Home() {
+  return <Terminal />;
+}
+```
+
+```tsx title="app/terminal.tsx"
+"use client";
+
+import { InkXterm, Box } from "ink-web/bundled";
+import { Ascii } from '@/components/ui/ascii'
+import "ink-web/bundled/css";
+import "xterm/css/xterm.css";
+
+export default function Terminal() {
+  return (
+    <InkXterm focus>
+      <Box flexDirection="column">
+        <Ascii text="Hello" />
+      </Box>
+    </InkXterm>
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `text` | `string` | - | The text to render as ASCII art |
+| `font` | `string` | `'Standard'` | The figlet font to use |
+| `horizontalLayout` | `string` | `'default'` | Horizontal layout mode |
+| `verticalLayout` | `string` | `'default'` | Vertical layout mode |
+| `color` | `string` | - | Color of the ASCII art text |
+
+## Examples
+
+### Basic ASCII Art
+
+```tsx
+<Ascii text="Hello" />
+```
+
+### With Color
+
+```tsx
+<Ascii text="World" color="cyan" />
+```
+
+### Different Fonts
+
+```tsx
+<Box flexDirection="column" gap={1}>
+  <Ascii text="Big" font="Big" />
+  <Ascii text="Mini" font="Mini" />
+  <Ascii text="Slant" font="Slant" />
+</Box>
+```
+
+### Colored Banner
+
+```tsx
+<Box flexDirection="column">
+  <Ascii text="Welcome" font="Standard" color="green" />
+</Box>
+```
+
+### App Header
+
+```tsx
+<Box flexDirection="column">
+  <Ascii text="CLI App" font="Big" color="cyan" />
+  <Text dimColor>Version 1.0.0</Text>
+</Box>
+```
+
+## Available Fonts
+
+Figlet includes many built-in fonts. Some popular ones:
+
+- `Standard` (default)
+- `Big`
+- `Mini`
+- `Slant`
+- `Banner`
+- `Block`
+- `Bubble`
+- `Digital`
+- `Ivrit`
+- `Lean`
+- `Script`
+- `Shadow`
+- `Small`
+- `Speed`
+- `Star Wars`
+
+See the [figlet font gallery](http://www.figlet.org/examples.html) for more options.
+
+## Notes
+
+- Uses the figlet library which works in both Node.js and browsers
+- Font rendering is synchronous, so very long text may cause brief delays
+- Some fonts may not render all characters
+- Works seamlessly with Ink's layout system (`Box`, `Text`, etc.)

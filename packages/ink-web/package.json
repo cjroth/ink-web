@@ -63,18 +63,20 @@
   },
   "dependencies": {
     "@xterm/addon-fit": "^0.10.0",
+    "figlet": "^1.9.4",
     "terminal-link": "^5.0.0"
   },
   "devDependencies": {
     "@happy-dom/global-registrator": "^20.0.10",
     "@testing-library/react": "^16.3.0",
     "@types/bun": "^1.2.20",
+    "@types/figlet": "^1.7.0",
     "@types/node": "^24.10.1",
     "@types/react": "^19.0.0",
-    "next": "^15.0.0",
     "@vitejs/plugin-react": "^5.1.1",
     "chalk": "^5.4.1",
     "ink": "^6.0.0",
+    "next": "^15.0.0",
     "path-browserify": "^1.0.1",
     "react": "^19.0.0",
     "react-dom": "^19.2.0",

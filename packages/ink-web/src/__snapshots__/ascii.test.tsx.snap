@@ -1,0 +1,11 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`Ascii Component Snapshots basic ascii snapshot 1`] = `
+"  _   _ _
+ | | | (_)
+ | |_| | |
+ |  _  | |
+ |_| |_|_|
+
+\x1B[?25l"
+`;

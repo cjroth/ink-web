@@ -1,0 +1,17 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "ascii",
+  "type": "registry:ui",
+  "title": "Ascii",
+  "description": "Render text as ASCII art using figlet fonts",
+  "dependencies": ["figlet"],
+  "devDependencies": ["@types/figlet"],
+  "files": [
+    {
+      "path": "ui/ascii.tsx",
+      "type": "registry:ui",
+      "target": "components/ui/ascii.tsx",
+      "content": "import { Text, Box } from 'ink'\nimport figlet from 'figlet'\n\nexport interface AsciiProps {\n  /**\n   * The text to render as ASCII art\n   */\n  text: string\n  /**\n   * The figlet font to use\n   * @default 'Standard'\n   */\n  font?: string\n  /**\n   * Horizontal layout mode\n   * @default 'default'\n   */\n  horizontalLayout?: 'default' | 'full' | 'fitted' | 'controlled smushing' | 'universal smushing'\n  /**\n   * Vertical layout mode\n   * @default 'default'\n   */\n  verticalLayout?: 'default' | 'full' | 'fitted' | 'controlled smushing' | 'universal smushing'\n  /**\n   * Color of the ASCII art text\n   */\n  color?: string\n}\n\n/**\n * Ascii component for Ink\n *\n * Renders text as ASCII art using figlet fonts.\n *\n * Based on ink-ascii by Xiaoru Li (https://github.com/hexrcs/ink-ascii)\n *\n * @example\n * ```tsx\n * // Basic usage\n * <Ascii text=\"Hello\" />\n *\n * // With custom font\n * <Ascii text=\"World\" font=\"Big\" />\n *\n * // With color\n * <Ascii text=\"Cool\" font=\"Standard\" color=\"cyan\" />\n * ```\n */\nexport const Ascii = ({\n  text,\n  font = 'Standard',\n  horizontalLayout = 'default',\n  verticalLayout = 'default',\n  color,\n}: AsciiProps) => {\n  const asciiArt = figlet.textSync(text, {\n    font: font as any,\n    horizontalLayout,\n    verticalLayout,\n  })\n\n  return (\n    <Box>\n      <Text color={color}>{asciiArt}</Text>\n    </Box>\n  )\n}\n\nexport default Ascii\n"
+    }
+  ]
+}
