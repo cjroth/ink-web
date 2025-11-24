@@ -2,15 +2,11 @@
 
 import dynamic from 'next/dynamic';
 import { MacWindow } from "@/components/ui/mac-window";
-import { getTerminalHeight } from 'ink-web/utils';
-
-// Must match the rows prop in table-demo.tsx
-const ROWS = 12;
-const HEIGHT = getTerminalHeight(ROWS);
+import { InkTerminalLoadingPlaceholder } from 'ink-web/utils';
 
 const TableDemo = dynamic(() => import('./table-demo'), {
   ssr: false,
-  loading: () => <div style={{ height: HEIGHT, background: '#1a1a1a' }} />,
+  loading: () => <InkTerminalLoadingPlaceholder loading="spinner" />,
 });
 
 export default function TableDemoWrapper() {

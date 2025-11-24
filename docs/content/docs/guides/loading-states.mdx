@@ -1,0 +1,235 @@
+---
+title: Loading States
+description: Customize loading indicators for your terminal
+---
+
+Ink Web provides built-in loading states that display while your terminal initializes. Choose from three presets or provide your own custom component.
+
+## Quick Start
+
+The simplest way to handle loading states with Next.js:
+
+```tsx title="components/terminal.tsx"
+'use client'
+
+import { createDynamicTerminal } from 'ink-web/next'
+
+const Terminal = createDynamicTerminal(
+  () => import('./my-terminal').then(m => m.MyTerminal),
+  { rows: 15 }
+)
+
+export function TerminalWrapper() {
+  return <Terminal />
+}
+```
+
+This automatically:
+- Prevents SSR errors
+- Shows a loading spinner
+- Maintains consistent height
+- Handles smooth transitions
+
+## Loading Types
+
+### None (Default)
+
+No loading indicator - just shows the terminal background until ready. This is the default behavior.
+
+```tsx
+createDynamicTerminal(importFn, { 
+  rows: 15, 
+  loading: 'none' 
+})
+```
+
+### Spinner
+
+A centered spinning loader icon.
+
+import LoadingSpinnerDemoWrapper from '@/components/demos/loading-spinner-demo-wrapper'
+
+<LoadingSpinnerDemoWrapper />
+
+```tsx
+createDynamicTerminal(importFn, { 
+  rows: 15, 
+  loading: 'spinner' 
+})
+```
+
+### Skeleton
+
+Multiple animated placeholder lines, similar to content loading states.
+
+import LoadingSkeletonDemoWrapper from '@/components/demos/loading-skeleton-demo-wrapper'
+
+<LoadingSkeletonDemoWrapper />
+
+```tsx
+createDynamicTerminal(importFn, { 
+  rows: 15, 
+  loading: 'skeleton' 
+})
+```
+
+### Progress
+
+An animated progress bar that fills from 0 to 100%.
+
+import LoadingProgressDemoWrapper from '@/components/demos/loading-progress-demo-wrapper'
+
+<LoadingProgressDemoWrapper />
+
+```tsx
+createDynamicTerminal(importFn, { 
+  rows: 15, 
+  loading: 'progress' 
+})
+```
+
+## Positioning
+
+By default, loading indicators are centered. You can position them in any corner:
+
+```tsx
+createDynamicTerminal(importFn, { 
+  rows: 15, 
+  loading: { type: 'skeleton', position: 'top-left' } 
+})
+```
+
+Available positions:
+- `'center'` (default)
+- `'top-left'`
+- `'top-right'`
+- `'bottom-left'`
+- `'bottom-right'`
+
+## Custom Loading Components
+
+Pass any React element for full customization:
+
+```tsx
+import { Loader2 } from 'lucide-react'
+
+createDynamicTerminal(importFn, { 
+  rows: 15, 
+  loading: <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+})
+```
+
+Or a more complex component:
+
+```tsx
+function CustomLoader() {
+  return (
+    <div className="flex flex-col items-center gap-2">
+      <div className="h-8 w-8 animate-spin rounded-full border-2 border-white border-t-transparent" />
+      <span className="text-sm text-gray-400">Initializing terminal...</span>
+    </div>
+  )
+}
+
+createDynamicTerminal(importFn, { 
+  rows: 15, 
+  loading: <CustomLoader />
+})
+```
+
+## Complete Example
+
+```tsx title="components/my-terminal.tsx"
+'use client'
+
+import { InkTerminalBox } from 'ink-web/bundled'
+import { Box, Text } from 'ink-web/bundled'
+import 'ink-web/bundled/css'
+import 'xterm/css/xterm.css'
+
+export function MyTerminal({ onReady }: { onReady?: () => void }) {
+  return (
+    <InkTerminalBox rows={15} focus onReady={onReady}>
+      <Box flexDirection="column">
+        <Text color="green">Hello from Ink!</Text>
+      </Box>
+    </InkTerminalBox>
+  )
+}
+```
+
+```tsx title="components/terminal-wrapper.tsx"
+'use client'
+
+import { createDynamicTerminal } from 'ink-web/next'
+
+const Terminal = createDynamicTerminal(
+  () => import('./my-terminal').then(m => m.MyTerminal),
+  { 
+    rows: 15,
+    loading: { type: 'skeleton', position: 'top-left' }
+  }
+)
+
+export function TerminalWrapper() {
+  return <Terminal />
+}
+```
+
+```tsx title="app/page.tsx"
+import { TerminalWrapper } from '@/components/terminal-wrapper'
+
+export default function Page() {
+  return (
+    <div className="p-8">
+      <h1>My App</h1>
+      <TerminalWrapper />
+    </div>
+  )
+}
+```
+
+## How It Works
+
+The `createDynamicTerminal` helper:
+
+1. Uses Next.js `dynamic()` with `ssr: false`
+2. Renders an `InkTerminalLoadingPlaceholder` with your chosen loading state
+3. Keeps the skeleton visible until the terminal calls `onReady`
+4. Ensures no animation reset during React hydration
+
+This provides a seamless loading experience without layout shifts or flickering.
+
+## Using Without the Helper
+
+If you need more control, you can use the loading placeholder component directly:
+
+```tsx
+'use client'
+
+import dynamic from 'next/dynamic'
+import { InkTerminalLoadingPlaceholder } from 'ink-web/utils'
+import { useState } from 'react'
+
+const MyTerminal = dynamic(
+  () => import('./my-terminal').then(m => m.MyTerminal),
+  { ssr: false }
+)
+
+export function TerminalWrapper() {
+  const [ready, setReady] = useState(false)
+  
+  return (
+    <div style={{ position: 'relative' }}>
+      {!ready && <InkTerminalLoadingPlaceholder rows={15} loading="skeleton" />}
+      <div style={{ 
+        visibility: ready ? 'visible' : 'hidden',
+        position: ready ? 'relative' : 'absolute',
+        top: 0, left: 0, right: 0 
+      }}>
+        <MyTerminal onReady={() => setReady(true)} />
+      </div>
+    </div>
+  )
+}
+```

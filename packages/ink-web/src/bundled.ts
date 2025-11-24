@@ -8,6 +8,8 @@ import './InkTerminalBox.css'
 // Re-export everything from the main package
 export { DemoApp } from './DemoApp'
 export { InkTerminalBox, getTerminalHeight } from './InkTerminalBox'
+export { InkTerminalLoadingPlaceholder } from './InkTerminalLoadingPlaceholder'
+export type { LoadingOption, LoadingPosition, LoadingType, LoadingConfig, InkTerminalLoadingPlaceholderProps } from './InkTerminalLoadingPlaceholder'
 export { InkXterm } from './InkXterm'
 export { mountInkInXterm } from './xterm-ink'
 export type { InkWebOptions } from './xterm-ink'
@@ -27,4 +29,3 @@ export const waitForYogaInit = (): Promise<void> => {
   }
   return Promise.resolve()
 }
-

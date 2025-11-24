@@ -2,15 +2,11 @@
 
 import dynamic from 'next/dynamic';
 import { MacWindow } from "@/components/ui/mac-window";
-import { getTerminalHeight } from 'ink-web/utils';
-
-// Must match the rows prop in gradient-demo.tsx
-const ROWS = 20;
-const HEIGHT = getTerminalHeight(ROWS);
+import { InkTerminalLoadingPlaceholder } from 'ink-web/utils';
 
 const GradientDemo = dynamic(() => import('./gradient-demo'), {
   ssr: false,
-  loading: () => <div style={{ height: HEIGHT, background: '#1a1a1a' }} />,
+  loading: () => <InkTerminalLoadingPlaceholder loading="spinner" />,
 });
 
 export default function GradientDemoWrapper() {

@@ -4,7 +4,7 @@
   border: none;
   overflow: hidden;
   position: relative;
-  background: #1a1a1a;
+  background: #000000;
 }
 
 /* Remove focus ring */
@@ -68,4 +68,38 @@
 /* Hide default cursor - use input cursor instead */
 .ink-terminal-box .xterm .xterm-cursor {
   display: none;
+}
+
+/* Loading animations for skeleton state */
+@keyframes ink-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes ink-pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes ink-progress {
+  0% {
+    width: 0%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes ink-progress-loop {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
 }

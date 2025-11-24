@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Box, Text, InkTerminalBox } from "ink-web/bundled";
 import "ink-web/bundled/css";
 import "xterm/css/xterm.css";
-import { Loader2 } from "lucide-react";
 import { SelectInput } from "@/components/ui/select-input";
 
 const items = [
@@ -19,10 +18,7 @@ export default function SelectInputDemo() {
   const [selected, setSelected] = useState<string | null>(null);
 
   return (
-    <InkTerminalBox
-      rows={12}
-      loading={<Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />}
-    >
+    <InkTerminalBox>
       <Box flexDirection="column">
         <Text>Select your favorite language:</Text>
         <Text> </Text>

@@ -37,6 +37,7 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
     disableStdin: false,
     cols: initialCols,
     rows: initialRows,
+
     ...opts.termOptions,
   })
   const fitAddon = new FitAddon()

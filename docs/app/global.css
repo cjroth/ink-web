@@ -112,3 +112,14 @@
     @apply bg-background text-foreground overflow-x-hidden;
   }
 }
+
+/* Synced spin animation - uses document timeline so animation doesn't reset on hydration */
+@keyframes spin-synced {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-synced {
+  animation: spin-synced 1s linear infinite;
+}

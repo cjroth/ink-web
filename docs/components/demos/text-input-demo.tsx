@@ -4,7 +4,6 @@ import "ink-web/bundled/css";
 import "xterm/css/xterm.css";
 import { Box, Text, InkTerminalBox } from "ink-web/bundled";
 import { useTextInput } from "@/components/ui/text-input";
-import { Loader2 } from "lucide-react";
 
 function TextInputApp() {
   const { value, history } = useTextInput();
@@ -34,11 +33,7 @@ function TextInputApp() {
 
 export default function TextInputDemo() {
   return (
-    <InkTerminalBox
-      rows={10}
-      focus
-      loading={<Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />}
-    >
+    <InkTerminalBox focus>
       <TextInputApp />
     </InkTerminalBox>
   );
