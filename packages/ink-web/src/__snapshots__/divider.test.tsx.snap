@@ -1,11 +1,11 @@
 // Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
 exports[`Divider Component Snapshots simple divider snapshot 1`] = `
-"────────────────────────────────────────────────────────────────────────────────
+"\x1B[90m────────────────────────────────────────────────────────────────────────────────\x1B[39m
 \x1B[?25l"
 `;
 
 exports[`Divider Component Snapshots divider with title snapshot 1`] = `
-"───────────────────────────────── Test Section ─────────────────────────────────
+"\x1B[90m─────────────────────────────────\x1B[39m \x1B[37mTest Section\x1B[39m \x1B[90m─────────────────────────────────\x1B[39m
 \x1B[?25l"
 `;
