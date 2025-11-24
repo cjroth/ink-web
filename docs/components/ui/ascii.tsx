@@ -39,11 +39,7 @@ export const Ascii = ({
     })
   }, [text, font, horizontalLayout, verticalLayout])
 
-  return (
-    <Box>
-      <Text color={color}>{asciiArt}</Text>
-    </Box>
-  )
+  return <Text color={color}>{asciiArt}</Text>
 }
 
 export default Ascii

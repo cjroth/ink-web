@@ -1,4 +1,4 @@
-import { Text, Box } from 'ink'
+import { Text } from 'ink'
 import figlet from 'figlet'
 
 export interface AsciiProps {
@@ -59,11 +59,7 @@ export const Ascii = ({
     verticalLayout,
   })
 
-  return (
-    <Box>
-      <Text color={color}>{asciiArt}</Text>
-    </Box>
-  )
+  return <Text color={color}>{asciiArt}</Text>
 }
 
 export default Ascii
