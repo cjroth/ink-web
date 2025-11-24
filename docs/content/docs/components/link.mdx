@@ -1,0 +1,131 @@
+---
+title: Link
+---
+
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import LinkDemo from '@/components/demos/link-demo-wrapper';
+
+Create clickable hyperlinks in the terminal using OSC 8 escape sequences, supported by many modern terminal emulators.
+
+Based on [ink-link](https://github.com/sindresorhus/ink-link) by [Sindre Sorhus](https://github.com/sindresorhus).
+
+<div className="my-8">
+  <LinkDemo />
+</div>
+
+## Installation
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/link.json
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/link.json
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/link.json
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bunx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/link.json
+    ```
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx title="app/page.tsx"
+"use client";
+
+import dynamic from "next/dynamic";
+
+const Terminal = dynamic(() => import("./terminal"), {
+  ssr: false,
+});
+
+export default function Home() {
+  return <Terminal />;
+}
+```
+
+```tsx title="app/terminal.tsx"
+"use client";
+
+import { InkXterm, Box, Text } from "ink-web/bundled";
+import { Link } from '@/components/ui/link'
+import "ink-web/bundled/css";
+import "xterm/css/xterm.css";
+
+export default function Terminal() {
+  return (
+    <InkXterm focus>
+      <Box flexDirection="column">
+        <Link url="https://github.com">GitHub</Link>
+      </Box>
+    </InkXterm>
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | - | The content to display as the link text |
+| `url` | `string` | - | The URL to link to |
+
+## Examples
+
+### Basic Link
+
+```tsx
+<Link url="https://github.com">GitHub</Link>
+```
+
+### Inline Link
+
+Combine with text for inline links:
+
+```tsx
+<Box>
+  <Text>Check out </Text>
+  <Link url="https://github.com">GitHub</Link>
+  <Text> for more info.</Text>
+</Box>
+```
+
+### Multiple Links
+
+```tsx
+<Box flexDirection="column" gap={1}>
+  <Link url="https://github.com">GitHub</Link>
+  <Link url="https://twitter.com">Twitter</Link>
+  <Link url="https://linkedin.com">LinkedIn</Link>
+</Box>
+```
+
+### Navigation Menu
+
+```tsx
+<Box flexDirection="column">
+  <Text bold>Quick Links:</Text>
+  <Box flexDirection="column" paddingLeft={2}>
+    <Link url="https://docs.example.com">Documentation</Link>
+    <Link url="https://api.example.com">API Reference</Link>
+    <Link url="https://support.example.com">Support</Link>
+  </Box>
+</Box>
+```
+
+## Notes
+
+- Links use OSC 8 escape sequences which are supported by modern terminal emulators like iTerm2, Windows Terminal, GNOME Terminal, and others
+- In unsupported terminals, the text displays without link functionality
+- The demo above shows the visual appearance - actual clickable links require a supporting terminal
+- Works seamlessly with Ink's layout system (`Box`, `Text`, etc.)

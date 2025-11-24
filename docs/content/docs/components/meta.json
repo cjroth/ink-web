@@ -3,6 +3,7 @@
   "defaultOpen": false,
   "pages": [
     "gradient",
+    "link",
     "mac-window",
     "multi-select",
     "progress-bar",

@@ -1,0 +1,11 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`Link Component Snapshots basic link output snapshot 1`] = `
+"\x1B]8;;https://github.com\x07GitHub\x1B]8;;\x07
+\x1B[?25l"
+`;
+
+exports[`Link Component Snapshots link with different text snapshot 1`] = `
+"\x1B]8;;https://example.com\x07Example\x1B]8;;\x07
+\x1B[?25l"
+`;

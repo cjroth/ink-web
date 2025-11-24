@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "link",
+  "type": "registry:ui",
+  "title": "Link",
+  "description": "Create clickable hyperlinks in the terminal",
+  "files": [
+    {
+      "path": "ui/link.tsx",
+      "type": "registry:ui",
+      "target": "components/ui/link.tsx",
+      "content": "import type { ReactNode } from 'react'\nimport { Transform, Text } from 'ink'\n\nexport interface LinkProps {\n  /**\n   * The content to display as the link text\n   */\n  children: ReactNode\n  /**\n   * The URL to link to\n   */\n  url: string\n}\n\n/**\n * Link component for Ink\n *\n * Creates clickable links in the terminal. Uses OSC 8 escape sequences\n * which are supported by many modern terminal emulators.\n *\n * Based on ink-link by Sindre Sorhus (https://github.com/sindresorhus/ink-link)\n *\n * @example\n * ```tsx\n * // Basic usage\n * <Link url=\"https://github.com\">GitHub</Link>\n *\n * // Inline with text\n * <Box>\n *   <Text>Check out </Text>\n *   <Link url=\"https://github.com\">GitHub</Link>\n * </Box>\n * ```\n */\nexport const Link = ({ children, url }: LinkProps) => (\n  <Transform transform={text => `\\x1b]8;;${url}\\x07${text}\\x1b]8;;\\x07`}>\n    <Text>{children}</Text>\n  </Transform>\n)\n\nexport default Link\n"
+    }
+  ]
+}

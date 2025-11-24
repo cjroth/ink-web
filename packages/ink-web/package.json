@@ -62,7 +62,8 @@
     "xterm": ">=5.0.0"
   },
   "dependencies": {
-    "@xterm/addon-fit": "^0.10.0"
+    "@xterm/addon-fit": "^0.10.0",
+    "terminal-link": "^5.0.0"
   },
   "devDependencies": {
     "@happy-dom/global-registrator": "^20.0.10",
