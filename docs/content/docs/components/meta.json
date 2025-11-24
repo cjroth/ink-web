@@ -2,6 +2,7 @@
   "title": "Components",
   "defaultOpen": false,
   "pages": [
+    "divider",
     "gradient",
     "link",
     "mac-window",

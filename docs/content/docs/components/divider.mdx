@@ -1,0 +1,164 @@
+---
+title: Divider
+---
+
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import DividerDemo from '@/components/demos/divider-demo-wrapper';
+
+A horizontal divider with optional centered title text for organizing terminal content.
+
+Based on [ink-divider](https://github.com/JureSotosek/ink-divider) by [Jure Sotošek](https://github.com/JureSotosek).
+
+<div className="my-8">
+  <DividerDemo />
+</div>
+
+## Installation
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/divider.json
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/divider.json
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/divider.json
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bunx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/divider.json
+    ```
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx title="app/page.tsx"
+"use client";
+
+import dynamic from "next/dynamic";
+
+const Terminal = dynamic(() => import("./terminal"), {
+  ssr: false,
+});
+
+export default function Home() {
+  return <Terminal />;
+}
+```
+
+```tsx title="app/terminal.tsx"
+"use client";
+
+import { InkXterm, Box } from "ink-web/bundled";
+import { Divider } from '@/components/ui/divider'
+import "ink-web/bundled/css";
+import "xterm/css/xterm.css";
+
+export default function Terminal() {
+  return (
+    <InkXterm focus>
+      <Box flexDirection="column">
+        <Divider title="Section" />
+      </Box>
+    </InkXterm>
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `title` | `string` | - | Title shown in the middle of the divider |
+| `width` | `'auto' \| number` | `'auto'` | Width of the divider |
+| `padding` | `number` | `0` | Padding at the start and end of the divider |
+| `titlePadding` | `number` | `1` | Padding beside the title |
+| `titleColor` | `string` | `'white'` | Color of the title |
+| `dividerChar` | `string` | `'─'` | Character used as the divider |
+| `dividerColor` | `string` | `'gray'` | Color of the divider |
+
+## Examples
+
+### Simple Divider
+
+```tsx
+<Divider />
+```
+
+### With Title
+
+```tsx
+<Divider title="Options" />
+```
+
+### Colored Title
+
+```tsx
+<Divider title="Settings" titleColor="cyan" />
+```
+
+### Custom Divider Character
+
+```tsx
+<Box flexDirection="column" gap={1}>
+  <Divider title="Equals" dividerChar="=" />
+  <Divider title="Dashes" dividerChar="-" />
+  <Divider title="Stars" dividerChar="*" />
+</Box>
+```
+
+### Colored Divider
+
+```tsx
+<Box flexDirection="column" gap={1}>
+  <Divider title="Error" titleColor="red" dividerColor="red" />
+  <Divider title="Warning" titleColor="yellow" dividerColor="yellow" />
+  <Divider title="Success" titleColor="green" dividerColor="green" />
+</Box>
+```
+
+### With Padding
+
+```tsx
+<Divider title="Padded" padding={2} />
+```
+
+### Section Layout
+
+```tsx
+<Box flexDirection="column">
+  <Divider title="User Info" titleColor="cyan" />
+  <Box paddingLeft={2} flexDirection="column">
+    <Text>Name: John Doe</Text>
+    <Text>Email: john@example.com</Text>
+  </Box>
+
+  <Divider title="Actions" titleColor="green" />
+  <Box paddingLeft={2} flexDirection="column">
+    <Text>• Edit profile</Text>
+    <Text>• Change password</Text>
+    <Text>• Logout</Text>
+  </Box>
+</Box>
+```
+
+### Fixed Width
+
+```tsx
+<Divider title="Fixed" width={40} />
+```
+
+## Notes
+
+- The divider automatically expands to fill available width when `width` is `'auto'`
+- Use `padding` to add space at the edges of the divider
+- Use `titlePadding` to control spacing between the title and divider lines
+- Works seamlessly with Ink's layout system (`Box`, `Text`, etc.)
