@@ -14,10 +14,6 @@ export default function LinkDemo({ onReady }: { onReady?: () => void }) {
           <Link url="https://github.com">GitHub</Link>
           <Text> for more info.</Text>
         </Box>
-        <Box>
-          <Text>Read the </Text>
-          <Link url="https://github.com/vadimdemedes/ink">Ink documentation</Link>
-        </Box>
       </Box>
     </InkTerminalBox>
   );

@@ -42,19 +42,7 @@
         }
       ]
     },
-    {
-      "name": "progress-bar",
-      "type": "registry:ui",
-      "title": "Progress Bar",
-      "description": "A flexible progress bar component with customizable appearance and spacing",
-      "files": [
-        {
-          "path": "registry/ui/progress-bar.tsx",
-          "type": "registry:ui",
-          "target": "components/ui/progress-bar.tsx"
-        }
-      ]
-    },
+
     {
       "name": "multi-select",
       "type": "registry:ui",
@@ -120,19 +108,7 @@
         }
       ]
     },
-    {
-      "name": "divider",
-      "type": "registry:ui",
-      "title": "Divider",
-      "description": "A horizontal divider with optional centered title text",
-      "files": [
-        {
-          "path": "registry/ui/divider.tsx",
-          "type": "registry:ui",
-          "target": "components/ui/divider.tsx"
-        }
-      ]
-    },
+
     {
       "name": "text-input",
       "type": "registry:ui",

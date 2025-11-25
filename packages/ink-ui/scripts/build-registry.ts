@@ -29,11 +29,7 @@ const COMPONENT_CONFIGS: Record<string, ComponentConfig> = {
     dependencies: ['figlet'],
     devDependencies: ['@types/figlet'],
   },
-  divider: {
-    name: 'divider',
-    title: 'Divider',
-    description: 'A horizontal divider with optional centered title text',
-  },
+
   gradient: {
     name: 'gradient',
     title: 'Gradient',
@@ -54,11 +50,7 @@ const COMPONENT_CONFIGS: Record<string, ComponentConfig> = {
     title: 'Multi Select',
     description: 'A multi-select input component with keyboard navigation',
   },
-  'progress-bar': {
-    name: 'progress-bar',
-    title: 'Progress Bar',
-    description: 'A flexible progress bar component with customizable appearance and spacing',
-  },
+
   'select-input': {
     name: 'select-input',
     title: 'Select Input',
