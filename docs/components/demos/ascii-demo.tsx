@@ -5,9 +5,9 @@ import "ink-web/bundled/css";
 import "xterm/css/xterm.css";
 import { Ascii } from "@/components/ui/ascii";
 
-export default function AsciiDemo() {
+export default function AsciiDemo({ onReady }: { onReady?: () => void }) {
   return (
-    <InkTerminalBox>
+    <InkTerminalBox loading={false} onReady={onReady}>
       <Box flexDirection="column">
         <Ascii text="Hello" color="cyan" />
       </Box>

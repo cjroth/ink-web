@@ -14,11 +14,11 @@ const items = [
   { label: "Go", value: "go" },
 ];
 
-export default function MultiSelectDemo() {
+export default function MultiSelectDemo({ onReady }: { onReady?: () => void }) {
   const [submitted, setSubmitted] = useState<MultiSelectItem<string>[] | null>(null);
 
   return (
-    <InkTerminalBox>
+    <InkTerminalBox loading={false} onReady={onReady}>
       <Box flexDirection="column">
         <Text>Select your favorite languages:</Text>
         <Text dimColor>(Space to toggle, Enter to submit)</Text>

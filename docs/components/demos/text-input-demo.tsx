@@ -31,9 +31,9 @@ function TextInputApp() {
   );
 }
 
-export default function TextInputDemo() {
+export default function TextInputDemo({ onReady }: { onReady?: () => void }) {
   return (
-    <InkTerminalBox focus>
+    <InkTerminalBox focus loading={false} onReady={onReady}>
       <TextInputApp />
     </InkTerminalBox>
   );

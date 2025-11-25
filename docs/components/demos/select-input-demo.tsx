@@ -14,11 +14,11 @@ const items = [
   { label: "Go", value: "go" },
 ];
 
-export default function SelectInputDemo() {
+export default function SelectInputDemo({ onReady }: { onReady?: () => void }) {
   const [selected, setSelected] = useState<string | null>(null);
 
   return (
-    <InkTerminalBox>
+    <InkTerminalBox loading={false} onReady={onReady}>
       <Box flexDirection="column">
         <Text>Select your favorite language:</Text>
         <Text> </Text>

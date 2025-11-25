@@ -5,9 +5,9 @@ import "ink-web/bundled/css";
 import "xterm/css/xterm.css";
 import { Spinner } from "@/components/ui/spinner";
 
-export default function SpinnerDemo() {
+export default function SpinnerDemo({ onReady }: { onReady?: () => void }) {
   return (
-    <InkTerminalBox>
+    <InkTerminalBox loading={false} onReady={onReady}>
       <Box flexDirection="column">
         <Spinner text="Thinking" />
       </Box>

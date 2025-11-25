@@ -5,9 +5,9 @@ import "ink-web/bundled/css";
 import "xterm/css/xterm.css";
 import { Link } from "@/components/ui/link";
 
-export default function LinkDemo() {
+export default function LinkDemo({ onReady }: { onReady?: () => void }) {
   return (
-    <InkTerminalBox>
+    <InkTerminalBox loading={false} onReady={onReady}>
       <Box flexDirection="column" gap={1}>
         <Box>
           <Text>Check out </Text>

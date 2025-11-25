@@ -12,9 +12,9 @@ const data = [
   { name: "Svelte", type: "Compiler", stars: 77000 },
 ];
 
-export default function TableDemo() {
+export default function TableDemo({ onReady }: { onReady?: () => void }) {
   return (
-    <InkTerminalBox>
+    <InkTerminalBox loading={false} onReady={onReady}>
       <Box flexDirection="column">
         <Table data={data} />
       </Box>

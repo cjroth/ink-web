@@ -5,9 +5,9 @@ import "ink-web/bundled/css";
 import "xterm/css/xterm.css";
 import { Divider } from "@/components/ui/divider";
 
-export default function DividerDemo() {
+export default function DividerDemo({ onReady }: { onReady?: () => void }) {
   return (
-    <InkTerminalBox>
+    <InkTerminalBox loading={false} onReady={onReady}>
       <Box flexDirection="column" gap={1} width="100%">
         <Divider title="Options" titleColor="cyan" />
         <Box paddingLeft={2}>

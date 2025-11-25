@@ -38,9 +38,9 @@ function ProgressBarContent() {
   );
 }
 
-export default function ProgressBarDemo() {
+export default function ProgressBarDemo({ onReady }: { onReady?: () => void }) {
   return (
-    <InkTerminalBox>
+    <InkTerminalBox loading={false} onReady={onReady}>
       <ProgressBarContent />
     </InkTerminalBox>
   );

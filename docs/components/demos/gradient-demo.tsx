@@ -6,9 +6,9 @@ import "xterm/css/xterm.css";
 import { Gradient } from "@/components/ui/gradient";
 import { Ascii } from "@/components/ui/ascii";
 
-export default function GradientDemo() {
+export default function GradientDemo({ onReady }: { onReady?: () => void }) {
   return (
-    <InkTerminalBox>
+    <InkTerminalBox loading={false} onReady={onReady}>
       <Box flexDirection="column">
         <Gradient name="rainbow">
           <Ascii text="Gradient" />

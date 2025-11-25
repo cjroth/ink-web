@@ -1,13 +1,14 @@
 "use client";
 
-import dynamic from 'next/dynamic';
+import { createDynamicTerminal } from 'ink-web/next';
 import { MacWindow } from "@/components/ui/mac-window";
-import { InkTerminalLoadingPlaceholder } from 'ink-web/utils';
 
-const MultiSelectDemo = dynamic(() => import('./multi-select-demo'), {
-  ssr: false,
-  loading: () => <InkTerminalLoadingPlaceholder loading="spinner" />,
-});
+const MultiSelectDemo = createDynamicTerminal(
+  () => import('./multi-select-demo').then(m => m.default),
+  {
+    loading: 'spinner'
+  }
+);
 
 export default function MultiSelectDemoWrapper() {
   return (
