@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Text, Box, type BoxProps } from 'ink'
+import { Text, Box, type BoxProps } from 'ink-web/bundled'
 
 export interface DividerProps {
   /**
@@ -60,11 +60,9 @@ const BaseDivider = ({
 )
 
 /**
- * Divider component for Ink
+ * Divider component for ink-web
  *
  * A horizontal divider with optional centered title text.
- *
- * Based on ink-divider by Jure Sotošek (https://github.com/JureSotosek/ink-divider)
  *
  * @example
  * ```tsx

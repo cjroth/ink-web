@@ -1,50 +1,122 @@
-import { Text, Box } from 'ink-web/bundled'
+import type { ReactNode } from 'react'
+import { Text, Box, type BoxProps } from 'ink-web/bundled'
 
 export interface DividerProps {
+  /**
+   * Title shown in the middle of the divider
+   */
   title?: string
   /**
-   * Width in columns. Defaults to process.stdout.columns or 80.
+   * Width of the divider
+   * @default 'auto'
    */
-  columns?: number
+  width?: 'auto' | number
+  /**
+   * Padding at the start and end of the divider
+   * @default 0
+   */
   padding?: number
+  /**
+   * Padding beside the title
+   * @default 1
+   */
   titlePadding?: number
+  /**
+   * Color of the title
+   * @default 'white'
+   */
   titleColor?: string
+  /**
+   * Character used as the divider
+   * @default '─'
+   */
   dividerChar?: string
+  /**
+   * Color of the divider
+   * @default 'gray'
+   */
   dividerColor?: string
 }
 
+const BaseDivider = ({
+  dividerChar,
+  dividerColor = 'gray',
+}: {
+  dividerChar?: string
+  dividerColor?: string
+}) => (
+  <Box
+    // @ts-expect-error - custom border style
+    borderStyle={{
+      bottom: dividerChar,
+    }}
+    borderColor={dividerColor}
+    flexGrow={1}
+    borderBottom={true}
+    borderTop={false}
+    borderLeft={false}
+    borderRight={false}
+  />
+)
+
+/**
+ * Divider component for ink-web
+ *
+ * A horizontal divider with optional centered title text.
+ *
+ * @example
+ * ```tsx
+ * // Simple divider
+ * <Divider />
+ *
+ * // With title
+ * <Divider title="Section" />
+ *
+ * // Custom styling
+ * <Divider
+ *   title="Options"
+ *   titleColor="cyan"
+ *   dividerColor="blue"
+ *   dividerChar="="
+ * />
+ * ```
+ */
 export const Divider = ({
   title,
-  columns,
+  width = 'auto',
   padding = 0,
   titlePadding = 1,
   titleColor = 'white',
   dividerChar = '─',
   dividerColor = 'gray',
 }: DividerProps) => {
-  const terminalWidth = columns || (typeof process !== 'undefined' && process.stdout?.columns) || 80
-  const availableWidth = terminalWidth - (padding * 2)
+  const dividerLine = (
+    <BaseDivider
+      dividerChar={dividerChar}
+      dividerColor={dividerColor}
+    />
+  )
 
   if (!title) {
-    const line = dividerChar.repeat(availableWidth)
     return (
       <Box paddingLeft={padding} paddingRight={padding}>
-        <Text color={dividerColor}>{line}</Text>
+        {dividerLine}
       </Box>
     )
   }
 
-  const titleText = ' '.repeat(titlePadding) + title + ' '.repeat(titlePadding)
-  const remainingWidth = availableWidth - titleText.length
-  const sideWidth = Math.floor(remainingWidth / 2)
-  const leftLine = dividerChar.repeat(Math.max(0, sideWidth))
-  const rightLine = dividerChar.repeat(Math.max(0, remainingWidth - sideWidth))
-
   return (
-    <Box paddingLeft={padding} paddingRight={padding}>
-      <Text color={dividerColor}>{leftLine}</Text>
-      <Text color={titleColor}>{titleText}</Text>
-      <Text color={dividerColor}>{rightLine}</Text>
+    <Box
+      width={width}
+      paddingLeft={padding}
+      paddingRight={padding}
+      gap={titlePadding}
+    >
+      {dividerLine}
+      <Box>
+        <Text color={titleColor}>{title}</Text>
+      </Box>
+      {dividerLine}
     </Box>
   )
 }

@@ -1,15 +1,9 @@
 /**
  * Multi Select component for ink-web
- *
- * Based on ink-multi-select by George Karagkiaouris
- * https://github.com/karaggeorge/ink-multi-select
- * MIT License
- *
- * Adapted for browser compatibility with ink-web by removing Node.js dependencies.
  */
 
-import React, { useState, useEffect, useRef, useCallback } from 'react'
-import { Box, Text, useInput } from 'ink'
+import React, { useState, useCallback } from 'react'
+import { Box, Text, useInput } from 'ink-web/bundled'
 
 export type MultiSelectItem<V> = {
   key?: string
@@ -54,23 +48,6 @@ function DefaultItem({ isHighlighted = false, label }: ItemProps) {
   return <Text color={isHighlighted ? 'blue' : undefined}>{label}</Text>
 }
 
-// Simple array rotation helper
-function rotateArray<T>(array: T[], count: number): T[] {
-  const len = array.length
-  if (len === 0) return array
-  const normalizedCount = ((count % len) + len) % len
-  return [...array.slice(normalizedCount), ...array.slice(0, normalizedCount)]
-}
-
-// Deep equality check for arrays of items
-function areItemsEqual<V>(a: MultiSelectItem<V>[], b: MultiSelectItem<V>[]): boolean {
-  if (a.length !== b.length) return false
-  return a.every((item, index) => {
-    const other = b[index]
-    return item.value === other?.value && item.label === other?.label
-  })
-}
-
 export interface MultiSelectProps<V> {
   items?: MultiSelectItem<V>[]
   selected?: MultiSelectItem<V>[]
@@ -93,7 +70,7 @@ export function MultiSelect<V>({
   defaultSelected = [],
   focus = true,
   initialIndex = 0,
-  limit: customLimit,
+  limit,
   indicatorComponent: IndicatorComponent = DefaultIndicator,
   checkboxComponent: CheckboxComponent = DefaultCheckbox,
   itemComponent: ItemComponent = DefaultItem,
@@ -102,89 +79,79 @@ export function MultiSelect<V>({
   onSubmit,
   onHighlight,
 }: MultiSelectProps<V>) {
-  const hasLimit = typeof customLimit === 'number' && items.length > customLimit
-  const limit = hasLimit ? Math.min(customLimit, items.length) : items.length
+  // Calculate visible range
+  const visibleCount = limit && limit < items.length ? limit : items.length
+  const clampedInitial = Math.min(initialIndex, items.length - 1)
 
-  const [rotateIndex, setRotateIndex] = useState(0)
-  const [highlightedIndex, setHighlightedIndex] = useState(
-    initialIndex > limit - 1 ? limit - 1 : initialIndex
+  const [highlightedIndex, setHighlightedIndex] = useState(Math.max(0, clampedInitial))
+  const [scrollOffset, setScrollOffset] = useState(
+    limit ? Math.max(0, clampedInitial - Math.floor(limit / 2)) : 0
   )
   const [internalSelected, setInternalSelected] = useState<MultiSelectItem<V>[]>(defaultSelected)
-  const previousItems = useRef<MultiSelectItem<V>[]>(items)
 
   const selected = controlledSelected ?? internalSelected
 
-  const isSelected = useCallback((value: V) => {
-    return selected.some(item => item.value === value)
-  }, [selected])
+  const isSelected = useCallback(
+    (value: V) => {
+      return selected.some(item => item.value === value)
+    },
+    [selected]
+  )
 
-  useEffect(() => {
-    if (!areItemsEqual(previousItems.current, items)) {
-      setRotateIndex(0)
-      setHighlightedIndex(0)
-    }
-    previousItems.current = items
-  }, [items])
+  // Get visible items based on scroll offset
+  const visibleItems = limit
+    ? items.slice(scrollOffset, scrollOffset + visibleCount)
+    : items
+
+  // Calculate the index within visible items
+  const visibleHighlightedIndex = highlightedIndex - scrollOffset
 
   useInput(
     useCallback(
       (input, key) => {
         if (input === 'k' || key.upArrow) {
-          const lastIdx = limit - 1
-          const atFirstIndex = highlightedIndex === 0
-          const nextIndex = hasLimit ? highlightedIndex : lastIdx
-          const nextRotateIndex = atFirstIndex ? rotateIndex + 1 : rotateIndex
-          const nextHighlightedIndex = atFirstIndex ? nextIndex : highlightedIndex - 1
+          const newIndex = highlightedIndex > 0 ? highlightedIndex - 1 : items.length - 1
+          setHighlightedIndex(newIndex)
 
-          setRotateIndex(nextRotateIndex)
-          setHighlightedIndex(nextHighlightedIndex)
-
-          const slicedItems = hasLimit
-            ? rotateArray(items, nextRotateIndex).slice(0, limit)
-            : items
-
-          if (typeof onHighlight === 'function' && slicedItems[nextHighlightedIndex]) {
-            onHighlight(slicedItems[nextHighlightedIndex])
+          // Update scroll offset if needed
+          if (limit && newIndex < scrollOffset) {
+            setScrollOffset(newIndex)
+          } else if (limit && newIndex >= items.length - 1 && scrollOffset + visibleCount < items.length) {
+            setScrollOffset(Math.max(0, items.length - visibleCount))
           }
+
+          onHighlight?.(items[newIndex]!)
         }
 
         if (input === 'j' || key.downArrow) {
-          const atLastIndex = highlightedIndex === limit - 1
-          const nextIndex = hasLimit ? highlightedIndex : 0
-          const nextRotateIndex = atLastIndex ? rotateIndex - 1 : rotateIndex
-          const nextHighlightedIndex = atLastIndex ? nextIndex : highlightedIndex + 1
+          const newIndex = highlightedIndex < items.length - 1 ? highlightedIndex + 1 : 0
+          setHighlightedIndex(newIndex)
 
-          setRotateIndex(nextRotateIndex)
-          setHighlightedIndex(nextHighlightedIndex)
-
-          const slicedItems = hasLimit
-            ? rotateArray(items, nextRotateIndex).slice(0, limit)
-            : items
-
-          if (typeof onHighlight === 'function' && slicedItems[nextHighlightedIndex]) {
-            onHighlight(slicedItems[nextHighlightedIndex])
+          // Update scroll offset if needed
+          if (limit && newIndex >= scrollOffset + visibleCount) {
+            setScrollOffset(newIndex - visibleCount + 1)
+          } else if (limit && newIndex === 0) {
+            setScrollOffset(0)
           }
+
+          onHighlight?.(items[newIndex]!)
         }
 
         if (input === ' ') {
-          const slicedItems = hasLimit
-            ? rotateArray(items, rotateIndex).slice(0, limit)
-            : items
-          const item = slicedItems[highlightedIndex]
+          const item = items[highlightedIndex]
+          if (!item) return
 
-          if (item) {
-            if (isSelected(item.value)) {
-              onUnselect?.(item)
-              const newSelected = selected.filter(s => s.value !== item.value)
-              if (!controlledSelected) {
-                setInternalSelected(newSelected)
-              }
-            } else {
-              onSelect?.(item)
-              const newSelected = [...selected, item]
-              if (!controlledSelected) {
-                setInternalSelected(newSelected)
-              }
+          if (isSelected(item.value)) {
+            onUnselect?.(item)
+            const newSelected = selected.filter(s => s.value !== item.value)
+            if (!controlledSelected) {
+              setInternalSelected(newSelected)
+            }
+          } else {
+            onSelect?.(item)
+            const newSelected = [...selected, item]
+            if (!controlledSelected) {
+              setInternalSelected(newSelected)
             }
           }
         }
@@ -193,19 +160,29 @@ export function MultiSelect<V>({
           onSubmit?.(selected)
         }
       },
-      [hasLimit, limit, rotateIndex, highlightedIndex, items, selected, controlledSelected, isSelected, onSelect, onUnselect, onSubmit, onHighlight]
+      [
+        highlightedIndex,
+        scrollOffset,
+        items,
+        limit,
+        visibleCount,
+        selected,
+        controlledSelected,
+        isSelected,
+        onSelect,
+        onUnselect,
+        onSubmit,
+        onHighlight,
+      ]
     ),
     { isActive: focus }
   )
 
-  const slicedItems = hasLimit
-    ? rotateArray(items, rotateIndex).slice(0, limit)
-    : items
-
   return (
     <Box flexDirection="column">
-      {slicedItems.map((item, index) => {
-        const isHighlighted = index === highlightedIndex
+      {visibleItems.map((item, index) => {
+        const actualIndex = scrollOffset + index
+        const isHighlighted = index === visibleHighlightedIndex
         const itemIsSelected = isSelected(item.value)
         return (
           <Box key={item.key ?? String(item.value)}>

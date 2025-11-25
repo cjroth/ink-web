@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Transform, Text } from 'ink'
+import { Transform, Text } from 'ink-web/bundled'
 
 export interface LinkProps {
   /**
@@ -13,12 +13,10 @@ export interface LinkProps {
 }
 
 /**
- * Link component for Ink
+ * Link component for ink-web
  *
- * Creates clickable links in the terminal. Uses OSC 8 escape sequences
- * which are supported by many modern terminal emulators.
- *
- * Based on ink-link by Sindre Sorhus (https://github.com/sindresorhus/ink-link)
+ * Creates clickable links in the terminal using OSC 8 escape sequences,
+ * supported by many modern terminal emulators.
  *
  * @example
  * ```tsx

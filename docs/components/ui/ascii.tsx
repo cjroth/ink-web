@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Text, Box } from 'ink-web/bundled'
+import { Text } from 'ink-web/bundled'
 import figlet from 'figlet'
 import standard from 'figlet/importable-fonts/Standard.js'
 
