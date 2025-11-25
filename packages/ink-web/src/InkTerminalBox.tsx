@@ -17,6 +17,8 @@ export interface InkTerminalBoxProps {
   onReady?: () => void
   /** Loading indicator to show while terminal initializes. Defaults to skeleton loader. Set to false to disable. */
   loading?: LoadingOption | false
+  /** Padding around the terminal content in pixels. Defaults to 10. */
+  padding?: number
 }
 
 // Re-export for convenience
@@ -26,7 +28,7 @@ export { getTerminalHeight }
  * A wrapper component that provides proper styling and containment for InkXterm.
  * Handles CSS isolation from parent styles and ensures proper scrolling behavior.
  */
-export const InkTerminalBox: React.FC<InkTerminalBoxProps> = ({ className = '', focus, termOptions, children, rows = 15, onReady, loading }) => {
+export const InkTerminalBox: React.FC<InkTerminalBoxProps> = ({ className = '', focus, termOptions, children, rows = 15, onReady, loading, padding = 10 }) => {
   // Default to skeleton loading unless explicitly disabled
   const showLoading = loading !== false
   const [ready, setReady] = useState(!showLoading)
@@ -43,7 +45,7 @@ export const InkTerminalBox: React.FC<InkTerminalBoxProps> = ({ className = '', 
   return (
     <div
       className={`ink-terminal-box ${className}`}
-      style={height ? { height: `${height}px`, position: 'relative' } : { position: 'relative' }}
+      style={height ? { height: `${height}px`, position: 'relative', padding: `${padding}px` } : { position: 'relative', padding: `${padding}px` }}
     >
       {showLoading && !ready && (
         <div style={{
@@ -59,7 +61,7 @@ export const InkTerminalBox: React.FC<InkTerminalBoxProps> = ({ className = '', 
       )}
       <div
         className="ink-terminal-reset"
-        style={showLoading ? { visibility: ready ? 'visible' : 'hidden' } : undefined}
+        style={showLoading ? { visibility: ready ? 'visible' : 'hidden', top: `${padding}px`, left: `${padding}px`, right: `${padding}px`, bottom: `${padding}px` } : { top: `${padding}px`, left: `${padding}px`, right: `${padding}px`, bottom: `${padding}px` }}
       >
         <InkXterm focus={focus} termOptions={mergedTermOptions} onReady={handleReady}>
           {children}

@@ -5,6 +5,7 @@
   overflow: hidden;
   position: relative;
   background: #000000;
+  box-sizing: border-box;
 }
 
 /* Remove focus ring */
@@ -25,10 +26,6 @@
   overflow: hidden !important;
   max-width: 100% !important;
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
 }
 
 /* Ensure xterm container fills the space and isn't affected by docs styles */
@@ -42,7 +39,7 @@
 }
 
 .ink-terminal-box .xterm .xterm-screen {
-  padding: 10px;
+  padding: 0;
 }
 
 /* Prevent parent styles from centering terminal text */
