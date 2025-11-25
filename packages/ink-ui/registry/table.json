@@ -3,7 +3,7 @@
   "name": "table",
   "type": "registry:ui",
   "title": "Table",
-  "description": "A terminal table component for displaying tabular data",
+  "description": "A table component for displaying tabular data with customizable styling",
   "files": [
     {
       "path": "ui/table.tsx",

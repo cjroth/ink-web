@@ -3,7 +3,7 @@
   "name": "multi-select",
   "type": "registry:ui",
   "title": "Multi Select",
-  "description": "A terminal multi-select input with keyboard navigation",
+  "description": "A multi-select input component with keyboard navigation",
   "files": [
     {
       "path": "ui/multi-select.tsx",

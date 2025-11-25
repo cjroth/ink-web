@@ -1,5 +1,4 @@
-import type { ReactNode } from 'react'
-import { Text, Box, type BoxProps } from 'ink-web/bundled'
+import { Text, Box } from 'ink-web/bundled'
 
 export interface DividerProps {
   /**
@@ -39,17 +38,15 @@ export interface DividerProps {
 }
 
 const BaseDivider = ({
-  dividerChar,
+  dividerChar = '─',
   dividerColor = 'gray',
 }: {
   dividerChar?: string
   dividerColor?: string
 }) => (
   <Box
-    // @ts-expect-error - custom border style
-    borderStyle={{
-      bottom: dividerChar,
-    }}
+    // @ts-expect-error - custom border style for divider character
+    borderStyle={{ bottom: dividerChar }}
     borderColor={dividerColor}
     flexGrow={1}
     borderBottom={true}

@@ -6,7 +6,9 @@
     "jsx": "react-jsx",
     "strict": true,
     "skipLibCheck": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "types": ["node"]
   },
-  "include": ["registry/**/*"]
+  "include": ["components/**/*"],
+  "exclude": ["**/*.test.ts", "**/*.test.tsx", "registry/**/*", "scripts/**/*"]
 }

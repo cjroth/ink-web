@@ -3,7 +3,7 @@
   "name": "select-input",
   "type": "registry:ui",
   "title": "Select Input",
-  "description": "A terminal select input with keyboard navigation",
+  "description": "A select input component with keyboard navigation",
   "files": [
     {
       "path": "ui/select-input.tsx",

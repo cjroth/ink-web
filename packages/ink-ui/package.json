@@ -5,10 +5,17 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "build": "echo 'Registry package - no build needed'"
+    "build": "bun run scripts/build-registry.ts",
+    "test": "bun test"
   },
   "devDependencies": {
+    "@happy-dom/global-registrator": "^16.6.0",
+    "@testing-library/react": "^16.1.0",
+    "@types/figlet": "^1.7.0",
+    "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
+    "figlet": "^1.8.0",
+    "ink-web": "workspace:*",
     "react": "^19.0.0",
     "typescript": "^5.7.2"
   },

@@ -13,6 +13,9 @@
     "build": "bun run --cwd packages/ink-web build",
     "dev": "bun run --cwd packages/ink-web dev",
     "test": "bun run --cwd packages/ink-web test",
+    "tsc": "bunx tsc --noEmit -p packages/ink-web && bunx tsc --noEmit -p packages/ink-ui && bunx tsc --noEmit -p docs",
+    "ui:build": "bun run --cwd packages/ink-ui build",
+    "ui:test": "bun run --cwd packages/ink-ui test",
     "docs": "bun run --cwd docs dev",
     "docs:build": "bun run build && bun run --cwd docs build",
     "publish": "npm publish --workspace packages/ink-web"

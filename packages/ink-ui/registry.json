@@ -1,8 +1,34 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "ink-ui",
-  "homepage": "https://github.com/yourusername/ink-web",
+  "homepage": "https://github.com/cjroth/ink-web",
   "items": [
+    {
+      "name": "gradient",
+      "type": "registry:ui",
+      "title": "Gradient",
+      "description": "A gradient color component for terminal-style interfaces with built-in presets and custom colors",
+      "files": [
+        {
+          "path": "registry/ui/gradient.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/gradient.tsx"
+        }
+      ]
+    },
+    {
+      "name": "ascii",
+      "type": "registry:ui",
+      "title": "Ascii",
+      "description": "Render text as ASCII art using figlet fonts",
+      "files": [
+        {
+          "path": "registry/ui/ascii.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/ascii.tsx"
+        }
+      ]
+    },
     {
       "name": "mac-window",
       "type": "registry:ui",
@@ -14,10 +40,33 @@
           "type": "registry:ui",
           "target": "components/ui/mac-window.tsx"
         }
-      ],
-      "tailwind": {
-        "config": {}
-      }
+      ]
+    },
+    {
+      "name": "progress-bar",
+      "type": "registry:ui",
+      "title": "Progress Bar",
+      "description": "A flexible progress bar component with customizable appearance and spacing",
+      "files": [
+        {
+          "path": "registry/ui/progress-bar.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/progress-bar.tsx"
+        }
+      ]
+    },
+    {
+      "name": "multi-select",
+      "type": "registry:ui",
+      "title": "Multi Select",
+      "description": "A multi-select input component with keyboard navigation",
+      "files": [
+        {
+          "path": "registry/ui/multi-select.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/multi-select.tsx"
+        }
+      ]
     },
     {
       "name": "spinner",
@@ -33,28 +82,67 @@
       ]
     },
     {
-      "name": "gradient",
+      "name": "select-input",
       "type": "registry:ui",
-      "title": "Gradient",
-      "description": "A gradient color component for terminal-style interfaces with built-in presets and custom colors",
+      "title": "Select Input",
+      "description": "A select input component with keyboard navigation",
       "files": [
         {
-          "path": "registry/ui/gradient.tsx",
+          "path": "registry/ui/select-input.tsx",
           "type": "registry:ui",
-          "target": "components/ui/gradient.tsx"
+          "target": "components/ui/select-input.tsx"
         }
       ]
     },
     {
-      "name": "progress-bar",
+      "name": "link",
       "type": "registry:ui",
-      "title": "Progress Bar",
-      "description": "A flexible progress bar component with customizable appearance and spacing",
+      "title": "Link",
+      "description": "Clickable terminal links using OSC 8 escape sequences",
       "files": [
         {
-          "path": "registry/ui/progress-bar.tsx",
+          "path": "registry/ui/link.tsx",
           "type": "registry:ui",
-          "target": "components/ui/progress-bar.tsx"
+          "target": "components/ui/link.tsx"
+        }
+      ]
+    },
+    {
+      "name": "table",
+      "type": "registry:ui",
+      "title": "Table",
+      "description": "A table component for displaying tabular data with customizable styling",
+      "files": [
+        {
+          "path": "registry/ui/table.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/table.tsx"
+        }
+      ]
+    },
+    {
+      "name": "divider",
+      "type": "registry:ui",
+      "title": "Divider",
+      "description": "A horizontal divider with optional centered title text",
+      "files": [
+        {
+          "path": "registry/ui/divider.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/divider.tsx"
+        }
+      ]
+    },
+    {
+      "name": "text-input",
+      "type": "registry:ui",
+      "title": "Text Input",
+      "description": "A text input component with cursor and placeholder support",
+      "files": [
+        {
+          "path": "registry/ui/text-input.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/text-input.tsx"
         }
       ]
     }

@@ -3,7 +3,7 @@
   "name": "link",
   "type": "registry:ui",
   "title": "Link",
-  "description": "Create clickable hyperlinks in the terminal",
+  "description": "Clickable terminal links using OSC 8 escape sequences",
   "files": [
     {
       "path": "ui/link.tsx",
