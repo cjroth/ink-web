@@ -82,8 +82,13 @@ export default function Home() {
 
 import { InkXterm, Box } from "ink-web/bundled";
 import { Ascii } from '@/components/ui/ascii'
+import figlet from 'figlet'
+import standard from 'figlet/importable-fonts/Standard.js'
 import "ink-web/bundled/css";
 import "xterm/css/xterm.css";
+
+// Register fonts at module load time (before component renders)
+figlet.parseFont('Standard', standard)
 
 export default function Terminal() {
   return (
@@ -95,6 +100,8 @@ export default function Terminal() {
   )
 }
 ```
+
+The default font is `Standard`. To use other fonts, import them from `figlet/importable-fonts/` and register with `parseFont` before rendering. Do not use `figlet.preloadFonts()` in browser environments - it attempts to fetch fonts via HTTP which won't work with bundled applications.
 
 ## Props
 
@@ -124,9 +131,8 @@ export default function Terminal() {
 
 ```tsx
 <Box flexDirection="column" gap={1}>
-  <Ascii text="Big" font="Big" />
-  <Ascii text="Mini" font="Mini" />
-  <Ascii text="Slant" font="Slant" />
+  <Ascii text="Doom" font="Doom" />
+  <Ascii text="Ghost" font="Ghost" />
 </Box>
 ```
 
