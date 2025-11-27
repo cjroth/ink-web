@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Text } from 'ink-web/bundled'
+import { Text } from 'ink'
 import figlet from 'figlet'
+import standard from 'figlet/importable-fonts/Standard.js'
+
+// Preload the Standard font
+figlet.parseFont('Standard', standard)
 
 export interface AsciiProps {
   text: string

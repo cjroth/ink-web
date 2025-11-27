@@ -1,7 +1,8 @@
 "use client";
 
-import { Box, InkTerminalBox, Newline } from "ink-web/bundled";
-import "ink-web/bundled/css";
+import { Box } from "ink";
+import { InkTerminalBox } from "ink-web";
+import "ink-web/css";
 import "xterm/css/xterm.css";
 import { Ascii } from "@/components/ui/ascii";
 import figlet from "figlet";

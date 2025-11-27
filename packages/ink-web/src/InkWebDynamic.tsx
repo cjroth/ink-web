@@ -1,7 +1,7 @@
 'use client'
 
 // CSS imports - these are loaded at runtime, externalized during build
-import 'ink-web/bundled/css'
+import 'ink-web/css'
 import 'xterm/css/xterm.css'
 
 import dynamic from 'next/dynamic'
@@ -28,7 +28,7 @@ function InkWebDynamicInner({ children, focus = true, termOptions }: InkWebDynam
   useEffect(() => {
     // Dynamic import from package path - kept external by tsup
     // @ts-ignore - module types may not be available during parallel DTS builds
-    import('ink-web/bundled').then((mod: InkModule) => {
+    import('ink-web').then((mod: InkModule) => {
       setInkModule(mod)
     })
   }, [])

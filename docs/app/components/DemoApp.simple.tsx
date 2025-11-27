@@ -1,4 +1,4 @@
-import { Text } from 'ink-web/bundled'
+import { Text } from 'ink'
 
 export const DemoApp = () => {
   return <Text>Hello World!</Text>

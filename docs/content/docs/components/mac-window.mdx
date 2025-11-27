@@ -43,9 +43,10 @@ A macOS-style window container with traffic light buttons (close, minimize, maxi
 ```tsx title="app/terminal.tsx"
 "use client";
 
+import { Box, Text } from "ink";
 import { MacWindow } from '@/components/ui/mac-window'
-import { InkXterm, Box, Text } from "ink-web/bundled";
-import "ink-web/bundled/css";
+import { InkXterm } from "ink-web";
+import "ink-web/css";
 import "xterm/css/xterm.css";
 
 export default function Terminal() {

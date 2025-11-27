@@ -10,8 +10,8 @@ ink-web provides two main components for rendering Ink applications in the brows
 A higher-level component that wraps `InkXterm` with styling, CSS isolation, and loading state support. This is the recommended component for most use cases.
 
 ```tsx
-import { InkTerminalBox, Box, Text } from "ink-web/bundled";
-import "ink-web/bundled/css";
+import { InkTerminalBox, Box, Text } from "ink-web";
+import "ink-web/css";
 import "xterm/css/xterm.css";
 
 export function MyTerminal() {
@@ -47,7 +47,7 @@ export function MyTerminal() {
 ### Example with Loading State
 
 ```tsx
-import { InkTerminalBox, Box, Text } from "ink-web/bundled";
+import { InkTerminalBox, Box, Text } from "ink-web";
 import { Loader2 } from "lucide-react";
 
 export function MyTerminal() {
@@ -71,7 +71,7 @@ export function MyTerminal() {
 A lower-level component that directly integrates xterm.js with Ink. Use this when you need more control or don't want the additional styling from `InkTerminalBox`.
 
 ```tsx
-import { InkXterm, Box, Text } from "ink-web/bundled";
+import { InkXterm, Box, Text } from "ink-web";
 import "xterm/css/xterm.css";
 
 export function MyTerminal() {
@@ -110,8 +110,7 @@ This approach ensures reliable initialization without arbitrary timeouts.
 For advanced use cases, you can use the `mountInkInXterm` function directly to create your own terminal integration.
 
 ```tsx
-import { mountInkInXterm } from "ink-web/bundled";
-import { Box, Text } from "ink-web/bundled";
+import { mountInkInXterm, Box, Text } from "ink-web";
 
 const container = document.getElementById("terminal");
 

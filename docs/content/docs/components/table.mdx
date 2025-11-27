@@ -55,9 +55,10 @@ export default function Home() {
 ```tsx title="app/terminal.tsx"
 "use client";
 
-import { InkXterm, Box } from "ink-web/bundled";
+import { Box } from "ink";
+import { InkXterm } from "ink-web";
 import { Table } from '@/components/ui/table'
-import "ink-web/bundled/css";
+import "ink-web/css";
 import "xterm/css/xterm.css";
 
 const data = [
@@ -122,7 +123,7 @@ const data = [
 ### Custom Cell Styling
 
 ```tsx
-import { Text } from 'ink-web/bundled'
+import { Text } from 'ink'
 
 const CustomCell = ({ children, column }) => (
   <Text color={column === 0 ? 'green' : undefined}>
@@ -136,7 +137,7 @@ const CustomCell = ({ children, column }) => (
 ### Custom Header Styling
 
 ```tsx
-import { Text } from 'ink-web/bundled'
+import { Text } from 'ink'
 
 const CustomHeader = ({ children }) => (
   <Text bold color="yellow" underline>

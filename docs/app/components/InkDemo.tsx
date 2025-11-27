@@ -1,8 +1,9 @@
 'use client'
 
-import 'ink-web/bundled/css'
+import 'ink-web/css'
 import 'xterm/css/xterm.css'
-import { InkTerminalBox, DemoApp } from 'ink-web/bundled'
+import { InkTerminalBox } from 'ink-web'
+import { DemoApp } from './DemoApp'
 
 export function InkDemo({ onReady }: { onReady?: () => void }) {
   return (

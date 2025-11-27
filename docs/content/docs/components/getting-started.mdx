@@ -1,0 +1,203 @@
+---
+title: Getting Started
+description: How to set up your project to use ink-ui components
+---
+
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import { Step, Steps } from 'fumadocs-ui/components/steps';
+
+<Steps>
+<Step>
+
+## Configure the Alias
+
+Before installing components, you need to configure your project to alias `ink` to `ink-web`. This allows the components to work both in Node.js (with the real `ink` package) and in the browser (with `ink-web`).
+
+<Tabs items={['Next.js (Turbopack)', 'Next.js (Webpack)', 'Vite']}>
+  <Tab value="Next.js (Turbopack)">
+    Add the alias to your `next.config.mjs`:
+
+    ```js title="next.config.mjs"
+    /** @type {import('next').NextConfig} */
+    const config = {
+      turbopack: { // [!code highlight]
+        resolveAlias: { // [!code highlight]
+          ink: 'ink-web', // [!code highlight]
+        }, // [!code highlight]
+      }, // [!code highlight]
+    };
+
+    export default config;
+    ```
+  </Tab>
+  <Tab value="Next.js (Webpack)">
+    Add the alias to your `next.config.mjs`:
+
+    ```js title="next.config.mjs"
+    /** @type {import('next').NextConfig} */
+    const config = {
+      webpack: (config) => { // [!code highlight]
+        config.resolve.alias = { // [!code highlight]
+          ...config.resolve.alias, // [!code highlight]
+          ink: 'ink-web', // [!code highlight]
+        }; // [!code highlight]
+        return config; // [!code highlight]
+      }, // [!code highlight]
+    };
+
+    export default config;
+    ```
+  </Tab>
+  <Tab value="Vite">
+    Add the alias to your `vite.config.ts`:
+
+    ```ts title="vite.config.ts"
+    import { defineConfig } from 'vite';
+    import react from '@vitejs/plugin-react';
+
+    export default defineConfig({
+      plugins: [react()],
+      resolve: { // [!code highlight]
+        alias: { // [!code highlight]
+          ink: 'ink-web', // [!code highlight]
+        }, // [!code highlight]
+      }, // [!code highlight]
+    });
+    ```
+  </Tab>
+</Tabs>
+
+</Step>
+<Step>
+
+## Install ink (for types)
+
+Install `ink` as a dev dependency to get TypeScript types:
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npm install -D ink
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    yarn add -D ink
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm add -D ink
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bun add -D ink
+    ```
+  </Tab>
+</Tabs>
+
+</Step>
+<Step>
+
+## Initialize shadcn
+
+If you haven't already, initialize shadcn in your project:
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npx shadcn@latest init
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    npx shadcn@latest init
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest init
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bunx shadcn@latest init
+    ```
+  </Tab>
+</Tabs>
+
+</Step>
+<Step>
+
+## Add Components
+
+Now you can add components from the ink-ui registry:
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/spinner.json
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/spinner.json
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/spinner.json
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bunx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/spinner.json
+    ```
+  </Tab>
+</Tabs>
+
+This will add the component to your `components/ui` folder.
+
+</Step>
+<Step>
+
+## Use the Component
+
+```tsx title="app/terminal.tsx"
+"use client";
+
+import { Box } from "ink"; // [!code highlight]
+import { InkTerminalBox } from "ink-web";
+import { Spinner } from "@/components/ui/spinner"; // [!code highlight]
+import "ink-web/css";
+import "xterm/css/xterm.css";
+
+export default function Terminal() {
+  return (
+    <InkTerminalBox focus>
+      <Box flexDirection="column">
+        <Spinner text="Loading..." /> // [!code highlight]
+      </Box>
+    </InkTerminalBox>
+  );
+}
+```
+
+</Step>
+</Steps>
+
+## How It Works
+
+The components import from `ink`:
+
+```tsx
+import { Box, Text } from 'ink';
+```
+
+Your bundler alias redirects these imports to `ink-web` at build time, which includes all the browser-compatible shims and polyfills needed to run Ink in the browser.
+
+This approach means:
+- Components work in both Node.js (real `ink`) and browser (`ink-web`)
+- You get full TypeScript support from the `ink` types
+- No changes needed to component source code

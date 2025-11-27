@@ -9,7 +9,7 @@
       "path": "ui/spinner.tsx",
       "type": "registry:ui",
       "target": "components/ui/spinner.tsx",
-      "content": "import { useEffect, useState } from 'react'\nimport { Text } from 'ink-web/bundled'\n\nexport interface SpinnerProps {\n  text?: string\n  color?: string\n  interval?: number\n}\n\nconst frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']\n\nexport const Spinner = ({ text = 'Loading', color = 'gray', interval = 100 }: SpinnerProps) => {\n  const [frame, setFrame] = useState(0)\n\n  useEffect(() => {\n    const timer = setInterval(() => {\n      setFrame((prev) => (prev + 1) % frames.length)\n    }, interval)\n\n    return () => clearInterval(timer)\n  }, [interval])\n\n  return <Text color={color}>{frames[frame]} {text}</Text>\n}\n\nexport default Spinner\n"
+      "content": "import { useEffect, useState } from 'react'\nimport { Text } from 'ink'\n\nexport interface SpinnerProps {\n  text?: string\n  color?: string\n  interval?: number\n}\n\nconst frames = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏']\n\nexport const Spinner = ({ text = 'Loading', color = 'gray', interval = 100 }: SpinnerProps) => {\n  const [frame, setFrame] = useState(0)\n\n  useEffect(() => {\n    const timer = setInterval(() => {\n      setFrame((prev) => (prev + 1) % frames.length)\n    }, interval)\n\n    return () => clearInterval(timer)\n  }, [interval])\n\n  return <Text color={color}>{frames[frame]} {text}</Text>\n}\n\nexport default Spinner\n"
     }
   ]
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Text } from 'ink-web/bundled'
+import { Text } from 'ink'
 
 export interface SpinnerProps {
   text?: string

@@ -1,7 +1,7 @@
 "use client";
 
-import { InkTerminalLoadingPlaceholder } from "ink-web/bundled";
-import "ink-web/bundled/css";
+import { InkTerminalLoadingPlaceholder } from "ink-web";
+import "ink-web/css";
 
 export default function LoadingSkeletonDemo() {
   return (

@@ -127,9 +127,8 @@ createDynamicTerminal(importFn, {
 ```tsx title="components/my-terminal.tsx"
 'use client'
 
-import { InkTerminalBox } from 'ink-web/bundled'
-import { Box, Text } from 'ink-web/bundled'
-import 'ink-web/bundled/css'
+import { InkTerminalBox, Box, Text } from 'ink-web'
+import 'ink-web/css'
 import 'xterm/css/xterm.css'
 
 export function MyTerminal({ onReady }: { onReady?: () => void }) {

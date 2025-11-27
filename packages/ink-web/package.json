@@ -22,16 +22,16 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": "./dist/index.js"
     },
-    "./bundled": {
-      "types": "./dist/bundled.d.ts",
-      "import": "./dist/bundled.js"
+    "./css": {
+      "types": "./dist/index.css.d.ts",
+      "import": "./dist/index.css"
     },
-    "./bundled/css": {
-      "types": "./dist/bundled.css.d.ts",
-      "import": "./dist/bundled.css"
+    "./core": {
+      "types": "./dist/core.d.ts",
+      "import": "./dist/core.js",
+      "require": "./dist/core.cjs"
     },
     "./vite": {
       "types": "./dist/vite-plugin.d.ts",

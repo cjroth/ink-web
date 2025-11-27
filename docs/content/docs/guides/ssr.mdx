@@ -10,8 +10,8 @@ Ink Web provides first-class support for Next.js and other SSR frameworks. Use t
 ```tsx title="components/my-terminal.tsx"
 'use client'
 
-import { InkTerminalBox, Box, Text } from 'ink-web/bundled'
-import 'ink-web/bundled/css'
+import { InkTerminalBox, Box, Text } from 'ink-web'
+import 'ink-web/css'
 import 'xterm/css/xterm.css'
 
 export function MyTerminal({ onReady }: { onReady?: () => void }) {
@@ -108,14 +108,14 @@ const height = getTerminalHeight(15) // Returns pixel height for 15 rows
 
 The formula is: `rows * 18 + 20` (line height + padding).
 
-**Important**: Import from `ink-web/utils`, not `ink-web/bundled`:
+**Important**: Import from `ink-web/utils`, not `ink-web`:
 
 ```tsx
 // GOOD - SSR-safe
 import { getTerminalHeight } from 'ink-web/utils'
 
 // BAD - causes "self is not defined" error
-import { getTerminalHeight } from 'ink-web/bundled'
+import { getTerminalHeight } from 'ink-web'
 ```
 
 ## Manual Setup

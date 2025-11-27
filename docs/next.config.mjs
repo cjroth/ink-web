@@ -9,6 +9,18 @@ const config = {
   experimental: {
     externalDir: true,
   },
+  turbopack: {
+    resolveAlias: {
+      ink: 'ink-web',
+    },
+  },
+  webpack: (config) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      ink: 'ink-web',
+    };
+    return config;
+  },
 };
 
 export default withMDX(config);

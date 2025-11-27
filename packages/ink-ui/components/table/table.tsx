@@ -3,7 +3,7 @@
  */
 
 import React from 'react'
-import { Box, Text } from 'ink-web/bundled'
+import { Box, Text } from 'ink'
 
 type Scalar = string | number | boolean | null | undefined
 

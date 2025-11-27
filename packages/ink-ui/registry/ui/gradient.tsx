@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Transform } from 'ink-web/bundled'
+import { Transform } from 'ink'
 
 export type GradientName =
   | 'cristal'

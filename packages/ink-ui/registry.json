@@ -42,7 +42,6 @@
         }
       ]
     },
-
     {
       "name": "multi-select",
       "type": "registry:ui",
@@ -108,7 +107,6 @@
         }
       ]
     },
-
     {
       "name": "text-input",
       "type": "registry:ui",

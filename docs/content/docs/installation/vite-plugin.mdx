@@ -1,7 +1,11 @@
 ---
 title: Vite (Plugin)
+description: Advanced setup using the Vite plugin with standalone ink
 ---
-Start with the [example](https://github.com/cjroth/ink-web/tree/main/examples/vite-plugin) or follow this guide:
+
+This is an advanced setup that uses the Vite plugin to transform the real `ink` package for browser use. This results in a smaller bundle size but requires additional configuration.
+
+For most users, we recommend the simpler [Vite setup](/docs/installation/vite) which uses the pre-bundled version.
 
 import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 
@@ -45,7 +49,7 @@ export default defineConfig({
 
 ```tsx
 import { Box, Text } from "ink";
-import { InkXterm } from "ink-web";
+import { InkXterm } from "ink-web/core";
 import "xterm/css/xterm.css";
 
 const App = () => (
@@ -61,4 +65,4 @@ const App = () => (
 export default App;
 ```
 
-Note: Import ink components from `ink` separately.
+With this setup, you import Ink components from `ink` and wrapper components from `ink-web/core`. The Vite plugin handles transforming the `ink` imports for browser compatibility.

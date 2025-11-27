@@ -1,8 +1,9 @@
 "use client";
 
-import "ink-web/bundled/css";
+import "ink-web/css";
 import "xterm/css/xterm.css";
-import { Box, Text, InkTerminalBox } from "ink-web/bundled";
+import { Box, Text } from "ink";
+import { InkTerminalBox } from "ink-web";
 import { useTextInput } from "@/components/ui/text-input";
 
 function TextInputApp() {

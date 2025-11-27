@@ -80,11 +80,12 @@ export default function Home() {
 ```tsx title="app/terminal.tsx"
 "use client";
 
-import { InkXterm, Box } from "ink-web/bundled";
+import { Box } from "ink";
+import { InkXterm } from "ink-web";
 import { Ascii } from '@/components/ui/ascii'
 import figlet from 'figlet'
 import standard from 'figlet/importable-fonts/Standard.js'
-import "ink-web/bundled/css";
+import "ink-web/css";
 import "xterm/css/xterm.css";
 
 // Register fonts at module load time (before component renders)

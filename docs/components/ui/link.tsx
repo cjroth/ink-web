@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Transform, Text } from 'ink-web/bundled'
+import { Transform, Text } from 'ink'
 
 export interface LinkProps {
   /**

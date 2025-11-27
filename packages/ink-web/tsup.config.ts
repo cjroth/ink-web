@@ -73,10 +73,10 @@ const nodeShimsPlugin = (rootDir: string): Plugin => ({
 })
 
 export default defineConfig([
-  // Standalone bundle - small, requires vite plugin (ink is external)
+  // Core bundle - small, requires vite plugin (ink is external)
   {
     entry: {
-      index: 'src/index.ts',
+      core: 'src/core.ts',
     },
     format: ['esm', 'cjs'],
     dts: true,
@@ -86,11 +86,11 @@ export default defineConfig([
     platform: 'browser',
     external: ['react', 'react-dom', 'ink', 'xterm', '@xterm/addon-fit'],
   },
-  // Bundled version - bundles Ink and shims but NOT React
+  // Main bundle - bundles Ink and shims but NOT React
   // Compatible with Next.js and other React 19+ environments
   {
     entry: {
-      bundled: 'src/bundled.ts',
+      index: 'src/index.ts',
     },
     format: ['esm'],
     dts: true,
@@ -182,7 +182,7 @@ const require = globalThis.__bundled_require__;
     sourcemap: true,
     target: 'es2020',
     platform: 'browser',
-    external: ['react', 'react-dom', 'next', 'next/dynamic', 'xterm', 'xterm/css/xterm.css', '@xterm/addon-fit', 'ink-web/bundled', 'ink-web/bundled/css'],
+    external: ['react', 'react-dom', 'next', 'next/dynamic', 'xterm', 'xterm/css/xterm.css', '@xterm/addon-fit', 'ink-web', 'ink-web/css'],
   },
   // SSR-safe utilities (pure functions, no browser dependencies)
   {

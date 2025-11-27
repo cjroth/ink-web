@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Transform } from 'ink-web/bundled'
+import { Transform } from 'ink'
 
 export type GradientName =
   | 'cristal'
@@ -187,7 +187,7 @@ export const Gradient = ({ children, name, colors }: GradientProps) => {
   const gradientColors = name ? GRADIENTS[name] : colors!
 
   return (
-    <Transform transform={(text) => applyGradient(text, gradientColors)}>
+    <Transform transform={(text: string) => applyGradient(text, gradientColors)}>
       {children}
     </Transform>
   )

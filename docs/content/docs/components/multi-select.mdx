@@ -55,9 +55,10 @@ export default function Home() {
 ```tsx title="app/terminal.tsx"
 "use client";
 
-import { InkXterm, Box, Text } from "ink-web/bundled";
+import { Box, Text } from "ink";
+import { InkXterm } from "ink-web";
 import { MultiSelect } from '@/components/ui/multi-select'
-import "ink-web/bundled/css";
+import "ink-web/css";
 import "xterm/css/xterm.css";
 
 const items = [

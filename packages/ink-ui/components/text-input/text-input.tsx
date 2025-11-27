@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { Box, Text, useInput } from 'ink-web/bundled'
+import { Box, Text, useInput } from 'ink'
 
 export interface UseTextInputOptions {
   onSubmit?: (value: string) => void

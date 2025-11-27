@@ -8,6 +8,10 @@
     "build": "bun run scripts/build-registry.ts",
     "test": "bun test"
   },
+  "peerDependencies": {
+    "ink": ">=6.0.0",
+    "react": ">=19.0.0"
+  },
   "devDependencies": {
     "@happy-dom/global-registrator": "^16.6.0",
     "@testing-library/react": "^16.1.0",

@@ -2,6 +2,7 @@
   "title": "Components",
   "defaultOpen": false,
   "pages": [
+    "getting-started",
     "ascii",
     "gradient",
     "link",

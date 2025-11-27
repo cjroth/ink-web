@@ -93,7 +93,7 @@ const Yoga = new Proxy({}, {
     if (prop === '__getYogaInstance') {
       return () => __yogaInstance;
     }
-    
+
     // Forward to the real yoga instance
     if (__yogaInstance) {
       // Just return the value directly from the yoga instance
@@ -102,7 +102,7 @@ const Yoga = new Proxy({}, {
       if (typeof value === 'undefined') {
         console.warn(\`[Yoga Proxy] Warning: Property \${String(prop)} is undefined on Yoga instance\`);
       }
-      
+
       // If the value is the Node class, we need to proxy it too to handle static methods like create()
       if (prop === 'Node') {
         return new Proxy(value, {
@@ -138,7 +138,7 @@ const Yoga = new Proxy({}, {
 
       return value;
     }
-    
+
     // If not yet loaded, throw error with details
     const error = new Error(\`[Yoga Proxy] WASM not initialized. Property: \${String(prop)}\`);
     console.error(error);
@@ -257,11 +257,11 @@ if (typeof globalThis !== 'undefined') {
   console.log(`✅ Fixed fs${fixReact ? ' and React' : ''} imports in ${fileName}`)
 }
 
-// Fix bundled.js (without React fixes since React is external)
-const bundledPath = resolve(import.meta.dir, '../dist/bundled.js')
-fixFile(bundledPath, 'bundled.js', false)
+// Fix index.js (the main bundled entry, without React fixes since React is external)
+const indexPath = resolve(import.meta.dir, '../dist/index.js')
+fixFile(indexPath, 'index.js', false)
 
 // Create CSS type declaration file
-const cssDeclarationPath = resolve(import.meta.dir, '../dist/bundled.css.d.ts')
+const cssDeclarationPath = resolve(import.meta.dir, '../dist/index.css.d.ts')
 writeFileSync(cssDeclarationPath, 'export {};\n', 'utf-8')
-console.log('✅ Created bundled.css.d.ts')
+console.log('✅ Created index.css.d.ts')

@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, Text, useInput } from 'ink-web/bundled'
+import { Box, Text, useInput } from 'ink'
 import { useState } from 'react'
 
 export const DemoApp = () => {

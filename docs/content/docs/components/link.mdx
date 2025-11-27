@@ -55,9 +55,10 @@ export default function Home() {
 ```tsx title="app/terminal.tsx"
 "use client";
 
-import { InkXterm, Box, Text } from "ink-web/bundled";
+import { Box } from "ink";
+import { InkXterm } from "ink-web";
 import { Link } from '@/components/ui/link'
-import "ink-web/bundled/css";
+import "ink-web/css";
 import "xterm/css/xterm.css";
 
 export default function Terminal() {
