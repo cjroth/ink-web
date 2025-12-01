@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react'
-import type { ITerminalOptions } from 'xterm'
+import type { ITerminalOptions } from 'ghostty-web'
 import './InkTerminalBox.css'
 import { InkXterm } from './InkXterm'
 import { getTerminalHeight } from './utils'

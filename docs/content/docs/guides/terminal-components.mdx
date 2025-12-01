@@ -3,7 +3,7 @@ title: Terminal Components
 description: API reference for InkTerminalBox and InkXterm components
 ---
 
-ink-web provides two main components for rendering Ink applications in the browser: `InkTerminalBox` and `InkXterm`. These components handle the xterm.js integration and provide a terminal-like environment for your Ink components.
+ink-web provides two main components for rendering Ink applications in the browser: `InkTerminalBox` and `InkXterm`. These components handle the ghostty-web integration and provide a terminal-like environment for your Ink components.
 
 ## InkTerminalBox
 
@@ -12,7 +12,6 @@ A higher-level component that wraps `InkXterm` with styling, CSS isolation, and 
 ```tsx
 import { InkTerminalBox, Box, Text } from "ink-web";
 import "ink-web/css";
-import "xterm/css/xterm.css";
 
 export function MyTerminal() {
   return (
@@ -32,7 +31,7 @@ export function MyTerminal() {
 | `children` | `React.ReactElement` | Required | The Ink component tree to render |
 | `className` | `string` | `""` | Additional CSS class for the container |
 | `focus` | `boolean` | `true` | Whether to focus the terminal on mount |
-| `termOptions` | `ITerminalOptions` | `{}` | xterm.js terminal options |
+| `termOptions` | `ITerminalOptions` | `{}` | Terminal options |
 | `rows` | `number` | `undefined` | Number of rows to display. Sets a fixed height. |
 | `onReady` | `() => void` | `undefined` | Callback fired when terminal is fully initialized |
 | `loading` | `React.ReactNode` | `undefined` | Loading indicator shown while terminal initializes |
@@ -40,7 +39,7 @@ export function MyTerminal() {
 ### Features
 
 - **CSS Isolation**: Resets inherited styles to prevent parent CSS from affecting terminal rendering
-- **Loading States**: Show a custom loading indicator while xterm.js initializes
+- **Loading States**: Show a custom loading indicator while the terminal initializes
 - **Fixed Height**: Use `rows` prop to set consistent height across SSR and client
 - **Automatic Sizing**: Automatically fits to container and handles resize events
 
@@ -68,11 +67,10 @@ export function MyTerminal() {
 
 ## InkXterm
 
-A lower-level component that directly integrates xterm.js with Ink. Use this when you need more control or don't want the additional styling from `InkTerminalBox`.
+A lower-level component that directly integrates ghostty-web with Ink. Use this when you need more control or don't want the additional styling from `InkTerminalBox`.
 
 ```tsx
 import { InkXterm, Box, Text } from "ink-web";
-import "xterm/css/xterm.css";
 
 export function MyTerminal() {
   return (
@@ -92,7 +90,7 @@ export function MyTerminal() {
 | `children` | `React.ReactElement` | Required | The Ink component tree to render |
 | `className` | `string` | `""` | CSS class for the container div |
 | `focus` | `boolean` | `true` | Whether to focus the terminal on mount |
-| `termOptions` | `ITerminalOptions` | `{}` | xterm.js terminal options |
+| `termOptions` | `ITerminalOptions` | `{}` | Terminal options |
 | `onReady` | `() => void` | `undefined` | Callback fired when terminal is fully initialized |
 
 ### Initialization Behavior
@@ -136,19 +134,19 @@ await unmount();
 |--------|------|-------------|
 | `container` | `HTMLElement` | DOM element to mount the terminal in |
 | `focus` | `boolean` | Whether to focus the terminal |
-| `termOptions` | `ITerminalOptions` | xterm.js terminal options |
+| `termOptions` | `ITerminalOptions` | Terminal options |
 | `onReady` | `() => void` | Callback when terminal is ready |
 
 ### Return Value
 
 | Property | Type | Description |
 |----------|------|-------------|
-| `term` | `Terminal` | The xterm.js Terminal instance |
+| `term` | `Terminal` | The ghostty-web Terminal instance |
 | `unmount` | `() => Promise<void>` | Cleanup function |
 
 ## Terminal Options
 
-Both components accept `termOptions` which are passed to xterm.js. Common options include:
+Both components accept `termOptions` which are passed to ghostty-web. Common options include:
 
 ```tsx
 <InkTerminalBox
@@ -166,7 +164,7 @@ Both components accept `termOptions` which are passed to xterm.js. Common option
 </InkTerminalBox>
 ```
 
-See the [xterm.js documentation](https://xtermjs.org/docs/api/terminal/interfaces/iterminaloptions/) for all available options.
+See the [ghostty-web documentation](https://github.com/coder/ghostty-web) for all available options. ghostty-web is API-compatible with xterm.js.
 
 ## Choosing Between Components
 

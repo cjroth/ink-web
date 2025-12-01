@@ -4,7 +4,7 @@
   border: none;
   overflow: hidden;
   position: relative;
-  background: #000000;
+  background: #1e1e1e;
   box-sizing: border-box;
 }
 
@@ -28,43 +28,24 @@
   position: absolute;
 }
 
-/* Ensure xterm container fills the space and isn't affected by docs styles */
-.ink-terminal-box .xterm {
-  padding: 0 !important;
-  margin: 0 !important;
-  height: 100% !important;
-  width: 100% !important;
-  text-align: left !important;
-  box-sizing: border-box !important;
-}
-
-.ink-terminal-box .xterm .xterm-screen {
-  padding: 0;
-}
-
-/* Prevent parent styles from centering terminal text */
-.ink-terminal-box .xterm .xterm-screen,
-.ink-terminal-box .xterm .xterm-rows,
-.ink-terminal-box .xterm .xterm-row {
-  text-align: left !important;
+/* Ensure ghostty canvas fills the space */
+.ink-terminal-box canvas {
   display: block !important;
+  width: 100% !important;
+  height: 100% !important;
 }
 
-/* Ensure proper font rendering */
-.ink-terminal-box .xterm-helper-textarea {
+/* Ensure the terminal container fills the space */
+.ink-terminal-box .ink-terminal-reset > div {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Hide helper textarea used for clipboard operations */
+.ink-terminal-box textarea {
   position: absolute !important;
   opacity: 0 !important;
-}
-
-/* Enable vertical scrolling, prevent horizontal */
-.ink-terminal-box .xterm .xterm-viewport {
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-}
-
-/* Hide default cursor - use input cursor instead */
-.ink-terminal-box .xterm .xterm-cursor {
-  display: none;
+  pointer-events: none !important;
 }
 
 /* Loading animations for skeleton state */

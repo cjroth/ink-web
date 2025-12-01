@@ -1,7 +1,7 @@
-import { FitAddon } from '@xterm/addon-fit'
+import { init, Terminal, FitAddon } from 'ghostty-web'
+import type { ITerminalOptions } from 'ghostty-web'
 import { render } from 'ink'
 import React from 'react'
-import { Terminal, type ITerminalOptions } from 'xterm'
 import { Readable, Writable } from './shims/stream'
 
 // Helper to check if yoga init is available
@@ -32,151 +32,163 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
   const initialCols = Math.floor(containerWidth / charWidth) || 80
   const initialRows = Math.floor(containerHeight / charHeight) || 24
 
-  const term = new Terminal({
-    convertEol: true,
-    disableStdin: false,
-    cols: initialCols,
-    rows: initialRows,
+  let term: Terminal | null = null
+  let fitAddon: FitAddon | null = null
+  let instance: any = null
+  let ro: ResizeObserver | null = null
 
-    ...opts.termOptions,
-  })
-  const fitAddon = new FitAddon()
+  // Initialize ghostty-web and create terminal
+  const initPromise = init().then(() => {
+    term = new Terminal({
+      cols: initialCols,
+      rows: initialRows,
+      ...opts.termOptions,
+    })
+    fitAddon = new FitAddon()
 
-  // Open terminal synchronously - Ink needs it immediately
-  term.open(opts.container)
-  term.loadAddon(fitAddon)
+    // Open terminal synchronously - Ink needs it immediately
+    term.open(opts.container)
+    term.loadAddon(fitAddon)
 
-  // Focus if needed (delay to allow full initialization)
-  if (opts.focus !== false) {
-    setTimeout(() => {
-      try {
-        term.focus()
-      } catch (e) {
-        console.warn('Error focusing terminal:', e)
-      }
-    }, 100)
-  }
-
-  // Create stdout stream that writes into xterm
-  const stdoutBase = new Writable()
-
-  // Override the write method to write to xterm
-  stdoutBase.write = (chunk: unknown, encoding?: any, cb?: any) => {
-    const str = typeof chunk === 'string' ? chunk : String(chunk)
-    term.write(str)
-
-    if (typeof encoding === 'function') {
-      encoding() // encoding is actually the callback
-    } else if (cb) {
-      cb()
+    // Focus if needed (delay to allow full initialization)
+    if (opts.focus !== false) {
+      setTimeout(() => {
+        try {
+          term?.focus()
+        } catch (e) {
+          console.warn('Error focusing terminal:', e)
+        }
+      }, 100)
     }
-    return true
-  }
 
-  const stdout = Object.assign(stdoutBase, {
-    columns: term.cols,
-    rows: term.rows,
-    isTTY: true,
-    writable: true,
-    setDefaultEncoding: (_enc: string) => stdout,
-    cork: () => {},
-    uncork: () => {},
-  }) as unknown as NodeJS.WriteStream
+    // Create stdout stream that writes into ghostty terminal
+    const stdoutBase = new Writable()
 
-  // Create stdin stream that emits data from xterm keystrokes
-  const stdinBase = new Readable()
-  const inputBuffer: string[] = []
-  const stdin = Object.assign(stdinBase, {
-    columns: term.cols,
-    rows: term.rows,
-    isTTY: true,
-    setEncoding: (_enc?: string) => {},
-    setRawMode: (_raw?: boolean) => {},
-    resume: () => {},
-    pause: () => {},
-    ref: () => {},
-    unref: () => {},
-    read: () => {
-      return inputBuffer.length > 0 ? inputBuffer.shift()! : null
-    },
-  }) as unknown as NodeJS.ReadStream
+    // Override the write method to write to terminal
+    stdoutBase.write = (chunk: unknown, encoding?: any, cb?: any) => {
+      const str = typeof chunk === 'string' ? chunk : String(chunk)
+      term?.write(str)
 
-  term.onData((data) => {
-    inputBuffer.push(data)
-    ;(stdin as unknown as { emit: (event: string) => void }).emit('readable')
-  })
+      if (typeof encoding === 'function') {
+        encoding() // encoding is actually the callback
+      } else if (cb) {
+        cb()
+      }
+      return true
+    }
 
-  const updateStreamsSize = () => {
-    const cols = term.cols
-    const rows = term.rows
-    ;(stdout as unknown as { columns: number; rows: number }).columns = cols
-    ;(stdout as unknown as { columns: number; rows: number }).rows = rows
-    ;(stdin as unknown as { columns: number; rows: number }).columns = cols
-    ;(stdin as unknown as { columns: number; rows: number }).rows = rows
-    ;(stdout as unknown as { emit: (event: string) => void }).emit('resize')
-  }
+    const stdout = Object.assign(stdoutBase, {
+      columns: term.cols,
+      rows: term.rows,
+      isTTY: true,
+      writable: true,
+      setDefaultEncoding: (_enc: string) => stdout,
+      cork: () => {},
+      uncork: () => {},
+    }) as unknown as NodeJS.WriteStream
 
-  // Update sizes BEFORE rendering Ink
-  updateStreamsSize()
+    // Create stdin stream that emits data from terminal keystrokes
+    const stdinBase = new Readable()
+    const inputBuffer: string[] = []
+    const stdin = Object.assign(stdinBase, {
+      columns: term.cols,
+      rows: term.rows,
+      isTTY: true,
+      setEncoding: (_enc?: string) => {},
+      setRawMode: (_raw?: boolean) => {},
+      resume: () => {},
+      pause: () => {},
+      ref: () => {},
+      unref: () => {},
+      read: () => {
+        return inputBuffer.length > 0 ? inputBuffer.shift()! : null
+      },
+    }) as unknown as NodeJS.ReadStream
 
-  // Wait for yoga WASM to initialize before rendering
-  let instance: any
+    term.onData((data: string) => {
+      inputBuffer.push(data)
+      ;(stdin as unknown as { emit: (event: string) => void }).emit('readable')
+    })
 
-  getYogaInit()
-    .then(() => {
-      instance = render(element, {
-        stdout,
-        stderr: stdout,
-        stdin,
-        patchConsole: false,
+    const updateStreamsSize = () => {
+      if (!term) return
+      const cols = term.cols
+      const rows = term.rows
+      ;(stdout as unknown as { columns: number; rows: number }).columns = cols
+      ;(stdout as unknown as { columns: number; rows: number }).rows = rows
+      ;(stdin as unknown as { columns: number; rows: number }).columns = cols
+      ;(stdin as unknown as { columns: number; rows: number }).rows = rows
+      ;(stdout as unknown as { emit: (event: string) => void }).emit('resize')
+    }
+
+    // Update sizes BEFORE rendering Ink
+    updateStreamsSize()
+
+    // Wait for yoga WASM to initialize before rendering
+    return getYogaInit()
+      .then(() => {
+        instance = render(element, {
+          stdout,
+          stderr: stdout,
+          stdin,
+          patchConsole: false,
+        })
+
+        // Set up resize handling - only after Ink is rendered
+        const resize = () => {
+          try {
+            if (term && fitAddon) {
+              fitAddon.fit()
+              updateStreamsSize()
+            }
+          } catch (e) {
+            console.error('Error during resize:', e)
+          }
+        }
+
+        // Observe container size changes
+        ro = new ResizeObserver(() => {
+          resize()
+        })
+        ro.observe(opts.container)
+
+        // Also listen to window resize as a fallback
+        const onWindowResize = () => resize()
+        window.addEventListener('resize', onWindowResize)
+
+        // Try initial resize after a delay, then signal ready
+        setTimeout(() => {
+          resize()
+          opts.onReady?.()
+        }, 200)
+
+        // Return cleanup info
+        return { onWindowResize }
       })
-    })
-    .catch((e: Error) => {
-      console.error('Error initializing Yoga or rendering Ink:', e)
-    })
-
-  // Set up resize handling - only after Ink is rendered
-  const resize = () => {
-    try {
-      // Only fit if the terminal has been properly initialized
-      if ((term as any)._core?.viewport) {
-        fitAddon.fit()
-        updateStreamsSize()
-      }
-    } catch (e) {
-      console.error('Error during resize:', e)
-    }
-  }
-
-  // Observe container size changes
-  const ro = new ResizeObserver(() => {
-    resize()
+      .catch((e: Error) => {
+        console.error('Error initializing Yoga or rendering Ink:', e)
+        return null
+      })
   })
-  ro.observe(opts.container)
-
-  // Also listen to window resize as a fallback
-  const onWindowResize = () => resize()
-  window.addEventListener('resize', onWindowResize)
-
-  // Try initial resize after a delay, then signal ready
-  setTimeout(() => {
-    resize()
-    opts.onReady?.()
-  }, 200)
 
   return {
-    term,
+    get term() {
+      return term
+    },
     unmount: async () => {
       try {
+        const cleanup = await initPromise
         if (instance) {
           instance.unmount()
         }
+        if (cleanup?.onWindowResize) {
+          window.removeEventListener('resize', cleanup.onWindowResize)
+        }
       } finally {
         try {
-          ro.disconnect()
+          ro?.disconnect()
         } catch {}
-        window.removeEventListener('resize', onWindowResize)
-        term.dispose()
+        term?.dispose()
       }
     },
   }

@@ -1,7 +1,6 @@
 'use client'
 
 import 'ink-web/css'
-import 'xterm/css/xterm.css'
 import { InkTerminalBox } from 'ink-web'
 import { DemoApp } from './DemoApp'
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import type { ITerminalOptions } from 'xterm'
+import type { ITerminalOptions } from 'ghostty-web'
 import { mountInkInXterm } from './xterm-ink'
 
 interface InkXtermProps {

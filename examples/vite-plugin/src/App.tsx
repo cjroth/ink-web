@@ -1,6 +1,5 @@
 import { Box, Text } from "ink";
 import { InkXterm } from "ink-web";
-import "xterm/css/xterm.css";
 
 const App = () => (
   <div style={{ width: "100vw", height: "100vh" }}>

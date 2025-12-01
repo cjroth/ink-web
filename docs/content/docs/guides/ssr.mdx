@@ -12,7 +12,6 @@ Ink Web provides first-class support for Next.js and other SSR frameworks. Use t
 
 import { InkTerminalBox, Box, Text } from 'ink-web'
 import 'ink-web/css'
-import 'xterm/css/xterm.css'
 
 export function MyTerminal({ onReady }: { onReady?: () => void }) {
   return (
@@ -66,7 +65,7 @@ The `createDynamicTerminal` helper creates a wrapper that:
 1. **Server render**: Renders a skeleton with the correct height
 2. **Client hydration**: Keeps the skeleton visible (no animation reset)
 3. **Terminal loads**: The actual terminal component loads in the background
-4. **Terminal ready**: Swaps to the real terminal when xterm.js is initialized
+4. **Terminal ready**: Swaps to the real terminal when ghostty-web is initialized
 
 This prevents the common SSR issues:
 - "self is not defined" errors

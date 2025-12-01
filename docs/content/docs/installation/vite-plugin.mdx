@@ -12,22 +12,22 @@ import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 <Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
   <Tab value="npm">
     ```bash
-    npm install ink-web ink xterm
+    npm install ink-web ink ghostty-web
     ```
   </Tab>
   <Tab value="yarn">
     ```bash
-    yarn add ink-web ink xterm
+    yarn add ink-web ink ghostty-web
     ```
   </Tab>
   <Tab value="pnpm">
     ```bash
-    pnpm add ink-web ink xterm
+    pnpm add ink-web ink ghostty-web
     ```
   </Tab>
   <Tab value="bun">
     ```bash
-    bun add ink-web ink xterm
+    bun add ink-web ink ghostty-web
     ```
   </Tab>
 </Tabs>
@@ -50,7 +50,6 @@ export default defineConfig({
 ```tsx
 import { Box, Text } from "ink";
 import { InkXterm } from "ink-web/core";
-import "xterm/css/xterm.css";
 
 const App = () => (
   <div style={{ width: "100vw", height: "100vh" }}>

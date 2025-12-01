@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react'
-import 'xterm/css/xterm.css'
 import { mountInkInXterm } from '../src'
 
 export default {
@@ -10,7 +9,7 @@ export const Basic = () => {
   const ref = useRef<HTMLDivElement | null>(null)
   useEffect(() => {
     if (!ref.current) return
-    const App = () => React.createElement('div', null, 'Ink + Xterm')
+    const App = () => React.createElement('div', null, 'Ink + Ghostty')
     const { unmount } = mountInkInXterm(React.createElement(App), { container: ref.current })
     return () => {
       void unmount()
