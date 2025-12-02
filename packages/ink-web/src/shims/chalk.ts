@@ -1,5 +1,5 @@
 // Browser shim for Chalk - provides ANSI color support
-// Generates proper ANSI escape codes for xterm
+// Generates proper ANSI escape codes for terminal emulators
 
 // ANSI escape codes
 const ANSI_CODES = {

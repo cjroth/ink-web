@@ -8,8 +8,8 @@ export type { InkTerminalLoadingPlaceholderProps, LoadingOption, LoadingType, Lo
 export const TERMINAL_LINE_HEIGHT = 18
 // Padding inside terminal (top + bottom)
 export const TERMINAL_PADDING = 20
-// Default background color (matches xterm default)
-export const TERMINAL_BACKGROUND = '#000000'
+// Default background color (using #010101 because ghostty-web treats #000000 as "use default")
+export const TERMINAL_BACKGROUND = '#010101'
 // Default number of rows
 export const DEFAULT_ROWS = 15
 

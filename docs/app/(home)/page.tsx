@@ -18,9 +18,9 @@ export default function HomePage() {
       </MacWindow>
       <Accordions type="single" className="w-full max-w-3xl text-left mt-8">
         <Accordion title="Why?">
-          I built Ink Web because I wanted a web-first, cross-platform app with an integrated CLI. After running into limitations with existing solutions, I found that rendering Ink components in Xterm.js worked surprisngly well. Also, Ink Web can be embedded directly into docs like Fumadocs, Nextra, etc.
+          I built Ink Web because I wanted a web-first, cross-platform app with an integrated CLI. After running into limitations with existing solutions, I found that rendering Ink components in a terminal emulator worked surprisingly well. Also, Ink Web can be embedded directly into docs like Fumadocs, Nextra, etc.
         </Accordion>
-        <Accordion title="How does it work?">Ink Web wraps Ink, polyfills the necessary Node.js APIs, and connects Ink to Xterm.js.</Accordion>
+        <Accordion title="How does it work?">Ink Web wraps Ink, polyfills the necessary Node.js APIs, and connects Ink to <a href="https://github.com/coder/ghostty-web" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">ghostty-web</a> for terminal rendering.</Accordion>
         <Accordion title="Is it compatible with existing Ink apps?">
           The React part of existing Ink apps should work with Ink Web - but you'll need to modify any Node.js-specific code to work in a browser environment.
         </Accordion>

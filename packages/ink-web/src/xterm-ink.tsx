@@ -42,6 +42,12 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
     term = new Terminal({
       cols: initialCols,
       rows: initialRows,
+      convertEol: true, // Convert \n to \r\n for proper line handling
+      theme: {
+        // Using #010101 because ghostty-web treats #000000 (0) as "use default"
+        background: '#010101',
+        ...opts.termOptions?.theme,
+      },
       ...opts.termOptions,
     })
     fitAddon = new FitAddon()
@@ -49,6 +55,9 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
     // Open terminal synchronously - Ink needs it immediately
     term.open(opts.container)
     term.loadAddon(fitAddon)
+
+    // Clear screen and hide the terminal's native cursor - Ink components render their own cursors
+    term.write('\x1b[2J\x1b[H\x1b[?25l')
 
     // Focus if needed (delay to allow full initialization)
     if (opts.focus !== false) {
@@ -67,6 +76,11 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
     // Override the write method to write to terminal
     stdoutBase.write = (chunk: unknown, encoding?: any, cb?: any) => {
       const str = typeof chunk === 'string' ? chunk : String(chunk)
+
+      // Always clear screen before writing. Ink does full redraws anyway,
+      // and this prevents ghosting artifacts from ghostty-web's dirty line
+      // optimization not clearing content that isn't overwritten.
+      term?.write('\x1b[2J\x1b[H') // Clear screen and cursor home
       term?.write(str)
 
       if (typeof encoding === 'function') {

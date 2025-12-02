@@ -8,27 +8,26 @@ There are **two ways** to use `ink-web`, depending on your needs:
 **Best for:** Most users who want less configuration and encapsulated dependencies.
 
 **Advantages:**
-- ✅ Minimal or no Vite plugin configuration (Vite auto-polyfills most node built-ins)
-- ✅ Shims are largely encapsulated and won't interfere with other code
-- ✅ Single import for both ink and the wrapper
+- Minimal or no Vite plugin configuration (Vite auto-polyfills most node built-ins)
+- Shims are largely encapsulated and won't interfere with other code
+- Single import for both ink and the wrapper
 
 **Disadvantages:**
-- ❌ Larger bundle size (~1MB for ink + dependencies)
-- ❌ If you use ink/chalk elsewhere, they get duplicated
-- ❌ May require minimal Vite config for production builds
+- Larger bundle size (~1MB for ink + dependencies)
+- If you use ink/chalk elsewhere, they get duplicated
+- May require minimal Vite config for production builds
 
 **Installation:**
 
 ```bash
-npm install ink-web react xterm
+npm install ink-web react ghostty-web
 ```
 
 **Usage:**
 
 ```typescript
-import { InkTerminalBox, Box, Text } from 'ink'
+import { InkTerminalBox, Box, Text } from 'ink-web'
 import 'ink-web/css'
-import 'xterm/css/xterm.css'
 
 const App = () => (
   <InkTerminalBox focus>
@@ -74,18 +73,18 @@ Then install: `npm install stream-browserify buffer process events`
 **Best for:** Advanced users who want smaller bundles or already use ink/chalk in their app.
 
 **Advantages:**
-- ✅ Smaller package bundle size (~5KB)
-- ✅ No duplication if you use ink/chalk elsewhere
-- ✅ More control over versions
+- Smaller package bundle size (~5KB)
+- No duplication if you use ink/chalk elsewhere
+- More control over versions
 
 **Disadvantages:**
-- ❌ Requires Vite plugin configuration
-- ❌ Shims are global to your entire build (may affect other code)
+- Requires Vite plugin configuration
+- Shims are global to your entire build (may affect other code)
 
 **Installation:**
 
 ```bash
-npm install ink-web ink react xterm
+npm install ink-web ink react ghostty-web
 ```
 
 **Vite Configuration:**
@@ -110,7 +109,6 @@ The plugin automatically:
 ```typescript
 import { InkXterm } from 'ink-web'
 import { Box, Text } from 'ink'
-import 'xterm/css/xterm.css'
 
 const App = () => (
   <InkXterm focus>
@@ -133,7 +131,6 @@ Note: Import ink components from `ink` separately.
 import { mountInkInXterm } from 'ink-web'
 import { Box, Text } from 'ink'
 import React from 'react'
-import 'xterm/css/xterm.css'
 
 const App = () => (
   <Box flexDirection="column">
@@ -158,7 +155,6 @@ await unmount()
 import { InkXterm } from 'ink-web'
 import { Box, Text } from 'ink'
 import React from 'react'
-import 'xterm/css/xterm.css'
 
 const App = () => (
   <Box flexDirection="column">
@@ -177,38 +173,38 @@ const MyTerminal = () => (
 
 ### `mountInkInXterm(element, options)`
 
-Mounts an Ink component into an Xterm.js terminal.
+Mounts an Ink component into a [ghostty-web](https://github.com/coder/ghostty-web) terminal.
 
 **Parameters:**
 - `element: React.ReactElement` - The Ink component to render
 - `options: InkWebOptions`
   - `container: HTMLElement` - The DOM element to mount the terminal in
   - `focus?: boolean` - Whether to focus the terminal (default: true)
-  - `termOptions?: ITerminalOptions` - Xterm.js terminal options
+  - `termOptions?: ITerminalOptions` - Terminal options
 
 **Returns:**
 ```typescript
 {
-  term: Terminal       // The Xterm.js terminal instance
+  term: Terminal       // The ghostty-web terminal instance
   unmount: () => Promise<void>  // Function to clean up and unmount
 }
 ```
 
 ### `<InkXterm>`
 
-React component wrapper for mounting Ink in Xterm.
+React component wrapper for mounting Ink in a terminal.
 
 **Props:**
 - `children: React.ReactElement` - The Ink component to render
 - `className?: string` - CSS class for the container
 - `focus?: boolean` - Whether to focus the terminal
-- `termOptions?: ITerminalOptions` - Xterm.js terminal options
+- `termOptions?: ITerminalOptions` - Terminal options
 
 ## How It Works
 
 This library provides browser-compatible shims for Node.js modules that Ink depends on (like `process`, `stream`, `tty`, etc.), allowing Ink to run in a browser environment.
 
-The shims are minimal implementations that provide just enough functionality for Ink to render correctly in Xterm.js. When you configure Vite to alias Node.js modules to these shims, Ink can run without modification.
+The shims are minimal implementations that provide just enough functionality for Ink to render correctly in [ghostty-web](https://github.com/coder/ghostty-web). When you configure Vite to alias Node.js modules to these shims, Ink can run without modification.
 
 ## Compatibility
 
@@ -216,4 +212,4 @@ The shims are minimal implementations that provide just enough functionality for
 - **Ink:** 6.x+
 - **Node.js:** 18.0.0+
 - **Vite:** 7.0.0+ (for plugin-based approach)
-- **Xterm.js:** 5.0.0+
+- **ghostty-web:** 0.3.0+
