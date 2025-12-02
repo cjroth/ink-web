@@ -73,6 +73,9 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
     // Create stdout stream that writes into ghostty terminal
     const stdoutBase = new Writable()
 
+    // Track if we've signaled ready (first render complete)
+    let hasSignaledReady = false
+
     // Override the write method to write to terminal
     stdoutBase.write = (chunk: unknown, encoding?: any, cb?: any) => {
       const str = typeof chunk === 'string' ? chunk : String(chunk)
@@ -82,6 +85,15 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
       // optimization not clearing content that isn't overwritten.
       term?.write('\x1b[2J\x1b[H') // Clear screen and cursor home
       term?.write(str)
+
+      // Signal ready after first write (Ink has rendered)
+      if (!hasSignaledReady) {
+        hasSignaledReady = true
+        // Use requestAnimationFrame to ensure the canvas has painted
+        requestAnimationFrame(() => {
+          opts.onReady?.()
+        })
+      }
 
       if (typeof encoding === 'function') {
         encoding() // encoding is actually the callback
@@ -170,10 +182,9 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
         const onWindowResize = () => resize()
         window.addEventListener('resize', onWindowResize)
 
-        // Try initial resize after a delay, then signal ready
+        // Try initial resize after a delay
         setTimeout(() => {
           resize()
-          opts.onReady?.()
         }, 200)
 
         // Return cleanup info
