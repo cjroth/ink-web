@@ -56,19 +56,19 @@ export default function Home() {
 "use client";
 
 import { Box, Text } from "ink";
-import { InkXterm } from "ink-web";
+import { InkTerminal } from "ink-web";
 import { Gradient } from '@/components/ui/gradient'
 import "ink-web/css";
 
 export default function Terminal() {
   return (
-    <InkXterm focus>
+    <InkTerminal focus>
       <Box flexDirection="column">
         <Gradient name="rainbow">
           <Text bold>Hello World!</Text>
         </Gradient>
       </Box>
-    </InkXterm>
+    </InkTerminal>
   )
 }
 ```

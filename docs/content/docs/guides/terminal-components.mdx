@@ -1,13 +1,13 @@
 ---
 title: Terminal Components
-description: API reference for InkTerminalBox and InkXterm components
+description: API reference for InkTerminalBox and InkTerminal components
 ---
 
-ink-web provides two main components for rendering Ink applications in the browser: `InkTerminalBox` and `InkXterm`. These components handle the ghostty-web integration and provide a terminal-like environment for your Ink components.
+ink-web provides two main components for rendering Ink applications in the browser: `InkTerminalBox` and `InkTerminal`. These components handle the ghostty-web integration and provide a terminal-like environment for your Ink components.
 
 ## InkTerminalBox
 
-A higher-level component that wraps `InkXterm` with styling, CSS isolation, and loading state support. This is the recommended component for most use cases.
+A higher-level component that wraps `InkTerminal` with styling, CSS isolation, and loading state support. This is the recommended component for most use cases.
 
 ```tsx
 import { InkTerminalBox, Box, Text } from "ink-web";
@@ -65,20 +65,20 @@ export function MyTerminal() {
 }
 ```
 
-## InkXterm
+## InkTerminal
 
 A lower-level component that directly integrates ghostty-web with Ink. Use this when you need more control or don't want the additional styling from `InkTerminalBox`.
 
 ```tsx
-import { InkXterm, Box, Text } from "ink-web";
+import { InkTerminal, Box, Text } from "ink-web";
 
 export function MyTerminal() {
   return (
-    <InkXterm focus>
+    <InkTerminal focus>
       <Box flexDirection="column">
         <Text>Hello World</Text>
       </Box>
-    </InkXterm>
+    </InkTerminal>
   );
 }
 ```
@@ -95,7 +95,7 @@ export function MyTerminal() {
 
 ### Initialization Behavior
 
-`InkXterm` uses a robust initialization strategy:
+`InkTerminal` uses a robust initialization strategy:
 
 1. **requestAnimationFrame**: Waits for the browser's next paint cycle to ensure the DOM is ready
 2. **Dimension Check**: Verifies the container has non-zero dimensions
@@ -103,16 +103,16 @@ export function MyTerminal() {
 
 This approach ensures reliable initialization without arbitrary timeouts.
 
-## mountInkInXterm
+## mountInk
 
-For advanced use cases, you can use the `mountInkInXterm` function directly to create your own terminal integration.
+For advanced use cases, you can use the `mountInk` function directly to create your own terminal integration.
 
 ```tsx
-import { mountInkInXterm, Box, Text } from "ink-web";
+import { mountInk, Box, Text } from "ink-web";
 
 const container = document.getElementById("terminal");
 
-const { term, unmount } = mountInkInXterm(
+const { term, unmount } = mountInk(
   <Box>
     <Text>Hello</Text>
   </Box>,
@@ -173,5 +173,5 @@ See the [ghostty-web documentation](https://github.com/coder/ghostty-web) for al
 | Standard terminal UI | `InkTerminalBox` |
 | Need loading states | `InkTerminalBox` |
 | SSR/Next.js apps | `InkTerminalBox` |
-| Custom styling/no CSS reset | `InkXterm` |
-| Advanced/custom integration | `mountInkInXterm` |
+| Custom styling/no CSS reset | `InkTerminal` |
+| Advanced/custom integration | `mountInk` |

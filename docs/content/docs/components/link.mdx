@@ -56,17 +56,17 @@ export default function Home() {
 "use client";
 
 import { Box } from "ink";
-import { InkXterm } from "ink-web";
+import { InkTerminal } from "ink-web";
 import { Link } from '@/components/ui/link'
 import "ink-web/css";
 
 export default function Terminal() {
   return (
-    <InkXterm focus>
+    <InkTerminal focus>
       <Box flexDirection="column">
         <Link url="https://github.com">GitHub</Link>
       </Box>
-    </InkXterm>
+    </InkTerminal>
   )
 }
 ```

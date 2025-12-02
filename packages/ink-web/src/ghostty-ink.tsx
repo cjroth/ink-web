@@ -21,7 +21,7 @@ export interface InkWebOptions {
 
 //
 
-export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions) {
+export function mountInk(element: React.ReactElement, opts: InkWebOptions) {
   // Get container dimensions to set initial terminal size
   const containerWidth = opts.container.clientWidth
   const containerHeight = opts.container.clientHeight

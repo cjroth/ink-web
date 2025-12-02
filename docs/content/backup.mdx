@@ -107,15 +107,15 @@ The plugin automatically:
 **Usage:**
 
 ```typescript
-import { InkXterm } from 'ink-web'
+import { InkTerminal } from 'ink-web'
 import { Box, Text } from 'ink'
 
 const App = () => (
-  <InkXterm focus>
+  <InkTerminal focus>
     <Box flexDirection="column">
       <Text color="green">Hello from Ink!</Text>
     </Box>
-  </InkXterm>
+  </InkTerminal>
 )
 ```
 
@@ -128,7 +128,7 @@ Note: Import ink components from `ink` separately.
 ### Imperative API
 
 ```typescript
-import { mountInkInXterm } from 'ink-web'
+import { mountInk } from 'ink-web'
 import { Box, Text } from 'ink'
 import React from 'react'
 
@@ -140,7 +140,7 @@ const App = () => (
 )
 
 const container = document.getElementById('terminal')!
-const { term, unmount } = mountInkInXterm(<App />, { 
+const { term, unmount } = mountInk(<App />, { 
   container,
   focus: true 
 })
@@ -152,7 +152,7 @@ await unmount()
 ### React Component API
 
 ```typescript
-import { InkXterm } from 'ink-web'
+import { InkTerminal } from 'ink-web'
 import { Box, Text } from 'ink'
 import React from 'react'
 
@@ -163,15 +163,15 @@ const App = () => (
 )
 
 const MyTerminal = () => (
-  <InkXterm className="terminal-container" focus>
+  <InkTerminal className="terminal-container" focus>
     <App />
-  </InkXterm>
+  </InkTerminal>
 )
 ```
 
 ## API Reference
 
-### `mountInkInXterm(element, options)`
+### `mountInk(element, options)`
 
 Mounts an Ink component into a [ghostty-web](https://github.com/coder/ghostty-web) terminal.
 
@@ -190,7 +190,7 @@ Mounts an Ink component into a [ghostty-web](https://github.com/coder/ghostty-we
 }
 ```
 
-### `<InkXterm>`
+### `<InkTerminal>`
 
 React component wrapper for mounting Ink in a terminal.
 

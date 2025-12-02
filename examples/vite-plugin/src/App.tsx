@@ -1,13 +1,13 @@
 import { Box, Text } from "ink";
-import { InkXterm } from "ink-web";
+import { InkTerminal } from "ink-web";
 
 const App = () => (
   <div style={{ width: "100vw", height: "100vh" }}>
-    <InkXterm focus>
+    <InkTerminal focus>
       <Box flexDirection="column">
         <Text color="green">Hello from Ink!</Text>
       </Box>
-    </InkXterm>
+    </InkTerminal>
   </div>
 );
 

@@ -45,17 +45,17 @@ A macOS-style window container with traffic light buttons (close, minimize, maxi
 
 import { Box, Text } from "ink";
 import { MacWindow } from '@/components/ui/mac-window'
-import { InkXterm } from "ink-web";
+import { InkTerminal } from "ink-web";
 import "ink-web/css";
 
 export default function Terminal() {
   return (
     <MacWindow title="Terminal">
-      <InkXterm focus>
+      <InkTerminal focus>
         <Box flexDirection="column">
           <Text color="green">Hello from Ink!</Text>
         </Box>
-      </InkXterm>
+      </InkTerminal>
     </MacWindow>
   )
 }

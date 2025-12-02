@@ -56,17 +56,17 @@ export default function Home() {
 "use client";
 
 import { Box } from "ink";
-import { InkXterm } from "ink-web";
+import { InkTerminal } from "ink-web";
 import { Spinner } from '@/components/ui/spinner'
 import "ink-web/css";
 
 export default function Terminal() {
   return (
-    <InkXterm focus>
+    <InkTerminal focus>
       <Box flexDirection="column">
         <Spinner text="Loading" />
       </Box>
-    </InkXterm>
+    </InkTerminal>
   )
 }
 ```

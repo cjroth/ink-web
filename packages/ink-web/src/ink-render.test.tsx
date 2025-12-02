@@ -140,7 +140,7 @@ describe('Ink rendering via bundled in browser-like environment', () => {
     expect(mod.Text).toBeDefined()
     expect(mod.render).toBeDefined()
     expect(mod.InkTerminalBox).toBeDefined()
-    expect(mod.mountInkInXterm).toBeDefined()
+    expect(mod.mountInk).toBeDefined()
   })
 
   test('can render ink via bundled with Text component', async () => {
@@ -217,7 +217,7 @@ describe('Ink rendering via bundled in browser-like environment', () => {
     document.body.appendChild(container)
 
     // Mock clientWidth/clientHeight on HTMLElement prototype since happy-dom doesn't compute layout
-    // This is needed for InkXterm to initialize properly (it checks dimensions of its inner div)
+    // This is needed for InkTerminal to initialize properly (it checks dimensions of its inner div)
     const originalClientWidth = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'clientWidth')
     const originalClientHeight = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'clientHeight')
     Object.defineProperty(HTMLElement.prototype, 'clientWidth', { value: 800, configurable: true })

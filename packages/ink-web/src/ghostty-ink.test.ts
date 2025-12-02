@@ -22,7 +22,7 @@ describe('Bundled imports', () => {
     expect(mod.Box).toBeDefined()
     expect(mod.Text).toBeDefined()
     expect(mod.InkTerminalBox).toBeDefined()
-    expect(mod.mountInkInXterm).toBeDefined()
+    expect(mod.mountInk).toBeDefined()
   })
 
   test('Ink components are properly imported', async () => {
@@ -40,14 +40,14 @@ describe('Stream shims', () => {
     const { Writable } = await import('./shims/stream')
     const stream = new Writable()
     const writes: string[] = []
-    
+
     stream.on('data', (data) => {
       writes.push(String(data))
     })
-    
+
     stream.write('Hello')
     stream.write(' World')
-    
+
     expect(writes).toEqual(['Hello', ' World'])
   })
 
@@ -62,10 +62,10 @@ describe('Ink rendering', () => {
   test('Ink renders to custom stream', async () => {
     const { render } = await import('ink')
     const { Writable } = await import('./shims/stream')
-    
+
     const stdout = new Writable()
     const writes: string[] = []
-    
+
     // Mock stdout properties that Ink needs
     Object.assign(stdout, {
       columns: 80,
@@ -76,22 +76,22 @@ describe('Ink rendering', () => {
         return true
       },
     })
-    
+
     const element = React.createElement(Text, {}, 'Hello Ink!')
-    const instance = render(element, { 
+    const instance = render(element, {
       stdout: stdout as any,
       stderr: stdout as any,
       stdin: process.stdin as any,
       patchConsole: false,
       debug: false,
     })
-    
+
     // Wait a bit for Ink to render
     await new Promise(resolve => setTimeout(resolve, 100))
-    
+
     console.log('Writes received:', writes)
     expect(writes.length).toBeGreaterThan(0)
-    
+
     instance.unmount()
   })
 
@@ -99,10 +99,10 @@ describe('Ink rendering', () => {
     const { render } = await import('ink')
     const { Box, Text } = await import('./bundled')
     const { Writable } = await import('./shims/stream')
-    
+
     const stdout = new Writable()
     const writes: string[] = []
-    
+
     Object.assign(stdout, {
       columns: 80,
       rows: 24,
@@ -113,13 +113,13 @@ describe('Ink rendering', () => {
         return true
       },
     })
-    
+
     const element = React.createElement(
       Box,
       { flexDirection: 'column' },
       React.createElement(Text, { color: 'green' }, 'Test Message')
     )
-    
+
     const instance = render(element, {
       stdout: stdout as any,
       stderr: stdout as any,
@@ -127,15 +127,15 @@ describe('Ink rendering', () => {
       patchConsole: false,
       debug: false,
     })
-    
+
     // Wait for Ink to render
     await new Promise(resolve => setTimeout(resolve, 200))
-    
+
     console.log('Total writes:', writes.length)
     console.log('First write:', writes[0]?.substring(0, 100))
-    
+
     expect(writes.length).toBeGreaterThan(0)
-    
+
     instance.unmount()
   })
 })

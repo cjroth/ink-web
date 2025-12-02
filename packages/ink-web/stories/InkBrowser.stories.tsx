@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { mountInkInXterm } from '../src'
+import { mountInk } from '../src'
 
 export default {
   title: 'Ink/Browser',
@@ -10,7 +10,7 @@ export const Basic = () => {
   useEffect(() => {
     if (!ref.current) return
     const App = () => React.createElement('div', null, 'Ink + Ghostty')
-    const { unmount } = mountInkInXterm(React.createElement(App), { container: ref.current })
+    const { unmount } = mountInk(React.createElement(App), { container: ref.current })
     return () => {
       void unmount()
     }

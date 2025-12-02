@@ -10,9 +10,9 @@ export { DemoApp } from './DemoApp'
 export { InkTerminalBox, getTerminalHeight } from './InkTerminalBox'
 export { InkTerminalLoadingPlaceholder } from './InkTerminalLoadingPlaceholder'
 export type { LoadingOption, LoadingPosition, LoadingType, LoadingConfig, InkTerminalLoadingPlaceholderProps } from './InkTerminalLoadingPlaceholder'
-export { InkXterm } from './InkXterm'
-export { mountInkInXterm } from './xterm-ink'
-export type { InkWebOptions } from './xterm-ink'
+export { InkTerminal } from './InkTerminal'
+export { mountInk } from './ghostty-ink'
+export type { InkWebOptions } from './ghostty-ink'
 
 // Re-export all of ink's exports with shims bundled in
 export { Box, measureElement, Newline, render, Spacer, Static, Text, Transform, useApp, useFocus, useFocusManager, useInput, useIsScreenReaderEnabled, useStderr, useStdin, useStdout } from 'ink'

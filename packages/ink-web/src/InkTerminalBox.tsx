@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react'
 import type { ITerminalOptions } from 'ghostty-web'
 import './InkTerminalBox.css'
-import { InkXterm } from './InkXterm'
+import { InkTerminal } from './InkTerminal'
 import { getTerminalHeight } from './utils'
 import { InkTerminalLoadingPlaceholder } from './InkTerminalLoadingPlaceholder'
 import type { LoadingOption } from './InkTerminalLoadingPlaceholder'
@@ -25,7 +25,7 @@ export interface InkTerminalBoxProps {
 export { getTerminalHeight }
 
 /**
- * A wrapper component that provides proper styling and containment for InkXterm.
+ * A wrapper component that provides proper styling and containment for InkTerminal.
  * Handles CSS isolation from parent styles and ensures proper scrolling behavior.
  */
 export const InkTerminalBox: React.FC<InkTerminalBoxProps> = ({ className = '', focus, termOptions, children, rows = 15, onReady, loading, padding = 10 }) => {
@@ -63,9 +63,9 @@ export const InkTerminalBox: React.FC<InkTerminalBoxProps> = ({ className = '', 
         className="ink-terminal-reset"
         style={showLoading ? { visibility: ready ? 'visible' : 'hidden', top: `${padding}px`, left: `${padding}px`, right: `${padding}px`, bottom: `${padding}px` } : { top: `${padding}px`, left: `${padding}px`, right: `${padding}px`, bottom: `${padding}px` }}
       >
-        <InkXterm focus={focus} termOptions={mergedTermOptions} onReady={handleReady}>
+        <InkTerminal focus={focus} termOptions={mergedTermOptions} onReady={handleReady}>
           {children}
-        </InkXterm>
+        </InkTerminal>
       </div>
     </div>
   )

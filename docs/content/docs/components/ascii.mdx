@@ -81,7 +81,7 @@ export default function Home() {
 "use client";
 
 import { Box } from "ink";
-import { InkXterm } from "ink-web";
+import { InkTerminal } from "ink-web";
 import { Ascii } from '@/components/ui/ascii'
 import figlet from 'figlet'
 import standard from 'figlet/importable-fonts/Standard.js'
@@ -92,11 +92,11 @@ figlet.parseFont('Standard', standard)
 
 export default function Terminal() {
   return (
-    <InkXterm focus>
+    <InkTerminal focus>
       <Box flexDirection="column">
         <Ascii text="Hello" />
       </Box>
-    </InkXterm>
+    </InkTerminal>
   )
 }
 ```
