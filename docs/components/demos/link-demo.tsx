@@ -3,7 +3,6 @@
 import { Box, Text } from "ink";
 import { InkTerminalBox } from "ink-web";
 import "ink-web/css";
-import "xterm/css/xterm.css";
 import { Link } from "@/components/ui/link";
 
 export default function LinkDemo({ onReady }: { onReady?: () => void }) {

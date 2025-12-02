@@ -56,17 +56,16 @@ export default function Home() {
 "use client";
 
 import { Box, Text } from "ink";
-import { InkXterm } from "ink-web";
+import { InkTerminal } from "ink-web";
 import { TextInput } from '@/components/ui/text-input'
 import "ink-web/css";
-import "xterm/css/xterm.css";
 import { useState } from "react";
 
 export default function Terminal() {
   const [history, setHistory] = useState<string[]>([]);
 
   return (
-    <InkXterm focus>
+    <InkTerminal focus>
       <Box flexDirection="column">
         {history.map((item, i) => (
           <Text key={i}>{item}</Text>
@@ -76,7 +75,7 @@ export default function Terminal() {
           placeholder="Type here..."
         />
       </Box>
-    </InkXterm>
+    </InkTerminal>
   )
 }
 ```

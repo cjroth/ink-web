@@ -84,7 +84,7 @@ afterEach(() => {
   delete global.cancelAnimationFrame
 })
 
-describe('InkXterm initialization behavior', () => {
+describe('InkTerminal initialization behavior', () => {
   test('requestAnimationFrame mock works correctly', () => {
     const cb1 = () => {}
     const cb2 = () => {}
@@ -148,9 +148,9 @@ describe('InkXterm initialization behavior', () => {
   })
 })
 
-describe('InkXterm container dimension logic', () => {
+describe('InkTerminal container dimension logic', () => {
   test('container with zero dimensions should trigger ResizeObserver', () => {
-    // Simulate the logic in InkXterm
+    // Simulate the logic in InkTerminal
     const container = {
       clientWidth: 0,
       clientHeight: 0,

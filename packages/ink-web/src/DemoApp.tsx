@@ -20,7 +20,7 @@ export const DemoApp = () => {
 
   return (
     <Box flexDirection="column">
-      <Text color="green">Ink + Xterm (browser)</Text>
+      <Text color="green">Ink + ghostty-web (browser)</Text>
       <Text dimColor>React version: {React.version}</Text>
       <Text dimColor>Type something and press Enter...</Text>
       <Text> </Text>

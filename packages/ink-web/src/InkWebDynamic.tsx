@@ -2,7 +2,6 @@
 
 // CSS imports - these are loaded at runtime, externalized during build
 import 'ink-web/css'
-import 'xterm/css/xterm.css'
 
 import dynamic from 'next/dynamic'
 import React, { useEffect, useState, type ReactNode } from 'react'

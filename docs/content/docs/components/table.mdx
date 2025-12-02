@@ -56,10 +56,9 @@ export default function Home() {
 "use client";
 
 import { Box } from "ink";
-import { InkXterm } from "ink-web";
+import { InkTerminal } from "ink-web";
 import { Table } from '@/components/ui/table'
 import "ink-web/css";
-import "xterm/css/xterm.css";
 
 const data = [
   { name: 'Alice', age: 30, city: 'NYC' },
@@ -69,11 +68,11 @@ const data = [
 
 export default function Terminal() {
   return (
-    <InkXterm focus>
+    <InkTerminal focus>
       <Box flexDirection="column">
         <Table data={data} />
       </Box>
-    </InkXterm>
+    </InkTerminal>
   )
 }
 ```

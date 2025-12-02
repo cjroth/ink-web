@@ -73,7 +73,7 @@ describe('Ink rendering in Node.js environment', () => {
 
     const element = React.createElement(Text, {}, 'Hello from Ink!')
     let instance: any
-    
+
     await act(async () => {
       instance = render(element, {
         stdout: mockStdout as any,
@@ -82,7 +82,7 @@ describe('Ink rendering in Node.js environment', () => {
         patchConsole: false,
         debug: false,
       })
-      
+
       // Wait for render
       await new Promise((resolve) => setTimeout(resolve, 100))
     })
@@ -109,7 +109,7 @@ describe('Ink rendering in Node.js environment', () => {
     )
 
     let instance: any
-    
+
     await act(async () => {
       instance = render(element, {
         stdout: mockStdout as any,
@@ -140,7 +140,7 @@ describe('Ink rendering via bundled in browser-like environment', () => {
     expect(mod.Text).toBeDefined()
     expect(mod.render).toBeDefined()
     expect(mod.InkTerminalBox).toBeDefined()
-    expect(mod.mountInkInXterm).toBeDefined()
+    expect(mod.mountInk).toBeDefined()
   })
 
   test('can render ink via bundled with Text component', async () => {
@@ -149,7 +149,7 @@ describe('Ink rendering via bundled in browser-like environment', () => {
 
     const element = React.createElement(Text, {}, 'Bundled Ink Test')
     let instance: any
-    
+
     await act(async () => {
       instance = render(element, {
         stdout: mockStdout as any,
@@ -184,7 +184,7 @@ describe('Ink rendering via bundled in browser-like environment', () => {
     )
 
     let instance: any
-    
+
     await act(async () => {
       instance = render(element, {
         stdout: mockStdout as any,
@@ -217,14 +217,59 @@ describe('Ink rendering via bundled in browser-like environment', () => {
     document.body.appendChild(container)
 
     // Mock clientWidth/clientHeight on HTMLElement prototype since happy-dom doesn't compute layout
-    // This is needed for InkXterm to initialize properly (it checks dimensions of its inner div)
+    // This is needed for InkTerminal to initialize properly (it checks dimensions of its inner div)
     const originalClientWidth = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'clientWidth')
     const originalClientHeight = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'clientHeight')
     Object.defineProperty(HTMLElement.prototype, 'clientWidth', { value: 800, configurable: true })
     Object.defineProperty(HTMLElement.prototype, 'clientHeight', { value: 600, configurable: true })
 
-    // Track what gets written to the terminal
-    const writes: string[] = []
+    // Mock canvas getContext since happy-dom doesn't support it and ghostty-web uses canvas
+    const originalGetContext = HTMLCanvasElement.prototype.getContext
+    HTMLCanvasElement.prototype.getContext = function(contextId: string) {
+      if (contextId === '2d') {
+        return {
+          fillRect: () => {},
+          clearRect: () => {},
+          fillText: () => {},
+          strokeRect: () => {},
+          beginPath: () => {},
+          moveTo: () => {},
+          lineTo: () => {},
+          stroke: () => {},
+          fill: () => {},
+          arc: () => {},
+          rect: () => {},
+          clip: () => {},
+          save: () => {},
+          restore: () => {},
+          scale: () => {},
+          translate: () => {},
+          rotate: () => {},
+          transform: () => {},
+          setTransform: () => {},
+          resetTransform: () => {},
+          createLinearGradient: () => ({ addColorStop: () => {} }),
+          createRadialGradient: () => ({ addColorStop: () => {} }),
+          createPattern: () => null,
+          measureText: () => ({ width: 10, actualBoundingBoxAscent: 12, actualBoundingBoxDescent: 3 }),
+          getImageData: () => ({ data: new Uint8ClampedArray(0), width: 0, height: 0 }),
+          putImageData: () => {},
+          drawImage: () => {},
+          canvas: this,
+          font: '',
+          fillStyle: '',
+          strokeStyle: '',
+          textBaseline: '',
+          textAlign: '',
+          lineWidth: 1,
+          lineCap: '',
+          lineJoin: '',
+          globalAlpha: 1,
+          globalCompositeOperation: '',
+        } as unknown as CanvasRenderingContext2D
+      }
+      return null
+    } as any
 
     // Render the component
     const TestApp = () =>
@@ -245,16 +290,16 @@ describe('Ink rendering via bundled in browser-like environment', () => {
       })
       unmountFn = unmount
 
-      // Wait for requestAnimationFrame to fire and xterm to initialize
+      // Wait for requestAnimationFrame to fire and ghostty-web to initialize
       await new Promise((resolve) => setTimeout(resolve, 100))
     })
 
     // Wait for Ink to initialize and render
     await waitFor(
       () => {
-        // Check if xterm terminal was created
-        const terminalElement = container.querySelector('.xterm')
-        expect(terminalElement).toBeTruthy()
+        // Check if canvas element was created (ghostty-web uses canvas for rendering)
+        const canvasElement = container.querySelector('canvas')
+        expect(canvasElement).toBeTruthy()
       },
       { timeout: 3000 }
     )
@@ -267,6 +312,9 @@ describe('Ink rendering via bundled in browser-like environment', () => {
     // Cleanup
     unmount()
     document.body.removeChild(container)
+
+    // Restore original getContext
+    HTMLCanvasElement.prototype.getContext = originalGetContext
 
     // Restore original clientWidth/clientHeight
     if (originalClientWidth) {
@@ -286,7 +334,7 @@ describe('Yoga layout engine', () => {
 
     const element = React.createElement(Box, {}, 'Test')
     let instance: any
-    
+
     await act(async () => {
       instance = render(element, {
         stdout: mockStdout as any,
@@ -323,7 +371,7 @@ describe('Yoga layout engine', () => {
     )
 
     let instance: any
-    
+
     await act(async () => {
       instance = render(element, {
         stdout: mockStdout as any,
@@ -346,4 +394,3 @@ describe('Yoga layout engine', () => {
     })
   })
 })
-

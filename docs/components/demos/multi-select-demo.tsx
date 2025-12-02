@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Box, Text } from "ink";
 import { InkTerminalBox } from "ink-web";
 import "ink-web/css";
-import "xterm/css/xterm.css";
 import { MultiSelect, MultiSelectItem } from "@/components/ui/multi-select";
 
 const items = [

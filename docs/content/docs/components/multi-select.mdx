@@ -56,10 +56,9 @@ export default function Home() {
 "use client";
 
 import { Box, Text } from "ink";
-import { InkXterm } from "ink-web";
+import { InkTerminal } from "ink-web";
 import { MultiSelect } from '@/components/ui/multi-select'
 import "ink-web/css";
-import "xterm/css/xterm.css";
 
 const items = [
   { label: 'Apple', value: 'apple' },
@@ -69,7 +68,7 @@ const items = [
 
 export default function Terminal() {
   return (
-    <InkXterm focus>
+    <InkTerminal focus>
       <Box flexDirection="column">
         <Text>Select fruits:</Text>
         <MultiSelect
@@ -77,7 +76,7 @@ export default function Terminal() {
           onSubmit={(selected) => console.log('Selected:', selected)}
         />
       </Box>
-    </InkXterm>
+    </InkTerminal>
   )
 }
 ```

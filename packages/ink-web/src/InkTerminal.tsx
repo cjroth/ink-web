@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react'
-import type { ITerminalOptions } from 'xterm'
-import { mountInkInXterm } from './xterm-ink'
+import type { ITerminalOptions } from 'ghostty-web'
+import { mountInk } from './ghostty-ink'
 
-interface InkXtermProps {
+interface InkTerminalProps {
   className?: string
   focus?: boolean
   termOptions?: ITerminalOptions
@@ -10,7 +10,7 @@ interface InkXtermProps {
   onReady?: () => void
 }
 
-export const InkXterm: React.FC<InkXtermProps> = ({ className = '', focus, termOptions, children, onReady }) => {
+export const InkTerminal: React.FC<InkTerminalProps> = ({ className = '', focus, termOptions, children, onReady }) => {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const unmountRef = useRef<(() => Promise<void>) | null>(null)
   const initializedRef = useRef(false)
@@ -27,7 +27,7 @@ export const InkXterm: React.FC<InkXtermProps> = ({ className = '', focus, termO
       if (container.clientWidth === 0 || container.clientHeight === 0) return
 
       initializedRef.current = true
-      const { unmount } = mountInkInXterm(children, { container, focus, termOptions, onReady })
+      const { unmount } = mountInk(children, { container, focus, termOptions, onReady })
       unmountRef.current = unmount
     }
 
@@ -64,4 +64,4 @@ export const InkXterm: React.FC<InkXtermProps> = ({ className = '', focus, termO
   return <div className={className} ref={containerRef} style={{ width: '100%', height: '100%' }} />
 }
 
-export default InkXterm
+export default InkTerminal
