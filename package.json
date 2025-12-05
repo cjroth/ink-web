@@ -1,6 +1,6 @@
 {
   "name": "ink-web",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "author": "Chris Roth <chris@cjroth.com>",
   "repository": {
     "url": "https://github.com/cjroth/ink-web.git"
@@ -18,6 +18,6 @@
     "ui:test": "bun run --cwd packages/ink-ui test",
     "docs": "bun run --cwd docs dev",
     "docs:build": "bun run build && bun run --cwd docs build",
-    "publish": "npm publish --workspace packages/ink-web"
+    "publish": "cp README.md packages/ink-web/README.md && npm publish --workspace packages/ink-web"
   }
 }
