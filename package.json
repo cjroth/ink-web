@@ -13,6 +13,7 @@
     "build": "bun run --cwd packages/ink-web build",
     "dev": "bun run --cwd packages/ink-web dev",
     "test": "bun run --cwd packages/ink-web test",
+    "test:ci": "bun test --randomize --rerun-each 5",
     "tsc": "bunx tsc --noEmit -p packages/ink-web && bunx tsc --noEmit -p packages/ink-ui && bunx tsc --noEmit -p docs",
     "ui:build": "bun run --cwd packages/ink-ui build",
     "ui:test": "bun run --cwd packages/ink-ui test",
