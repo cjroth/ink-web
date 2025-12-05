@@ -2,7 +2,37 @@ import { RootProvider } from 'fumadocs-ui/provider/next'
 import localFont from 'next/font/local'
 import { Analytics } from "@vercel/analytics/next"
 import { Footer } from '@/lib/layout.shared'
+import type { Metadata } from 'next'
 import './global.css'
+
+const siteConfig = {
+  name: 'Ink Web',
+  title: 'Ink Web - CLIs in the browser & terminal.',
+  description: 'Build interactive command-line apps with Ink and React that run in the browser as well as in the terminal.',
+  url: 'https://ink-web.dev',
+}
+
+export const metadata: Metadata = {
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: siteConfig.title,
+    template: `%s | ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: siteConfig.url,
+    siteName: siteConfig.name,
+    title: siteConfig.title,
+    description: siteConfig.description,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: siteConfig.title,
+    description: siteConfig.description,
+  },
+}
 
 const hubotSans = localFont({
   src: [
