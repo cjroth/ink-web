@@ -65,7 +65,7 @@ afterEach(() => {})
 
 describe('Ascii Component', () => {
   test('renders ASCII art text', async () => {
-    const { render, Box, Text } = await import('./bundled')
+    const { render, Box, Text } = await import('./index')
     const mockStdout = createMockStdout()
 
     const Ascii = ({ text, font = 'Standard', color }: { text: string; font?: string; color?: string }) => {
@@ -101,7 +101,7 @@ describe('Ascii Component', () => {
   })
 
   test('renders with custom font', async () => {
-    const { render, Box, Text } = await import('./bundled')
+    const { render, Box, Text } = await import('./index')
     const mockStdout = createMockStdout()
 
     const Ascii = ({ text, font = 'Standard', color }: { text: string; font?: string; color?: string }) => {
@@ -137,7 +137,7 @@ describe('Ascii Component', () => {
   })
 
   test('renders with color', async () => {
-    const { render, Box, Text } = await import('./bundled')
+    const { render, Box, Text } = await import('./index')
     const mockStdout = createMockStdout()
 
     const Ascii = ({ text, font = 'Standard', color }: { text: string; font?: string; color?: string }) => {
@@ -175,7 +175,7 @@ describe('Ascii Component', () => {
 
 describe('Ascii Component Snapshots', () => {
   test('basic ascii snapshot', async () => {
-    const { render, Box, Text } = await import('./bundled')
+    const { render, Box, Text } = await import('./index')
     const mockStdout = createMockStdout()
 
     const Ascii = ({ text, font = 'Standard', color }: { text: string; font?: string; color?: string }) => {

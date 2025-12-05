@@ -13,7 +13,7 @@ import React from 'react'
 describe('Yoga Proxy in bundled environment', () => {
   test('Yoga.Node.create() should work through proxy without xterm', async () => {
     // Import the bundled version which uses the Yoga proxy
-    const mod = await import('./bundled')
+    const mod = await import('./index')
     
     // Wait for yoga to initialize
     if (mod.waitForYogaInit) {
@@ -89,7 +89,7 @@ describe('Yoga Proxy in bundled environment', () => {
   
   test('can access Yoga constants through proxy directly', async () => {
     // Import bundled to ensure yoga is initialized
-    const mod = await import('./bundled')
+    const mod = await import('./index')
     if (mod.waitForYogaInit) {
       await mod.waitForYogaInit()
     }

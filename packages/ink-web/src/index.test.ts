@@ -11,23 +11,23 @@ beforeAll(() => {
   }
 })
 
-describe('Bundled without browser', () => {
-  test('Can import Ink components from bundled', async () => {
+describe('Index exports', () => {
+  test('Can import Ink components from index', async () => {
     // This should work with happy-dom providing document/window
-    const { Box, Text, render } = await import('./bundled')
+    const { Box, Text, render } = await import('./index')
     expect(Box).toBeDefined()
     expect(Text).toBeDefined()
     expect(render).toBeDefined()
   })
 
-  test('Ink from bundled renders to stream', async () => {
-    const { Box, Text, render } = await import('./bundled')
+  test('Ink renders to stream', async () => {
+    const { Box, Text, render } = await import('./index')
     const { Writable } = await import('./shims/stream')
-    
+
     const stdout = new Writable()
     const writes: string[] = []
     const listeners: Record<string, ((...args: any[]) => void)[]> = {}
-    
+
     Object.assign(stdout, {
       columns: 80,
       rows: 24,
@@ -49,14 +49,14 @@ describe('Bundled without browser', () => {
       cork: () => {},
       uncork: () => {},
     })
-    
+
     try {
       // Wait for yoga to be ready
       if ((globalThis as any).__yogaPromise) {
         await (globalThis as any).__yogaPromise
         console.log('Yoga promise resolved')
       }
-      
+
       const element = React.createElement(Text, {}, 'Hello Bundled!')
       const instance = render(element, {
         stdout: stdout as any,
@@ -65,15 +65,15 @@ describe('Bundled without browser', () => {
         patchConsole: false,
         debug: false,
       })
-      
+
       // Wait for Ink to render
       await new Promise(resolve => setTimeout(resolve, 200))
-      
+
       console.log('Bundled writes:', writes)
       console.log('First write:', writes[0])
-      
+
       expect(writes.length).toBeGreaterThan(0)
-      
+
       instance.unmount()
     } catch (error) {
       console.error('Error during test:', error)
@@ -81,4 +81,3 @@ describe('Bundled without browser', () => {
     }
   })
 })
-

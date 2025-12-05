@@ -68,7 +68,7 @@ afterEach(() => {
 
 describe('Gradient Component', () => {
   test('renders with built-in rainbow gradient', async () => {
-    const { render, Text, Transform } = await import('./bundled')
+    const { render, Text, Transform } = await import('./index')
     const mockStdout = createMockStdout()
 
     // Simple gradient implementation for testing
@@ -110,7 +110,7 @@ describe('Gradient Component', () => {
   })
 
   test('renders with custom colors', async () => {
-    const { render, Text, Transform } = await import('./bundled')
+    const { render, Text, Transform } = await import('./index')
     const mockStdout = createMockStdout()
 
     const Gradient = ({ children, colors }: { children: React.ReactNode; colors: string[] }) => {
@@ -150,7 +150,7 @@ describe('Gradient Component', () => {
   })
 
   test('works with multiline text', async () => {
-    const { render, Box, Text, Transform } = await import('./bundled')
+    const { render, Box, Text, Transform } = await import('./index')
     const mockStdout = createMockStdout()
 
     const Gradient = ({ children }: { children: React.ReactNode }) => {
@@ -196,13 +196,13 @@ describe('Gradient Component', () => {
   })
 
   test('Transform component is available', async () => {
-    const { Transform } = await import('./bundled')
+    const { Transform } = await import('./index')
     expect(Transform).toBeDefined()
     expect(typeof Transform).toBe('function')
   })
 
   test('handles empty text gracefully', async () => {
-    const { render, Text, Transform } = await import('./bundled')
+    const { render, Text, Transform } = await import('./index')
     const mockStdout = createMockStdout()
 
     const Gradient = ({ children }: { children: React.ReactNode }) => {

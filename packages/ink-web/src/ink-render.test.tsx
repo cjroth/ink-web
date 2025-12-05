@@ -135,7 +135,7 @@ describe('Ink rendering in Node.js environment', () => {
 
 describe('Ink rendering via bundled in browser-like environment', () => {
   test('can import from bundled and get all exports', async () => {
-    const mod = await import('./bundled')
+    const mod = await import('./index')
     expect(mod.Box).toBeDefined()
     expect(mod.Text).toBeDefined()
     expect(mod.render).toBeDefined()
@@ -144,7 +144,7 @@ describe('Ink rendering via bundled in browser-like environment', () => {
   })
 
   test('can render ink via bundled with Text component', async () => {
-    const { render, Text } = await import('./bundled')
+    const { render, Text } = await import('./index')
     const mockStdout = createMockStdout()
 
     const element = React.createElement(Text, {}, 'Bundled Ink Test')
@@ -173,7 +173,7 @@ describe('Ink rendering via bundled in browser-like environment', () => {
   })
 
   test('can render Box and Text from bundled', async () => {
-    const { render, Box, Text } = await import('./bundled')
+    const { render, Box, Text } = await import('./index')
     const mockStdout = createMockStdout()
 
     const element = React.createElement(
@@ -208,7 +208,7 @@ describe('Ink rendering via bundled in browser-like environment', () => {
   })
 
   test('renders with InkTerminalBox in browser environment', async () => {
-    const { InkTerminalBox, Text } = await import('./bundled')
+    const { InkTerminalBox, Text } = await import('./index')
 
     // Create a container element
     const container = document.createElement('div')
@@ -281,7 +281,7 @@ describe('Ink rendering via bundled in browser-like environment', () => {
 
 describe('Yoga layout engine', () => {
   test('yogaNode is created when using bundled', async () => {
-    const { render, Box } = await import('./bundled')
+    const { render, Box } = await import('./index')
     const mockStdout = createMockStdout()
 
     const element = React.createElement(Box, {}, 'Test')
@@ -311,7 +311,7 @@ describe('Yoga layout engine', () => {
   })
 
   test('layout calculations work correctly', async () => {
-    const { render, Box, Text } = await import('./bundled')
+    const { render, Box, Text } = await import('./index')
     const mockStdout = createMockStdout()
 
     // Create a complex layout that requires yoga

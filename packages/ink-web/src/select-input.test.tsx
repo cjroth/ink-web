@@ -183,7 +183,7 @@ describe('SelectInput helper functions', () => {
 
 describe('SelectInput rendering', () => {
   test('renders all items', async () => {
-    const { render, Box, Text, useInput } = await import('./bundled')
+    const { render, Box, Text, useInput } = await import('./index')
     const mockStdout = createMockStdout()
     const mockStdin = createMockStdin()
 
@@ -236,7 +236,7 @@ describe('SelectInput rendering', () => {
   })
 
   test('renders with indicator for selected item', async () => {
-    const { render, Box, Text } = await import('./bundled')
+    const { render, Box, Text } = await import('./index')
     const mockStdout = createMockStdout()
     const mockStdin = createMockStdin()
 
@@ -293,7 +293,7 @@ describe('SelectInput rendering', () => {
   })
 
   test('handles empty items array', async () => {
-    const { render, Box } = await import('./bundled')
+    const { render, Box } = await import('./index')
     const mockStdout = createMockStdout()
     const mockStdin = createMockStdin()
 
@@ -327,7 +327,7 @@ describe('SelectInput rendering', () => {
 
 describe('SelectInput with limit', () => {
   test('respects limit prop for visible items', async () => {
-    const { render, Box, Text } = await import('./bundled')
+    const { render, Box, Text } = await import('./index')
     const mockStdout = createMockStdout()
     const mockStdin = createMockStdin()
 

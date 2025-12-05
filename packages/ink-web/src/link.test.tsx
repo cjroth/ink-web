@@ -68,7 +68,7 @@ afterEach(() => {
 
 describe('Link Component', () => {
   test('renders link with text', async () => {
-    const { render, Text, Transform } = await import('./bundled')
+    const { render, Text, Transform } = await import('./index')
     const mockStdout = createMockStdout()
 
     const Link = ({ children, url }: { children: React.ReactNode; url: string }) => (
@@ -104,7 +104,7 @@ describe('Link Component', () => {
   })
 
   test('renders with different URLs', async () => {
-    const { render, Text, Transform } = await import('./bundled')
+    const { render, Text, Transform } = await import('./index')
     const mockStdout = createMockStdout()
 
     const Link = ({ children, url }: { children: React.ReactNode; url: string }) => (
@@ -140,13 +140,13 @@ describe('Link Component', () => {
   })
 
   test('Transform component is available', async () => {
-    const { Transform } = await import('./bundled')
+    const { Transform } = await import('./index')
     expect(Transform).toBeDefined()
     expect(typeof Transform).toBe('function')
   })
 
   test('handles empty children gracefully', async () => {
-    const { render, Text, Transform } = await import('./bundled')
+    const { render, Text, Transform } = await import('./index')
     const mockStdout = createMockStdout()
 
     const Link = ({ children, url }: { children: React.ReactNode; url: string }) => (
@@ -182,7 +182,7 @@ describe('Link Component', () => {
 
 describe('Link Component Snapshots', () => {
   test('basic link output snapshot', async () => {
-    const { render, Text, Transform } = await import('./bundled')
+    const { render, Text, Transform } = await import('./index')
     const mockStdout = createMockStdout()
 
     const Link = ({ children, url }: { children: React.ReactNode; url: string }) => (
@@ -216,7 +216,7 @@ describe('Link Component Snapshots', () => {
   })
 
   test('link with different text snapshot', async () => {
-    const { render, Text, Transform } = await import('./bundled')
+    const { render, Text, Transform } = await import('./index')
     const mockStdout = createMockStdout()
 
     const Link = ({ children, url }: { children: React.ReactNode; url: string }) => (
