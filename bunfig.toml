@@ -1,0 +1,8 @@
+[test]
+# Force color output for deterministic snapshot testing
+# Chalk caches color support at module load time, so we need to set this
+# before any modules are loaded
+preload = ["./packages/ink-ui/test/preload.ts"]
+
+[test.env]
+FORCE_COLOR = "3"

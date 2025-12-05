@@ -1,105 +1,42 @@
-import { describe, expect, test, beforeAll, afterEach } from 'bun:test'
+import { describe, expect, test, beforeAll } from 'bun:test'
 import React from 'react'
-import { GlobalRegistrator } from '@happy-dom/global-registrator'
 import { render as rtlRender, waitFor, act } from '@testing-library/react'
-
-// Test helper to capture stdout writes
-interface MockStdout {
-  writes: string[]
-  columns: number
-  rows: number
-  isTTY: boolean
-  write: (str: string) => boolean
-  on: (event: string, handler: (...args: any[]) => void) => void
-  off: (event: string, handler: (...args: any[]) => void) => void
-  emit: (event: string, ...args: any[]) => void
-  setDefaultEncoding: (encoding: string) => MockStdout
-  cork: () => void
-  uncork: () => void
-}
-
-function createMockStdout(): MockStdout {
-  const writes: string[] = []
-  const listeners: Record<string, ((...args: any[]) => void)[]> = {}
-
-  return {
-    writes,
-    columns: 80,
-    rows: 24,
-    isTTY: true,
-    write: (str: string) => {
-      writes.push(str)
-      return true
-    },
-    on: (event: string, handler: (...args: any[]) => void) => {
-      if (!listeners[event]) listeners[event] = []
-      listeners[event].push(handler)
-    },
-    off: (event: string, handler: (...args: any[]) => void) => {
-      if (listeners[event]) {
-        listeners[event] = listeners[event].filter((h) => h !== handler)
-      }
-    },
-    emit: (event: string, ...args: any[]) => {
-      if (listeners[event]) {
-        listeners[event].forEach((handler) => handler(...args))
-      }
-    },
-    setDefaultEncoding: () => {
-      return {} as MockStdout
-    },
-    cork: () => {},
-    uncork: () => {},
-  } as MockStdout
-}
+import { setupHappyDom, createMockWriteStream, createMockReadStream, wait } from '../test/utils'
 
 // Setup happy-dom for browser-like environment
 beforeAll(() => {
-  try {
-    GlobalRegistrator.register()
-  } catch (e) {
-    // Already registered, ignore
-  }
-})
-
-afterEach(() => {
-  // Clean up any mounted instances
+  setupHappyDom()
 })
 
 describe('Ink rendering in Node.js environment', () => {
   test('can import ink directly and render text', async () => {
     const { render, Text } = await import('ink')
-    const mockStdout = createMockStdout()
+    const stdout = createMockWriteStream()
+    const stderr = createMockWriteStream()
+    const stdin = createMockReadStream()
 
     const element = React.createElement(Text, {}, 'Hello from Ink!')
-    let instance: any
-    
-    await act(async () => {
-      instance = render(element, {
-        stdout: mockStdout as any,
-        stderr: mockStdout as any,
-        stdin: process.stdin as any,
-        patchConsole: false,
-        debug: false,
-      })
-      
-      // Wait for render
-      await new Promise((resolve) => setTimeout(resolve, 100))
+
+    const instance = render(element, {
+      stdout,
+      stderr,
+      stdin,
+      patchConsole: false,
+      debug: false,
     })
 
-    // Verify text was written
-    expect(mockStdout.writes.length).toBeGreaterThan(0)
-    const allOutput = mockStdout.writes.join('')
-    expect(allOutput).toContain('Hello from Ink!')
+    await wait(100)
 
-    act(() => {
-      instance.unmount()
-    })
+    expect(stdout.output()).toContain('Hello from Ink!')
+
+    instance.unmount()
   })
 
   test('can render Box with Text children', async () => {
     const { render, Box, Text } = await import('ink')
-    const mockStdout = createMockStdout()
+    const stdout = createMockWriteStream()
+    const stderr = createMockWriteStream()
+    const stdin = createMockReadStream()
 
     const element = React.createElement(
       Box,
@@ -108,28 +45,21 @@ describe('Ink rendering in Node.js environment', () => {
       React.createElement(Text, { color: 'blue' }, 'Line 2')
     )
 
-    let instance: any
-    
-    await act(async () => {
-      instance = render(element, {
-        stdout: mockStdout as any,
-        stderr: mockStdout as any,
-        stdin: process.stdin as any,
-        patchConsole: false,
-        debug: false,
-      })
-
-      await new Promise((resolve) => setTimeout(resolve, 100))
+    const instance = render(element, {
+      stdout,
+      stderr,
+      stdin,
+      patchConsole: false,
+      debug: false,
     })
 
-    expect(mockStdout.writes.length).toBeGreaterThan(0)
-    const allOutput = mockStdout.writes.join('')
-    expect(allOutput).toContain('Line 1')
-    expect(allOutput).toContain('Line 2')
+    await wait(100)
 
-    act(() => {
-      instance.unmount()
-    })
+    const output = stdout.output()
+    expect(output).toContain('Line 1')
+    expect(output).toContain('Line 2')
+
+    instance.unmount()
   })
 })
 
@@ -145,36 +75,32 @@ describe('Ink rendering via bundled in browser-like environment', () => {
 
   test('can render ink via bundled with Text component', async () => {
     const { render, Text } = await import('./index')
-    const mockStdout = createMockStdout()
+    const stdout = createMockWriteStream()
+    const stderr = createMockWriteStream()
+    const stdin = createMockReadStream()
 
     const element = React.createElement(Text, {}, 'Bundled Ink Test')
-    let instance: any
-    
-    await act(async () => {
-      instance = render(element, {
-        stdout: mockStdout as any,
-        stderr: mockStdout as any,
-        stdin: process.stdin as any,
-        patchConsole: false,
-        debug: false,
-      })
 
-      await new Promise((resolve) => setTimeout(resolve, 200))
+    const instance = render(element, {
+      stdout,
+      stderr,
+      stdin,
+      patchConsole: false,
+      debug: false,
     })
 
-    expect(mockStdout.writes.length).toBeGreaterThan(0)
-    const allOutput = mockStdout.writes.join('')
-    expect(allOutput.length).toBeGreaterThan(0)
-    expect(allOutput).toContain('Bundled Ink Test')
+    await wait(200)
 
-    act(() => {
-      instance.unmount()
-    })
+    expect(stdout.output()).toContain('Bundled Ink Test')
+
+    instance.unmount()
   })
 
   test('can render Box and Text from bundled', async () => {
     const { render, Box, Text } = await import('./index')
-    const mockStdout = createMockStdout()
+    const stdout = createMockWriteStream()
+    const stderr = createMockWriteStream()
+    const stdin = createMockReadStream()
 
     const element = React.createElement(
       Box,
@@ -183,28 +109,21 @@ describe('Ink rendering via bundled in browser-like environment', () => {
       React.createElement(Text, {}, 'Body text')
     )
 
-    let instance: any
-    
-    await act(async () => {
-      instance = render(element, {
-        stdout: mockStdout as any,
-        stderr: mockStdout as any,
-        stdin: process.stdin as any,
-        patchConsole: false,
-        debug: false,
-      })
-
-      await new Promise((resolve) => setTimeout(resolve, 200))
+    const instance = render(element, {
+      stdout,
+      stderr,
+      stdin,
+      patchConsole: false,
+      debug: false,
     })
 
-    expect(mockStdout.writes.length).toBeGreaterThan(0)
-    const allOutput = mockStdout.writes.join('')
-    expect(allOutput).toContain('Title')
-    expect(allOutput).toContain('Body text')
+    await wait(200)
 
-    act(() => {
-      instance.unmount()
-    })
+    const output = stdout.output()
+    expect(output).toContain('Title')
+    expect(output).toContain('Body text')
+
+    instance.unmount()
   })
 
   test('renders with InkTerminalBox in browser environment', async () => {
@@ -222,9 +141,6 @@ describe('Ink rendering via bundled in browser-like environment', () => {
     const originalClientHeight = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'clientHeight')
     Object.defineProperty(HTMLElement.prototype, 'clientWidth', { value: 800, configurable: true })
     Object.defineProperty(HTMLElement.prototype, 'clientHeight', { value: 600, configurable: true })
-
-    // Track what gets written to the terminal
-    const writes: string[] = []
 
     // Render the component
     const TestApp = () =>
@@ -245,22 +161,19 @@ describe('Ink rendering via bundled in browser-like environment', () => {
       })
       unmountFn = unmount
 
-      // Wait for requestAnimationFrame to fire and xterm to initialize
-      await new Promise((resolve) => setTimeout(resolve, 100))
+      await wait(100)
     })
 
     // Wait for Ink to initialize and render
     await waitFor(
       () => {
-        // Check if xterm terminal was created
         const terminalElement = container.querySelector('.xterm')
         expect(terminalElement).toBeTruthy()
       },
       { timeout: 3000 }
     )
 
-    // Additional wait for Ink rendering
-    await new Promise((resolve) => setTimeout(resolve, 500))
+    await wait(500)
 
     const unmount = unmountFn!
 
@@ -282,37 +195,34 @@ describe('Ink rendering via bundled in browser-like environment', () => {
 describe('Yoga layout engine', () => {
   test('yogaNode is created when using bundled', async () => {
     const { render, Box } = await import('./index')
-    const mockStdout = createMockStdout()
+    const stdout = createMockWriteStream()
+    const stderr = createMockWriteStream()
+    const stdin = createMockReadStream()
 
     const element = React.createElement(Box, {}, 'Test')
-    let instance: any
-    
-    await act(async () => {
-      instance = render(element, {
-        stdout: mockStdout as any,
-        stderr: mockStdout as any,
-        stdin: process.stdin as any,
-        patchConsole: false,
-        debug: false,
-      })
 
-      await new Promise((resolve) => setTimeout(resolve, 200))
+    const instance = render(element, {
+      stdout,
+      stderr,
+      stdin,
+      patchConsole: false,
+      debug: false,
     })
+
+    await wait(200)
 
     // Check that yogaNode was created by verifying non-empty output
-    expect(mockStdout.writes.length).toBeGreaterThan(0)
-    const allOutput = mockStdout.writes.join('')
-    expect(allOutput.length).toBeGreaterThan(0)
     // Empty output would mean yogaNode was undefined
+    expect(stdout.output().length).toBeGreaterThan(0)
 
-    act(() => {
-      instance.unmount()
-    })
+    instance.unmount()
   })
 
   test('layout calculations work correctly', async () => {
     const { render, Box, Text } = await import('./index')
-    const mockStdout = createMockStdout()
+    const stdout = createMockWriteStream()
+    const stderr = createMockWriteStream()
+    const stdin = createMockReadStream()
 
     // Create a complex layout that requires yoga
     const element = React.createElement(
@@ -322,28 +232,20 @@ describe('Yoga layout engine', () => {
       React.createElement(Box, { width: 10 }, React.createElement(Text, {}, 'Right'))
     )
 
-    let instance: any
-    
-    await act(async () => {
-      instance = render(element, {
-        stdout: mockStdout as any,
-        stderr: mockStdout as any,
-        stdin: process.stdin as any,
-        patchConsole: false,
-        debug: false,
-      })
-
-      await new Promise((resolve) => setTimeout(resolve, 200))
+    const instance = render(element, {
+      stdout,
+      stderr,
+      stdin,
+      patchConsole: false,
+      debug: false,
     })
 
-    expect(mockStdout.writes.length).toBeGreaterThan(0)
-    const allOutput = mockStdout.writes.join('')
-    expect(allOutput).toContain('Left')
-    expect(allOutput).toContain('Right')
+    await wait(200)
 
-    act(() => {
-      instance.unmount()
-    })
+    const output = stdout.output()
+    expect(output).toContain('Left')
+    expect(output).toContain('Right')
+
+    instance.unmount()
   })
 })
-

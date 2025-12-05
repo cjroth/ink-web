@@ -6,7 +6,7 @@
   "private": true,
   "scripts": {
     "build": "bun run scripts/build-registry.ts",
-    "test": "bun test"
+    "test": "FORCE_COLOR=3 bun test --preload ./test/preload.ts"
   },
   "peerDependencies": {
     "ink": ">=6.0.0",
@@ -19,7 +19,7 @@
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.7",
     "figlet": "^1.9.4",
-    "ink-web": "workspace:*",
+    "ink": "^6.5.1",
     "react": "^19.2.1",
     "typescript": "^5.9.3"
   },

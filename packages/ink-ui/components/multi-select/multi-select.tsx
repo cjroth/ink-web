@@ -181,11 +181,11 @@ export function MultiSelect<V>({
   return (
     <Box flexDirection="column">
       {visibleItems.map((item, index) => {
-        const actualIndex = scrollOffset + index
         const isHighlighted = index === visibleHighlightedIndex
         const itemIsSelected = isSelected(item.value)
+        const key = item.key ?? `item-${scrollOffset + index}`
         return (
-          <Box key={item.key ?? String(item.value)}>
+          <Box key={key}>
             <IndicatorComponent isHighlighted={isHighlighted} />
             <CheckboxComponent isSelected={itemIsSelected} />
             <ItemComponent {...item} isHighlighted={isHighlighted} />
