@@ -7,8 +7,8 @@
     "strict": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
-    "types": ["node"]
+    "types": ["node", "bun-types"]
   },
-  "include": ["components/**/*"],
-  "exclude": ["**/*.test.ts", "**/*.test.tsx", "registry/**/*", "scripts/**/*"]
+  "include": ["components/**/*", "test/**/*"],
+  "exclude": ["registry/**/*", "scripts/**/*"]
 }
