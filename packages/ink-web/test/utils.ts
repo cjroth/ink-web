@@ -310,6 +310,7 @@ export function renderForTest(node: ReactNode, options?: Partial<RenderOptions>)
   const stdin = createMockReadStream()
 
   let renderResolve: (() => void) | null = null
+  let renderCount = 0
 
   const instance = render(node, {
     stdout,
@@ -319,6 +320,7 @@ export function renderForTest(node: ReactNode, options?: Partial<RenderOptions>)
     debug: false,
     ...options,
     onRender: () => {
+      renderCount++
       options?.onRender?.({ renderTime: 0 })
       if (renderResolve) {
         renderResolve()
@@ -329,8 +331,8 @@ export function renderForTest(node: ReactNode, options?: Partial<RenderOptions>)
 
   const waitForRender = (): Promise<void> => {
     return new Promise((resolve) => {
-      // If we already have output, resolve on next tick
-      if (stdout.writes.length > 0) {
+      // If onRender has already been called, resolve on next tick
+      if (renderCount > 0) {
         Promise.resolve().then(resolve)
         return
       }
