@@ -1,126 +1,26 @@
 // Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
 exports[`TextInput Component renders with default prompt 1`] = `
-"\x1B[36m> \x1B[39m\x1B[7m \x1B[27m
+">
 \x1B[?25l"
 `;
 
 exports[`TextInput Component renders with custom prompt 1`] = `
-"\x1B[36m$ \x1B[39m\x1B[7m \x1B[27m
+"$
 \x1B[?25l"
 `;
 
 exports[`TextInput Component renders with placeholder 1`] = `
-"\x1B[36m> \x1B[39m\x1B[2mType something...\x1B[22m\x1B[7m \x1B[27m
+"> Type something...
 \x1B[?25l"
 `;
 
 exports[`TextInput Component renders with controlled value 1`] = `
-"\x1B[36m> \x1B[39mHello\x1B[7m \x1B[27m
+"> Hello
 \x1B[?25l"
 `;
 
 exports[`TextInput Component renders without cursor when not focused 1`] = `
-"\x1B[36m> \x1B[39m
-\x1B[?25l"
-`;
-
-exports[`TextInput Component renders without cursor when not focused 2`] = `
-"\x1B[36m> \x1B[39m
-\x1B[?25l"
-`;
-
-exports[`TextInput Component renders with default prompt 2`] = `
-"\x1B[36m> \x1B[39m\x1B[7m \x1B[27m
-\x1B[?25l"
-`;
-
-exports[`TextInput Component renders with placeholder 2`] = `
-"\x1B[36m> \x1B[39m\x1B[2mType something...\x1B[22m\x1B[7m \x1B[27m
-\x1B[?25l"
-`;
-
-exports[`TextInput Component renders with custom prompt 2`] = `
-"\x1B[36m$ \x1B[39m\x1B[7m \x1B[27m
-\x1B[?25l"
-`;
-
-exports[`TextInput Component renders with controlled value 2`] = `
-"\x1B[36m> \x1B[39mHello\x1B[7m \x1B[27m
-\x1B[?25l"
-`;
-
-exports[`TextInput Component renders with placeholder 3`] = `
-"\x1B[36m> \x1B[39m\x1B[2mType something...\x1B[22m\x1B[7m \x1B[27m
-\x1B[?25l"
-`;
-
-exports[`TextInput Component renders with custom prompt 3`] = `
-"\x1B[36m$ \x1B[39m\x1B[7m \x1B[27m
-\x1B[?25l"
-`;
-
-exports[`TextInput Component renders with default prompt 3`] = `
-"\x1B[36m> \x1B[39m\x1B[7m \x1B[27m
-\x1B[?25l"
-`;
-
-exports[`TextInput Component renders without cursor when not focused 3`] = `
-"\x1B[36m> \x1B[39m
-\x1B[?25l"
-`;
-
-exports[`TextInput Component renders with controlled value 3`] = `
-"\x1B[36m> \x1B[39mHello\x1B[7m \x1B[27m
-\x1B[?25l"
-`;
-
-exports[`TextInput Component renders with controlled value 4`] = `
-"\x1B[36m> \x1B[39mHello\x1B[7m \x1B[27m
-\x1B[?25l"
-`;
-
-exports[`TextInput Component renders with custom prompt 4`] = `
-"\x1B[36m$ \x1B[39m\x1B[7m \x1B[27m
-\x1B[?25l"
-`;
-
-exports[`TextInput Component renders without cursor when not focused 4`] = `
-"\x1B[36m> \x1B[39m
-\x1B[?25l"
-`;
-
-exports[`TextInput Component renders with default prompt 4`] = `
-"\x1B[36m> \x1B[39m\x1B[7m \x1B[27m
-\x1B[?25l"
-`;
-
-exports[`TextInput Component renders with placeholder 4`] = `
-"\x1B[36m> \x1B[39m\x1B[2mType something...\x1B[22m\x1B[7m \x1B[27m
-\x1B[?25l"
-`;
-
-exports[`TextInput Component renders with custom prompt 5`] = `
-"\x1B[36m$ \x1B[39m\x1B[7m \x1B[27m
-\x1B[?25l"
-`;
-
-exports[`TextInput Component renders with default prompt 5`] = `
-"\x1B[36m> \x1B[39m\x1B[7m \x1B[27m
-\x1B[?25l"
-`;
-
-exports[`TextInput Component renders with placeholder 5`] = `
-"\x1B[36m> \x1B[39m\x1B[2mType something...\x1B[22m\x1B[7m \x1B[27m
-\x1B[?25l"
-`;
-
-exports[`TextInput Component renders with controlled value 5`] = `
-"\x1B[36m> \x1B[39mHello\x1B[7m \x1B[27m
-\x1B[?25l"
-`;
-
-exports[`TextInput Component renders without cursor when not focused 5`] = `
-"\x1B[36m> \x1B[39m
+">
 \x1B[?25l"
 `;
