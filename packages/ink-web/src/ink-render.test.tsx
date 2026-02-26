@@ -1,6 +1,5 @@
 import { describe, expect, test } from 'bun:test'
 import React from 'react'
-import { render as rtlRender, waitFor, act } from '@testing-library/react'
 import { renderForTest, wait } from '../test/utils'
 // happy-dom is registered globally in preload.ts
 
