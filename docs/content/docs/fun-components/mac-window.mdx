@@ -4,6 +4,7 @@ title: MacWindow
 
 import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 import { MacWindow } from '@/components/ui/mac-window';
+import { CornerRibbon } from '@/components/made-with-ink-web';
 
 A macOS-style window container with traffic light buttons (close, minimize, maximize) and an optional title bar.
 
@@ -91,6 +92,29 @@ export default function Terminal() {
 <MacWindow title="My App">
   <div className="p-4">
     <p>Window with title</p>
+  </div>
+</MacWindow>
+```
+
+### With "Made with Ink Web" Badge
+
+Combine with the [CornerRibbon](/docs/fun-components/made-with-ink-web#corner-ribbon) to show off your stack.
+
+<MacWindow title="My App" className="my-8 relative">
+  <CornerRibbon position="top-right" absolute />
+  <div className="p-8 text-center text-muted-foreground">
+    Your content here
+  </div>
+</MacWindow>
+
+```tsx
+import { MacWindow } from '@/components/ui/mac-window'
+import { CornerRibbon } from '@/components/ui/made-with-ink-web'
+
+<MacWindow title="My App" className="relative">
+  <CornerRibbon position="top-right" absolute />
+  <div className="p-4">
+    <p>Your content here</p>
   </div>
 </MacWindow>
 ```

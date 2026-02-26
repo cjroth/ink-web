@@ -1,4 +1,4 @@
 {
   "title": "Guides",
-  "pages": ["terminal-components", "ssr", "loading-states", "made-with-ink-web"]
+  "pages": ["terminal-components", "ssr", "loading-states"]
 }

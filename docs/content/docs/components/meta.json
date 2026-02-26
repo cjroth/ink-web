@@ -1,12 +1,11 @@
 {
-  "title": "Components",
+  "title": "Ink Components",
   "defaultOpen": false,
   "pages": [
     "getting-started",
     "ascii",
     "gradient",
     "link",
-    "mac-window",
     "multi-select",
     "select-input",
     "spinner",
