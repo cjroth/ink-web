@@ -13,3 +13,7 @@ process.env.FORCE_COLOR = '3'
 if (typeof document === 'undefined') {
   GlobalRegistrator.register()
 }
+
+// Ink uses a custom React reconciler (not React DOM), so React DOM's act()
+// doesn't apply. Tests synchronize via renderForTest's waitForRender() instead.
+globalThis.IS_REACT_ACT_ENVIRONMENT = false
