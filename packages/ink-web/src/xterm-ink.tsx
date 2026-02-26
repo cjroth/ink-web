@@ -4,6 +4,7 @@ import React from 'react'
 import { Terminal, type ITerminalOptions } from 'xterm'
 import { Readable, Writable } from './shims/stream'
 import { FILE_DROP_EVENT, type DroppedFile } from './file-drop'
+import './shims/timers'
 
 // Helper to check if yoga init is available
 const getYogaInit = (): Promise<void> => {

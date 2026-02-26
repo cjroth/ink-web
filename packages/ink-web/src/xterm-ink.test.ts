@@ -58,6 +58,42 @@ describe('Stream shims', () => {
   })
 })
 
+describe('stdin forwarding', () => {
+  test('xterm onData populates buffer and emits readable for ink to consume', async () => {
+    const { Readable } = await import('./shims/stream')
+
+    // Recreate the same stdin wiring as mountInkInXterm
+    const inputBuffer: string[] = []
+    const stdin = new Readable()
+    Object.assign(stdin, {
+      isTTY: true,
+      setRawMode: () => {},
+      read: () => inputBuffer.length > 0 ? inputBuffer.shift()! : null,
+    })
+
+    // This mirrors ink's App.handleReadable: listens for 'readable',
+    // then calls read() in a loop to consume buffered data
+    const received: string[] = []
+    stdin.on('readable', () => {
+      let chunk
+      while ((chunk = (stdin as any).read()) !== null) {
+        received.push(String(chunk))
+      }
+    })
+
+    // Simulate what mountInkInXterm does in its term.onData callback
+    const simulateXtermOnData = (data: string) => {
+      inputBuffer.push(data)
+      ;(stdin as any).emit('readable')
+    }
+
+    simulateXtermOnData('a')
+    simulateXtermOnData('\x1b[D') // left arrow
+
+    expect(received).toEqual(['a', '\x1b[D'])
+  })
+})
+
 describe('Ink rendering', () => {
   test('Ink renders to custom stream', async () => {
     const { render } = await import('ink')
