@@ -1,7 +1,7 @@
 import React from 'react'
 import 'xterm/css/xterm.css'
 // In a real app, this would be: import { mountInkInXterm, DemoApp } from 'ink-web'
-import { DemoApp, mountInkInXterm } from '../dist/standalone.js'
+import { DemoApp, mountInkInXterm } from '../src/index'
 
 console.log('React version:', React.version)
 
