@@ -27,6 +27,7 @@ export function inkWebPlugin(): Plugin {
             '#supports-color': path.resolve(inkWebPath, 'src/shims/supports-color.ts'),
             'signal-exit': path.resolve(inkWebPath, 'src/shims/signal-exit.ts'),
             'window-size': path.resolve(inkWebPath, 'src/shims/window-size.ts'),
+            'terminal-size': path.resolve(inkWebPath, 'src/shims/terminal-size.ts'),
             tty: path.resolve(inkWebPath, 'src/shims/tty.ts'),
             process: path.resolve(inkWebPath, 'src/shims/process.ts'),
             'node:process': path.resolve(inkWebPath, 'src/shims/process.ts'),
@@ -40,6 +41,7 @@ export function inkWebPlugin(): Plugin {
             'node:buffer': path.resolve(inkWebPath, 'src/shims/buffer.ts'),
             fs: path.resolve(inkWebPath, 'src/shims/fs.ts'),
             'node:fs': path.resolve(inkWebPath, 'src/shims/fs.ts'),
+            path: 'path-browserify',
             'node:path': 'path-browserify',
             // Chalk special handling
             'chalk-orig': 'chalk',
@@ -55,7 +57,9 @@ export function inkWebPlugin(): Plugin {
           },
         },
         define: {
-          'process.env': '{}',
+          'process.env.TERM': '"xterm-256color"',
+          'process.env.TERM_PROGRAM': '""',
+          'process.env.CI': '""',
         },
       }
     },
