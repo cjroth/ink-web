@@ -1,0 +1,33 @@
+---
+title: Troubleshooting
+description: Common issues and solutions when using Ink Web
+---
+
+import { Accordions, Accordion } from 'fumadocs-ui/components/accordion'
+
+<Accordions type="multiple">
+  <Accordion title="Keyboard inputs stop working entirely">
+    **Problem**: `useInput` callbacks never fire, so interactive components like `SelectInput`, `TextInput`, etc. are completely unresponsive.
+
+    **Cause**: Dual ink instance. When importing from ink-web's main entry (`dist/index.js`), the entire ink library is bundled inside that file with its own `StdinContext`. Meanwhile, application components import `useInput` from the separate `node_modules/ink`, which has a different `StdinContext`. Since the provider (from bundled ink) and consumer (from `node_modules/ink`) are different module instances, React context doesn't connect — `useInput` never receives keyboard events.
+
+    **Solution (Vite)**: Alias `ink-web` to its source files in the Vite config so Vite compiles ink-web from source rather than using the pre-built dist bundle. This ensures all `from 'ink'` imports resolve to the single copy in `node_modules/ink`:
+
+    ```ts title="vite.config.ts"
+    import path from 'path'
+
+    const inkWebSrc = path.resolve(__dirname, '../../node_modules/ink-web/src')
+
+    export default defineConfig({
+      resolve: {
+        alias: {
+          'ink-web': path.resolve(inkWebSrc, 'index.ts'),
+        },
+        dedupe: ['react', 'react-dom', 'react-reconciler', 'ink'],
+      },
+    })
+    ```
+
+    This works because ink-web ships its `src/` directory in the npm package. The `ink-web/vite` plugin already handles aliasing Node.js builtins to browser shims, so the only missing piece is ensuring ink-web itself is resolved from source rather than dist.
+  </Accordion>
+</Accordions>

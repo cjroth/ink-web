@@ -1,4 +1,4 @@
 {
   "title": "Guides",
-  "pages": ["terminal-components", "ssr", "loading-states"]
+  "pages": ["terminal-components", "ssr", "loading-states", "troubleshooting"]
 }
