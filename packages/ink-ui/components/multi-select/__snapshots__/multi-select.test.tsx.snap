@@ -1,23 +1,23 @@
 // Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
 exports[`MultiSelect Component renders all items 1`] = `
-"❯ ◯ Option A
-  ◯ Option B
-  ◯ Option C
+"\x1B[34m❯\x1B[39m \x1B[32m◯\x1B[39m \x1B[34mOption A\x1B[39m
+  \x1B[32m◯\x1B[39m Option B
+  \x1B[32m◯\x1B[39m Option C
 \x1B[?25l"
 `;
 
 exports[`MultiSelect Component renders with default selected items 1`] = `
-"❯ ◉ Option A
-  ◯ Option B
-  ◯ Option C
+"\x1B[34m❯\x1B[39m \x1B[32m◉\x1B[39m \x1B[34mOption A\x1B[39m
+  \x1B[32m◯\x1B[39m Option B
+  \x1B[32m◯\x1B[39m Option C
 \x1B[?25l"
 `;
 
 exports[`MultiSelect Component renders with limit 1`] = `
-"❯ ◯ Item 1
-  ◯ Item 2
-  ◯ Item 3
+"\x1B[34m❯\x1B[39m \x1B[32m◯\x1B[39m \x1B[34mItem 1\x1B[39m
+  \x1B[32m◯\x1B[39m Item 2
+  \x1B[32m◯\x1B[39m Item 3
 \x1B[?25l"
 `;
 

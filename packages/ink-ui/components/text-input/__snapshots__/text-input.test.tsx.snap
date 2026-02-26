@@ -1,26 +1,26 @@
 // Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
 exports[`TextInput Component renders with default prompt 1`] = `
-">
+"\x1B[36m> \x1B[39m\x1B[7m \x1B[27m
 \x1B[?25l"
 `;
 
 exports[`TextInput Component renders with custom prompt 1`] = `
-"$
+"\x1B[36m$ \x1B[39m\x1B[7m \x1B[27m
 \x1B[?25l"
 `;
 
 exports[`TextInput Component renders with placeholder 1`] = `
-"> Type something...
+"\x1B[36m> \x1B[39m\x1B[2mType something...\x1B[22m\x1B[7m \x1B[27m
 \x1B[?25l"
 `;
 
 exports[`TextInput Component renders with controlled value 1`] = `
-"> Hello
+"\x1B[36m> \x1B[39mHello\x1B[7m \x1B[27m
 \x1B[?25l"
 `;
 
 exports[`TextInput Component renders without cursor when not focused 1`] = `
-">
+"\x1B[36m> \x1B[39m
 \x1B[?25l"
 `;

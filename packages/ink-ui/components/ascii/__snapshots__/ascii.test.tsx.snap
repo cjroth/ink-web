@@ -11,11 +11,11 @@ exports[`Ascii Component renders basic text 1`] = `
 `;
 
 exports[`Ascii Component renders with color 1`] = `
-"\x1B[?25l  _   _ _
- | | | (_)
- | |_| | |
- |  _  | |
- |_| |_|_|
-
+"\x1B[?25l\x1B[36m  _   _ _ \x1B[39m
+\x1B[36m | | | (_)\x1B[39m
+\x1B[36m | |_| | |\x1B[39m
+\x1B[36m |  _  | |\x1B[39m
+\x1B[36m |_| |_|_|\x1B[39m
+\x1B[36m          \x1B[39m
 "
 `;
