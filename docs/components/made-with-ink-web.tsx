@@ -4,81 +4,58 @@ import React from "react";
 
 const INK_WEB_URL = "https://ink-web.dev";
 
+function cn(...classes: (string | undefined | false)[]) {
+  return classes.filter(Boolean).join(" ");
+}
+
 // --- Corner Ribbon ---
 
 interface CornerRibbonProps {
   /** Which corner to display in */
   position?: "top-right" | "top-left" | "bottom-right" | "bottom-left";
-  /** Background color of the ribbon */
-  color?: string;
-  /** Text color */
-  textColor?: string;
+  /** Additional CSS classes */
+  className?: string;
   /** Use absolute instead of fixed positioning (for embedding in a relative container) */
   absolute?: boolean;
 }
 
+const positionClasses = {
+  "top-right": "top-0 right-0",
+  "top-left": "top-0 left-0",
+  "bottom-right": "bottom-0 right-0",
+  "bottom-left": "bottom-0 left-0",
+} as const;
+
+const ribbonTransforms = {
+  "top-right": "translate-x-[14px] translate-y-[32px] rotate-[45deg] top-0 right-[-30px]",
+  "top-left": "translate-x-[-14px] translate-y-[32px] rotate-[-45deg] top-0 left-[-30px]",
+  "bottom-right": "translate-x-[14px] translate-y-[-32px] rotate-[-45deg] bottom-0 right-[-30px]",
+  "bottom-left": "translate-x-[-14px] translate-y-[-32px] rotate-[45deg] bottom-0 left-[-30px]",
+} as const;
+
 export function CornerRibbon({
   position = "top-right",
-  color = "#000",
-  textColor = "#fff",
+  className,
   absolute = false,
 }: CornerRibbonProps) {
-  const isTop = position.startsWith("top");
-  const isRight = position.endsWith("right");
-
-  const wrapperStyles: React.CSSProperties = {
-    position: absolute ? "absolute" : "fixed",
-    zIndex: 9999,
-    overflow: "hidden",
-    width: 150,
-    height: 150,
-    pointerEvents: "none",
-    ...(isTop ? { top: 0 } : { bottom: 0 }),
-    ...(isRight ? { right: 0 } : { left: 0 }),
-  };
-
-  // The ribbon is 200px wide, centered in the 150x150 corner box and rotated 45deg
-  let ribbonTransform: string;
-  if (position === "top-right")
-    ribbonTransform =
-      "translateX(14px) translateY(32px) rotate(45deg)";
-  else if (position === "top-left")
-    ribbonTransform =
-      "translateX(-14px) translateY(32px) rotate(-45deg)";
-  else if (position === "bottom-right")
-    ribbonTransform =
-      "translateX(14px) translateY(-32px) rotate(-45deg)";
-  else
-    ribbonTransform =
-      "translateX(-14px) translateY(-32px) rotate(45deg)";
-
   return (
-    <div style={wrapperStyles}>
+    <div
+      className={cn(
+        absolute ? "absolute" : "fixed",
+        "z-[9999] overflow-hidden w-[200px] h-[200px] pointer-events-none",
+        positionClasses[position]
+      )}
+    >
       <a
         href={INK_WEB_URL}
         target="_blank"
         rel="noopener noreferrer"
-        style={{
-          position: "absolute",
-          display: "block",
-          width: 200,
-          padding: "6px 0",
-          textAlign: "center",
-          backgroundColor: color,
-          color: textColor,
-          fontSize: 11,
-          fontFamily:
-            "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
-          fontWeight: 600,
-          textDecoration: "none",
-          letterSpacing: "0.02em",
-          transform: ribbonTransform,
-          transformOrigin: "center",
-          boxShadow: "0 1px 4px rgba(0,0,0,0.15)",
-          pointerEvents: "auto",
-          ...(isTop ? { top: 0 } : { bottom: 0 }),
-          ...(isRight ? { right: -25 } : { left: -25 }),
-        }}
+        className={cn(
+          "absolute block w-[210px] py-1.5 text-center text-[11px] font-semibold font-mono no-underline tracking-wide origin-center shadow-sm pointer-events-auto",
+          "bg-neutral-200 text-neutral-800 dark:bg-neutral-950 dark:text-neutral-400",
+          ribbonTransforms[position],
+          className
+        )}
       >
         made with ink web
       </a>
@@ -95,22 +72,10 @@ interface BadgeButtonProps {
   className?: string;
 }
 
-const variantStyles: Record<BadgeVariant, React.CSSProperties> = {
-  dark: {
-    backgroundColor: "#000",
-    color: "#fff",
-    border: "1px solid transparent",
-  },
-  light: {
-    backgroundColor: "#fff",
-    color: "#000",
-    border: "1px solid #e5e5e5",
-  },
-  outline: {
-    backgroundColor: "transparent",
-    color: "currentColor",
-    border: "1px solid currentColor",
-  },
+const variantClasses: Record<BadgeVariant, string> = {
+  dark: "bg-black text-white dark:bg-white dark:text-black border border-transparent",
+  light: "bg-white text-black dark:bg-black dark:text-white border border-neutral-200 dark:border-neutral-700",
+  outline: "bg-transparent text-current border border-current",
 };
 
 export function BadgeButton({
@@ -122,30 +87,13 @@ export function BadgeButton({
       href={INK_WEB_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className={className}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 6,
-        padding: "6px 12px",
-        borderRadius: 6,
-        fontSize: 12,
-        fontFamily:
-          "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
-        fontWeight: 500,
-        textDecoration: "none",
-        lineHeight: 1,
-        transition: "opacity 0.15s",
-        ...variantStyles[variant],
-      }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.opacity = "0.8";
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.opacity = "1";
-      }}
+      className={cn(
+        "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-mono font-medium no-underline leading-none transition-opacity hover:opacity-80",
+        variantClasses[variant],
+        className
+      )}
     >
-      <span style={{ fontSize: 14 }}>&gt;_</span>
+      <span className="text-sm">&gt;_</span>
       <span>made with ink web</span>
     </a>
   );
@@ -163,25 +111,10 @@ export function TextBadge({ className }: TextBadgeProps) {
       href={INK_WEB_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className={className}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 4,
-        fontSize: 11,
-        fontFamily:
-          "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace",
-        color: "inherit",
-        opacity: 0.5,
-        textDecoration: "none",
-        transition: "opacity 0.15s",
-      }}
-      onMouseEnter={(e) => {
-        (e.currentTarget as HTMLElement).style.opacity = "0.8";
-      }}
-      onMouseLeave={(e) => {
-        (e.currentTarget as HTMLElement).style.opacity = "0.5";
-      }}
+      className={cn(
+        "inline-flex items-center gap-1 text-[11px] font-mono text-inherit opacity-50 no-underline transition-opacity hover:opacity-80",
+        className
+      )}
     >
       &gt;_ made with ink web
     </a>
