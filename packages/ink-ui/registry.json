@@ -30,6 +30,19 @@
       ]
     },
     {
+      "name": "tab-bar",
+      "type": "registry:ui",
+      "title": "Tab Bar",
+      "description": "A horizontal tab bar with inverse highlight on selected option",
+      "files": [
+        {
+          "path": "registry/ui/tab-bar.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/tab-bar.tsx"
+        }
+      ]
+    },
+    {
       "name": "mac-window",
       "type": "registry:ui",
       "title": "Mac Window",
@@ -104,6 +117,19 @@
           "path": "registry/ui/table.tsx",
           "type": "registry:ui",
           "target": "components/ui/table.tsx"
+        }
+      ]
+    },
+    {
+      "name": "status-bar",
+      "type": "registry:ui",
+      "title": "Status Bar",
+      "description": "A keybinding hints bar for displaying keyboard shortcuts",
+      "files": [
+        {
+          "path": "registry/ui/status-bar.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/status-bar.tsx"
         }
       ]
     },

@@ -56,10 +56,20 @@ const COMPONENT_CONFIGS: Record<string, ComponentConfig> = {
     title: 'Select Input',
     description: 'A select input component with keyboard navigation',
   },
+  'status-bar': {
+    name: 'status-bar',
+    title: 'Status Bar',
+    description: 'A keybinding hints bar for displaying keyboard shortcuts',
+  },
   spinner: {
     name: 'spinner',
     title: 'Spinner',
     description: 'An animated loading spinner with customizable text',
+  },
+  'tab-bar': {
+    name: 'tab-bar',
+    title: 'Tab Bar',
+    description: 'A horizontal tab bar with inverse highlight on selected option',
   },
   table: {
     name: 'table',

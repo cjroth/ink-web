@@ -10,6 +10,8 @@
     "multi-select",
     "select-input",
     "spinner",
+    "status-bar",
+    "tab-bar",
     "table",
     "text-input"
   ]
