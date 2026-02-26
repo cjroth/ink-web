@@ -7,6 +7,13 @@ let cancelledRafIds: number[] = []
 let rafId = 0
 let resizeObserverInstances: MockResizeObserver[] = []
 
+// Save originals so we restore rather than delete (happy-dom provides these globally)
+let origDocument: typeof globalThis.document
+let origWindow: typeof globalThis.window
+let origResizeObserver: typeof globalThis.ResizeObserver
+let origRAF: typeof globalThis.requestAnimationFrame
+let origCAF: typeof globalThis.cancelAnimationFrame
+
 class MockResizeObserver {
   callback: ResizeObserverCallback
   observedElements: Element[] = []
@@ -36,6 +43,13 @@ beforeEach(() => {
   cancelledRafIds = []
   rafId = 0
   resizeObserverInstances = []
+
+  // Save originals so we can restore them (happy-dom provides these globally)
+  origDocument = global.document
+  origWindow = global.window
+  origResizeObserver = global.ResizeObserver
+  origRAF = global.requestAnimationFrame
+  origCAF = global.cancelAnimationFrame
 
   // @ts-ignore
   global.document = {
@@ -72,16 +86,12 @@ beforeEach(() => {
 })
 
 afterEach(() => {
-  // @ts-ignore
-  delete global.document
-  // @ts-ignore
-  delete global.window
-  // @ts-ignore
-  delete global.ResizeObserver
-  // @ts-ignore
-  delete global.requestAnimationFrame
-  // @ts-ignore
-  delete global.cancelAnimationFrame
+  // Restore originals instead of deleting (preserves happy-dom globals)
+  global.document = origDocument
+  global.window = origWindow
+  global.ResizeObserver = origResizeObserver
+  global.requestAnimationFrame = origRAF
+  global.cancelAnimationFrame = origCAF
 })
 
 describe('InkXterm initialization behavior', () => {

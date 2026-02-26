@@ -14,7 +14,7 @@
     "build:watch": "tsup --watch",
     "dev": "bun run build && bunx vite --config vite.config.ts",
     "dev:watch": "bunx concurrently \"bun run build:watch\" \"bunx vite --config vite.config.ts\"",
-    "test": "bun test",
+    "test": "bun test --preload ./test/preload.ts",
     "prepublishOnly": "bun run build",
     "docs": "cd docs && bun run dev",
     "docs:build": "bun run build && cd docs && bun run build"
