@@ -1,0 +1,150 @@
+---
+title: Tab Bar
+---
+
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import TabBarDemo from '@/components/demos/tab-bar-demo-wrapper';
+
+A horizontal tab bar with inverse highlight on the selected option. Supports labels, focus states, and custom active colors.
+
+<div className="my-8">
+  <TabBarDemo />
+</div>
+
+## Installation
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/tab-bar.json
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/tab-bar.json
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/tab-bar.json
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bunx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/tab-bar.json
+    ```
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx title="app/page.tsx"
+"use client";
+
+import dynamic from "next/dynamic";
+
+const Terminal = dynamic(() => import("./terminal"), {
+  ssr: false,
+});
+
+export default function Home() {
+  return <Terminal />;
+}
+```
+
+```tsx title="app/terminal.tsx"
+"use client";
+
+import { useState } from "react";
+import { Box, useInput } from "ink";
+import { InkXterm } from "ink-web";
+import { TabBar } from '@/components/ui/tab-bar'
+import "ink-web/css";
+import "xterm/css/xterm.css";
+
+const tabs = ["Home", "Settings", "Help"];
+
+export default function Terminal() {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  useInput((_input, key) => {
+    if (key.leftArrow) {
+      setSelectedIndex((i) => (i > 0 ? i - 1 : tabs.length - 1));
+    }
+    if (key.rightArrow) {
+      setSelectedIndex((i) => (i < tabs.length - 1 ? i + 1 : 0));
+    }
+  });
+
+  return (
+    <InkXterm focus>
+      <Box flexDirection="column">
+        <TabBar options={tabs} selectedIndex={selectedIndex} />
+      </Box>
+    </InkXterm>
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `options` | `string[]` | — | Array of tab labels to display |
+| `selectedIndex` | `number` | — | Index of the currently selected tab |
+| `label` | `string` | — | Optional label displayed before the tabs |
+| `focused` | `boolean` | `true` | Whether the tab bar is focused (affects styling) |
+| `activeColor` | `string` | `'cyan'` | Color of the selected tab when focused |
+
+## Examples
+
+### Basic Tab Bar
+
+```tsx
+<TabBar options={["Home", "Settings", "Help"]} selectedIndex={0} />
+```
+
+### With Label
+
+```tsx
+<TabBar label="View" options={["Files", "Search", "Git"]} selectedIndex={1} />
+```
+
+### Custom Active Color
+
+```tsx
+<TabBar
+  options={["Tab 1", "Tab 2", "Tab 3"]}
+  selectedIndex={0}
+  activeColor="magenta"
+/>
+```
+
+### Unfocused State
+
+```tsx
+<TabBar
+  options={["Tab 1", "Tab 2", "Tab 3"]}
+  selectedIndex={0}
+  focused={false}
+/>
+```
+
+## Keyboard Navigation
+
+The `TabBar` component is a display-only component. You need to handle keyboard input yourself using Ink's `useInput` hook:
+
+```tsx
+const [selectedIndex, setSelectedIndex] = useState(0);
+
+useInput((_input, key) => {
+  if (key.leftArrow) {
+    setSelectedIndex((i) => (i > 0 ? i - 1 : options.length - 1));
+  }
+  if (key.rightArrow) {
+    setSelectedIndex((i) => (i < options.length - 1 ? i + 1 : 0));
+  }
+});
+
+<TabBar options={options} selectedIndex={selectedIndex} />
+```

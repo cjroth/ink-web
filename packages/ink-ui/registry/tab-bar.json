@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "tab-bar",
+  "type": "registry:ui",
+  "title": "Tab Bar",
+  "description": "A horizontal tab bar with inverse highlight on selected option",
+  "files": [
+    {
+      "path": "ui/tab-bar.tsx",
+      "type": "registry:ui",
+      "target": "components/ui/tab-bar.tsx",
+      "content": "import React from 'react'\nimport { Box, Text } from 'ink'\n\nexport interface TabBarProps {\n  label?: string\n  options: string[]\n  selectedIndex: number\n  focused?: boolean\n  activeColor?: string\n}\n\nexport function TabBar({ label, options, selectedIndex, focused = true, activeColor = 'cyan' }: TabBarProps) {\n  return (\n    <Box>\n      {label != null && (\n        <Text dimColor={!focused} bold={focused}>\n          {label}:{' '}\n        </Text>\n      )}\n      {options.map((opt, i) => {\n        const selected = i === selectedIndex\n        return (\n          <React.Fragment key={opt}>\n            {selected ? (\n              <Text inverse bold color={focused ? activeColor : undefined} dimColor={!focused}>\n                {' '}{opt}{' '}\n              </Text>\n            ) : (\n              <Text dimColor={!focused}>\n                {' '}{opt}{' '}\n              </Text>\n            )}\n          </React.Fragment>\n        )\n      })}\n    </Box>\n  )\n}\n\nexport default TabBar\n"
+    }
+  ]
+}
