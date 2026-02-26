@@ -13,6 +13,8 @@ export type { LoadingOption, LoadingPosition, LoadingType, LoadingConfig, InkTer
 export { InkXterm } from './InkXterm'
 export { mountInkInXterm } from './xterm-ink'
 export type { InkWebOptions } from './xterm-ink'
+export { useFileDrop } from './file-drop'
+export type { DroppedFile } from './file-drop'
 
 // Re-export all of ink's exports with shims bundled in
 export { Box, measureElement, Newline, render, Spacer, Static, Text, Transform, useApp, useFocus, useFocusManager, useInput, useIsScreenReaderEnabled, useStderr, useStdin, useStdout } from 'ink'

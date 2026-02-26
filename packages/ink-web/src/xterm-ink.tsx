@@ -3,6 +3,7 @@ import { render } from 'ink'
 import React from 'react'
 import { Terminal, type ITerminalOptions } from 'xterm'
 import { Readable, Writable } from './shims/stream'
+import { FILE_DROP_EVENT, type DroppedFile } from './file-drop'
 
 // Helper to check if yoga init is available
 const getYogaInit = (): Promise<void> => {
@@ -19,16 +20,12 @@ export interface InkWebOptions {
   onReady?: () => void
 }
 
-//
-
 export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions) {
-  // Get container dimensions to set initial terminal size
   const containerWidth = opts.container.clientWidth
   const containerHeight = opts.container.clientHeight
 
-  // Calculate initial cols/rows based on container size
-  const charWidth = 9 // approximate char width in pixels
-  const charHeight = 17 // approximate char height in pixels
+  const charWidth = 9
+  const charHeight = 17
   const initialCols = Math.floor(containerWidth / charWidth) || 80
   const initialRows = Math.floor(containerHeight / charHeight) || 24
 
@@ -37,16 +34,16 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
     disableStdin: false,
     cols: initialCols,
     rows: initialRows,
-
     ...opts.termOptions,
   })
   const fitAddon = new FitAddon()
 
-  // Open terminal synchronously - Ink needs it immediately
   term.open(opts.container)
   term.loadAddon(fitAddon)
 
-  // Focus if needed (delay to allow full initialization)
+  // Hide the native xterm.js cursor — ink components render their own
+  term.write('\x1b[?25l')
+
   if (opts.focus !== false) {
     setTimeout(() => {
       try {
@@ -59,14 +56,13 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
 
   // Create stdout stream that writes into xterm
   const stdoutBase = new Writable()
-
-  // Override the write method to write to xterm
   stdoutBase.write = (chunk: unknown, encoding?: any, cb?: any) => {
     const str = typeof chunk === 'string' ? chunk : String(chunk)
-    term.write(str)
-
+    if (str.length > 0) {
+      term.write(str)
+    }
     if (typeof encoding === 'function') {
-      encoding() // encoding is actually the callback
+      encoding()
     } else if (cb) {
       cb()
     }
@@ -106,6 +102,37 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
     ;(stdin as unknown as { emit: (event: string) => void }).emit('readable')
   })
 
+  // File drop support
+  const onDragOver = (e: DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+  const onDrop = async (e: DragEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const files = e.dataTransfer?.files
+    if (!files || files.length === 0) return
+    for (const file of Array.from(files)) {
+      try {
+        const content = await file.text()
+        const dropped: DroppedFile = {
+          name: file.name,
+          content,
+          type: file.type,
+          size: file.size,
+        }
+        ;(stdin as unknown as { emit: (event: string, ...args: unknown[]) => void }).emit(
+          FILE_DROP_EVENT,
+          dropped
+        )
+      } catch (err) {
+        console.warn('Error reading dropped file:', err)
+      }
+    }
+  }
+  opts.container.addEventListener('dragover', onDragOver)
+  opts.container.addEventListener('drop', onDrop)
+
   const updateStreamsSize = () => {
     const cols = term.cols
     const rows = term.rows
@@ -116,10 +143,8 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
     ;(stdout as unknown as { emit: (event: string) => void }).emit('resize')
   }
 
-  // Update sizes BEFORE rendering Ink
   updateStreamsSize()
 
-  // Wait for yoga WASM to initialize before rendering
   let instance: any
 
   getYogaInit()
@@ -135,10 +160,9 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
       console.error('Error initializing Yoga or rendering Ink:', e)
     })
 
-  // Set up resize handling - only after Ink is rendered
+  // Resize handling
   const resize = () => {
     try {
-      // Only fit if the terminal has been properly initialized
       if ((term as any)._core?.viewport) {
         fitAddon.fit()
         updateStreamsSize()
@@ -148,17 +172,11 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
     }
   }
 
-  // Observe container size changes
-  const ro = new ResizeObserver(() => {
-    resize()
-  })
+  const ro = new ResizeObserver(() => resize())
   ro.observe(opts.container)
-
-  // Also listen to window resize as a fallback
   const onWindowResize = () => resize()
   window.addEventListener('resize', onWindowResize)
 
-  // Try initial resize after a delay, then signal ready
   setTimeout(() => {
     resize()
     opts.onReady?.()
@@ -176,6 +194,8 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
           ro.disconnect()
         } catch {}
         window.removeEventListener('resize', onWindowResize)
+        opts.container.removeEventListener('dragover', onDragOver)
+        opts.container.removeEventListener('drop', onDrop)
         term.dispose()
       }
     },
