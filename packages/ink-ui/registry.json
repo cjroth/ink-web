@@ -134,6 +134,19 @@
       ]
     },
     {
+      "name": "made-with-ink-web",
+      "type": "registry:ui",
+      "title": "Made with Ink Web",
+      "description": "Badge components to show your site was built with Ink Web. Includes a corner ribbon, button badge, and text badge.",
+      "files": [
+        {
+          "path": "registry/ui/made-with-ink-web.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/made-with-ink-web.tsx"
+        }
+      ]
+    },
+    {
       "name": "text-input",
       "type": "registry:ui",
       "title": "Text Input",

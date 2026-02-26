@@ -81,6 +81,11 @@ const COMPONENT_CONFIGS: Record<string, ComponentConfig> = {
     title: 'Text Input',
     description: 'A text input component with cursor and placeholder support',
   },
+  'made-with-ink-web': {
+    name: 'made-with-ink-web',
+    title: 'Made with Ink Web',
+    description: 'Badge components to show your site was built with Ink Web. Includes a corner ribbon, button badge, and text badge.',
+  },
 }
 
 interface RegistryItem {
