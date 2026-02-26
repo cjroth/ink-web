@@ -1,0 +1,136 @@
+---
+title: '"Made with Ink Web" Badge'
+description: Add a badge to your site to show it was built with Ink Web.
+---
+
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import { CornerRibbon, BadgeButton, TextBadge } from '@/components/made-with-ink-web';
+
+Want to show off that your site uses Ink Web? Add one of these badges.
+
+## Installation
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/made-with-ink-web.json
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/made-with-ink-web.json
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/made-with-ink-web.json
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bunx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/made-with-ink-web.json
+    ```
+  </Tab>
+</Tabs>
+
+## Corner Ribbon
+
+A ribbon that sits in the corner of the page. Great for dev builds or project showcases.
+
+<div className="my-8 relative border rounded-xl overflow-hidden bg-muted/30" style={{ height: 250 }}>
+  <CornerRibbon position="top-right" absolute />
+  <div className="flex items-center justify-center h-full text-muted-foreground text-sm">
+    your page content
+  </div>
+</div>
+
+```tsx
+import { CornerRibbon } from '@/components/ui/made-with-ink-web'
+
+// Add to your root layout
+export default function Layout({ children }) {
+  return (
+    <>
+      {children}
+      <CornerRibbon />
+    </>
+  )
+}
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `position` | `"top-right" \| "top-left" \| "bottom-right" \| "bottom-left"` | `"top-right"` | Which corner |
+| `color` | `string` | `"#000"` | Ribbon background color |
+| `textColor` | `string` | `"#fff"` | Ribbon text color |
+| `absolute` | `boolean` | `false` | Use absolute instead of fixed positioning |
+
+### Positions
+
+<div className="grid grid-cols-2 gap-4 my-8">
+  <div className="relative border rounded-xl overflow-hidden bg-muted/30" style={{ height: 160 }}>
+    <CornerRibbon position="top-left" absolute />
+    <div className="flex items-center justify-center h-full text-muted-foreground text-xs">top-left</div>
+  </div>
+  <div className="relative border rounded-xl overflow-hidden bg-muted/30" style={{ height: 160 }}>
+    <CornerRibbon position="top-right" absolute />
+    <div className="flex items-center justify-center h-full text-muted-foreground text-xs">top-right</div>
+  </div>
+  <div className="relative border rounded-xl overflow-hidden bg-muted/30" style={{ height: 160 }}>
+    <CornerRibbon position="bottom-left" absolute />
+    <div className="flex items-center justify-center h-full text-muted-foreground text-xs">bottom-left</div>
+  </div>
+  <div className="relative border rounded-xl overflow-hidden bg-muted/30" style={{ height: 160 }}>
+    <CornerRibbon position="bottom-right" absolute />
+    <div className="flex items-center justify-center h-full text-muted-foreground text-xs">bottom-right</div>
+  </div>
+</div>
+
+## Badge Button
+
+An inline button-style badge. Works in footers, sidebars, or anywhere else.
+
+<div className="my-8 flex flex-wrap items-center gap-4">
+  <BadgeButton variant="dark" />
+  <BadgeButton variant="light" />
+  <BadgeButton variant="outline" />
+</div>
+
+```tsx
+import { BadgeButton } from '@/components/ui/made-with-ink-web'
+
+<BadgeButton />              // dark (default)
+<BadgeButton variant="light" />
+<BadgeButton variant="outline" />
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `variant` | `"dark" \| "light" \| "outline"` | `"dark"` | Visual style |
+| `className` | `string` | - | Additional CSS classes |
+
+## Text Badge
+
+A minimal text link, perfect for footers or subtle attribution.
+
+<div className="my-8 p-4 border rounded-xl bg-muted/30 flex items-center justify-center">
+  <TextBadge />
+</div>
+
+```tsx
+import { TextBadge } from '@/components/ui/made-with-ink-web'
+
+<footer>
+  <TextBadge />
+</footer>
+```
+
+### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `className` | `string` | - | Additional CSS classes |
