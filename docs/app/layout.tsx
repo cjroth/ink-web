@@ -1,5 +1,6 @@
 import { RootProvider } from 'fumadocs-ui/provider/next'
 import localFont from 'next/font/local'
+import Script from 'next/script'
 import { Analytics } from "@vercel/analytics/next"
 import { Footer } from '@/lib/layout.shared'
 import type { Metadata } from 'next'
@@ -111,6 +112,7 @@ export default function Layout({ children }: LayoutProps<'/'>) {
           <Footer />
         </RootProvider>
         <Analytics />
+        <Script defer src="https://cloud.umami.is/script.js" data-website-id="7025e030-677b-4116-8238-6b11d6b582ad" />
       </body>
     </html>
   )
