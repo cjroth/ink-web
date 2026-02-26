@@ -1,0 +1,125 @@
+---
+title: Status Bar
+---
+
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import StatusBarDemo from '@/components/demos/status-bar-demo-wrapper';
+
+A keybinding hints bar for displaying keyboard shortcuts in the terminal. Supports an optional extra element and customizable separator.
+
+<div className="my-8">
+  <StatusBarDemo />
+</div>
+
+## Installation
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/status-bar.json
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/status-bar.json
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/status-bar.json
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bunx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/status-bar.json
+    ```
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx title="app/page.tsx"
+"use client";
+
+import dynamic from "next/dynamic";
+
+const Terminal = dynamic(() => import("./terminal"), {
+  ssr: false,
+});
+
+export default function Home() {
+  return <Terminal />;
+}
+```
+
+```tsx title="app/terminal.tsx"
+"use client";
+
+import { Box, Text } from "ink";
+import { InkXterm } from "ink-web";
+import { StatusBar } from '@/components/ui/status-bar'
+import "ink-web/css";
+import "xterm/css/xterm.css";
+
+const shortcuts = [
+  { key: "⌘S", label: "Save" },
+  { key: "⌘Q", label: "Quit" },
+];
+
+export default function Terminal() {
+  return (
+    <InkXterm focus>
+      <Box flexDirection="column">
+        <Text>My App</Text>
+        <StatusBar items={shortcuts} />
+      </Box>
+    </InkXterm>
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `items` | `StatusBarItem[]` | — | Array of items to display. Each item has `key` and `label` |
+| `extra` | `React.ReactNode` | — | Optional content displayed before the items, separated by a vertical bar |
+| `separator` | `string` | `' · '` | Separator string between items |
+
+### StatusBarItem
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `key` | `string` | The keyboard shortcut or key label |
+| `label` | `string` | Description of the action |
+
+## Examples
+
+### Basic Status Bar
+
+```tsx
+const shortcuts = [
+  { key: "⌘S", label: "Save" },
+  { key: "⌘Q", label: "Quit" },
+];
+
+<StatusBar items={shortcuts} />
+```
+
+### With Extra Content
+
+```tsx
+<StatusBar
+  items={shortcuts}
+  extra={<Text color="green">● Connected</Text>}
+/>
+```
+
+### Custom Separator
+
+```tsx
+<StatusBar
+  items={shortcuts}
+  separator=" | "
+/>
+```

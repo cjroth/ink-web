@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "status-bar",
+  "type": "registry:ui",
+  "title": "Status Bar",
+  "description": "A keybinding hints bar for displaying keyboard shortcuts",
+  "files": [
+    {
+      "path": "ui/status-bar.tsx",
+      "type": "registry:ui",
+      "target": "components/ui/status-bar.tsx",
+      "content": "import React from 'react'\nimport { Box, Text } from 'ink'\n\nexport interface StatusBarItem {\n  key: string\n  label: string\n}\n\nexport interface StatusBarProps {\n  items: StatusBarItem[]\n  extra?: React.ReactNode\n  separator?: string\n}\n\nexport function StatusBar({ items, extra, separator = ' \\u00b7 ' }: StatusBarProps) {\n  return (\n    <Box gap={2}>\n      {extra != null && (\n        <>\n          {extra}\n          <Text dimColor>{'\\u2502'}</Text>\n        </>\n      )}\n      <Text dimColor>\n        {items.map((item, i) => (\n          <React.Fragment key={item.key}>\n            {i > 0 && separator}\n            {item.key}: {item.label}\n          </React.Fragment>\n        ))}\n      </Text>\n    </Box>\n  )\n}\n\nexport default StatusBar\n"
+    }
+  ]
+}
