@@ -1,116 +1,24 @@
 // Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
 exports[`MultiSelect Component renders all items 1`] = `
-"\x1B[34m❯\x1B[39m \x1B[32m◯\x1B[39m \x1B[34mOption A\x1B[39m
-  \x1B[32m◯\x1B[39m Option B
-  \x1B[32m◯\x1B[39m Option C
+"❯ ◯ Option A
+  ◯ Option B
+  ◯ Option C
 \x1B[?25l"
 `;
 
 exports[`MultiSelect Component renders with default selected items 1`] = `
-"\x1B[34m❯\x1B[39m \x1B[32m◉\x1B[39m \x1B[34mOption A\x1B[39m
-  \x1B[32m◯\x1B[39m Option B
-  \x1B[32m◯\x1B[39m Option C
+"❯ ◉ Option A
+  ◯ Option B
+  ◯ Option C
 \x1B[?25l"
 `;
 
 exports[`MultiSelect Component renders with limit 1`] = `
-"\x1B[34m❯\x1B[39m \x1B[32m◯\x1B[39m \x1B[34mItem 1\x1B[39m
-  \x1B[32m◯\x1B[39m Item 2
-  \x1B[32m◯\x1B[39m Item 3
+"❯ ◯ Item 1
+  ◯ Item 2
+  ◯ Item 3
 \x1B[?25l"
 `;
 
 exports[`MultiSelect Component renders empty list 1`] = `"\x1B[?25l"`;
-
-exports[`MultiSelect Component renders with limit 2`] = `
-"\x1B[34m❯\x1B[39m \x1B[32m◯\x1B[39m \x1B[34mItem 1\x1B[39m
-  \x1B[32m◯\x1B[39m Item 2
-  \x1B[32m◯\x1B[39m Item 3
-\x1B[?25l"
-`;
-
-exports[`MultiSelect Component renders all items 2`] = `
-"\x1B[34m❯\x1B[39m \x1B[32m◯\x1B[39m \x1B[34mOption A\x1B[39m
-  \x1B[32m◯\x1B[39m Option B
-  \x1B[32m◯\x1B[39m Option C
-\x1B[?25l"
-`;
-
-exports[`MultiSelect Component renders empty list 2`] = `"\x1B[?25l"`;
-
-exports[`MultiSelect Component renders with default selected items 2`] = `
-"\x1B[34m❯\x1B[39m \x1B[32m◉\x1B[39m \x1B[34mOption A\x1B[39m
-  \x1B[32m◯\x1B[39m Option B
-  \x1B[32m◯\x1B[39m Option C
-\x1B[?25l"
-`;
-
-exports[`MultiSelect Component renders with default selected items 3`] = `
-"\x1B[34m❯\x1B[39m \x1B[32m◉\x1B[39m \x1B[34mOption A\x1B[39m
-  \x1B[32m◯\x1B[39m Option B
-  \x1B[32m◯\x1B[39m Option C
-\x1B[?25l"
-`;
-
-exports[`MultiSelect Component renders with limit 3`] = `
-"\x1B[34m❯\x1B[39m \x1B[32m◯\x1B[39m \x1B[34mItem 1\x1B[39m
-  \x1B[32m◯\x1B[39m Item 2
-  \x1B[32m◯\x1B[39m Item 3
-\x1B[?25l"
-`;
-
-exports[`MultiSelect Component renders empty list 3`] = `"\x1B[?25l"`;
-
-exports[`MultiSelect Component renders all items 3`] = `
-"\x1B[34m❯\x1B[39m \x1B[32m◯\x1B[39m \x1B[34mOption A\x1B[39m
-  \x1B[32m◯\x1B[39m Option B
-  \x1B[32m◯\x1B[39m Option C
-\x1B[?25l"
-`;
-
-exports[`MultiSelect Component renders with limit 4`] = `
-"\x1B[34m❯\x1B[39m \x1B[32m◯\x1B[39m \x1B[34mItem 1\x1B[39m
-  \x1B[32m◯\x1B[39m Item 2
-  \x1B[32m◯\x1B[39m Item 3
-\x1B[?25l"
-`;
-
-exports[`MultiSelect Component renders empty list 4`] = `"\x1B[?25l"`;
-
-exports[`MultiSelect Component renders all items 4`] = `
-"\x1B[34m❯\x1B[39m \x1B[32m◯\x1B[39m \x1B[34mOption A\x1B[39m
-  \x1B[32m◯\x1B[39m Option B
-  \x1B[32m◯\x1B[39m Option C
-\x1B[?25l"
-`;
-
-exports[`MultiSelect Component renders with default selected items 4`] = `
-"\x1B[34m❯\x1B[39m \x1B[32m◉\x1B[39m \x1B[34mOption A\x1B[39m
-  \x1B[32m◯\x1B[39m Option B
-  \x1B[32m◯\x1B[39m Option C
-\x1B[?25l"
-`;
-
-exports[`MultiSelect Component renders with default selected items 5`] = `
-"\x1B[34m❯\x1B[39m \x1B[32m◉\x1B[39m \x1B[34mOption A\x1B[39m
-  \x1B[32m◯\x1B[39m Option B
-  \x1B[32m◯\x1B[39m Option C
-\x1B[?25l"
-`;
-
-exports[`MultiSelect Component renders with limit 5`] = `
-"\x1B[34m❯\x1B[39m \x1B[32m◯\x1B[39m \x1B[34mItem 1\x1B[39m
-  \x1B[32m◯\x1B[39m Item 2
-  \x1B[32m◯\x1B[39m Item 3
-\x1B[?25l"
-`;
-
-exports[`MultiSelect Component renders all items 5`] = `
-"\x1B[34m❯\x1B[39m \x1B[32m◯\x1B[39m \x1B[34mOption A\x1B[39m
-  \x1B[32m◯\x1B[39m Option B
-  \x1B[32m◯\x1B[39m Option C
-\x1B[?25l"
-`;
-
-exports[`MultiSelect Component renders empty list 5`] = `"\x1B[?25l"`;
