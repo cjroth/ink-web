@@ -118,11 +118,12 @@ export function SelectInput<V>({
     <Box flexDirection="column">
       {visibleItems.map((item, index) => {
         const isSelected = index === visibleSelectedIndex
-        const key = item.key ?? `item-${scrollOffset + index}`
+        const { key: itemKey, ...itemProps } = item
+        const key = itemKey ?? `item-${scrollOffset + index}`
         return (
           <Box key={key}>
             <IndicatorComponent isSelected={isSelected} />
-            <ItemComponent {...item} isSelected={isSelected} />
+            <ItemComponent {...itemProps} isSelected={isSelected} />
           </Box>
         )
       })}
