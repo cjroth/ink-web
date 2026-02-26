@@ -50,6 +50,39 @@ export class EventEmitter {
     }
     return this
   }
+
+  setMaxListeners(_n: number) {
+    return this
+  }
+
+  getMaxListeners() {
+    return Infinity
+  }
+
+  listenerCount(event: string) {
+    return this.listenerMap.get(event)?.size ?? 0
+  }
+
+  listeners(event: string) {
+    const set = this.listenerMap.get(event)
+    return set ? Array.from(set) : []
+  }
+
+  rawListeners(event: string) {
+    return this.listeners(event)
+  }
+
+  eventNames() {
+    return Array.from(this.listenerMap.keys())
+  }
+
+  prependListener(event: string, listener: Listener) {
+    return this.on(event, listener)
+  }
+
+  prependOnceListener(event: string, listener: Listener) {
+    return this.once(event, listener)
+  }
 }
 
 export default EventEmitter
