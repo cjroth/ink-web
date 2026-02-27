@@ -5,7 +5,7 @@ title: Table
 import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 import TableDemo from '@/components/demos/table-demo-wrapper';
 
-A terminal table component for displaying tabular data with customizable styling.
+A table component with rounded box-drawing borders, column alignment, per-cell styling, and footer rows. Supports a simple "pass an array" API and an advanced "explicit columns + rows" API.
 
 <div className="my-8">
   <TableDemo />
@@ -80,29 +80,65 @@ export default function Terminal() {
 
 ## Props
 
+The `Table` component accepts either **simple** or **advanced** props:
+
+### Simple mode
+
+Pass an array of objects and the table auto-generates columns from the keys.
+
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `data` | `T[]` | required | Array of objects to display as rows |
-| `columns` | `(keyof T)[]` | all keys | Which columns to display |
-| `padding` | `number` | `1` | Cell padding |
-| `header` | `Component` | `Header` | Custom header cell component |
-| `cell` | `Component` | `Cell` | Custom data cell component |
-| `skeleton` | `Component` | `Skeleton` | Custom border/structure component |
+| `columns` | `(keyof T)[]` | all keys | Which fields to show, and in what order |
+| `padding` | `number` | `1` | Cell padding (characters) |
+| `maxHeaderWidth` | `number` | unlimited | Max header width before truncating with `…` |
+
+### Advanced mode
+
+Define columns and rows explicitly with per-cell styling.
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `columns` | `Column[]` | required | Column definitions |
+| `rows` | `Cell[][]` | required | Array of rows (each row is an array of cells) |
+| `footerRows` | `Cell[][]` | `[]` | Footer rows displayed below a separator |
+| `padding` | `number` | `1` | Cell padding (characters) |
+| `maxHeaderWidth` | `number` | `8` | Max header width before truncating with `…` |
+
+### Column
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `header` | `string` | required | Column header text |
+| `width` | `number` | auto | Fixed column width |
+| `minWidth` | `number` | — | Minimum column width |
+| `align` | `'left' \| 'right'` | `'left'` | Text alignment |
+| `headerColor` | `string` | — | Color for the header text |
+
+### Cell
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `text` | `string` | required | Cell text (also used for width calculation) |
+| `color` | `string` | — | Text color |
+| `bold` | `boolean` | — | Bold text |
+| `dimColor` | `boolean` | — | Dimmed text |
+| `node` | `ReactNode` | — | Custom render node (overrides text display) |
 
 ## Examples
 
-### Basic Table
+### Basic table
 
 ```tsx
 const data = [
-  { id: 1, name: 'Item 1', price: 10 },
-  { id: 2, name: 'Item 2', price: 20 },
+  { name: 'Alice', age: 30, city: 'NYC' },
+  { name: 'Bob', age: 25, city: 'LA' },
 ];
 
 <Table data={data} />
 ```
 
-### Specific Columns
+### Column selection
 
 ```tsx
 const data = [
@@ -110,54 +146,89 @@ const data = [
   { id: 2, name: 'Bob', email: 'bob@example.com', age: 25 },
 ];
 
-// Only show name and email columns
 <Table data={data} columns={['name', 'email']} />
 ```
 
-### Custom Padding
+### Right-aligned numbers
 
 ```tsx
-<Table data={data} padding={2} />
+<Table
+  columns={[
+    { header: 'Item' },
+    { header: 'Price', align: 'right' },
+  ]}
+  rows={[
+    [{ text: 'Widget' }, { text: '$10.00' }],
+    [{ text: 'Gadget' }, { text: '$25.00' }],
+  ]}
+/>
 ```
 
-### Custom Cell Styling
+### Per-cell colors
+
+```tsx
+<Table
+  columns={[
+    { header: 'Status', headerColor: 'cyan' },
+    { header: 'Count', align: 'right' },
+  ]}
+  rows={[
+    [{ text: 'Passing', color: 'green' }, { text: '42' }],
+    [{ text: 'Failing', color: 'red' }, { text: '3' }],
+    [{ text: 'Skipped', dimColor: true }, { text: '7' }],
+  ]}
+/>
+```
+
+### Footer row
+
+```tsx
+<Table
+  columns={[
+    { header: 'Item' },
+    { header: 'Price', align: 'right' },
+  ]}
+  rows={[
+    [{ text: 'Widget' }, { text: '$10.00' }],
+    [{ text: 'Gadget' }, { text: '$25.00' }],
+  ]}
+  footerRows={[
+    [{ text: 'Total', bold: true }, { text: '$35.00', bold: true }],
+  ]}
+/>
+```
+
+### Custom ReactNode cells
 
 ```tsx
 import { Text } from 'ink'
 
-const CustomCell = ({ children, column }) => (
-  <Text color={column === 0 ? 'green' : undefined}>
-    {children}
-  </Text>
-)
-
-<Table data={data} cell={CustomCell} />
-```
-
-### Custom Header Styling
-
-```tsx
-import { Text } from 'ink'
-
-const CustomHeader = ({ children }) => (
-  <Text bold color="yellow" underline>
-    {children}
-  </Text>
-)
-
-<Table data={data} header={CustomHeader} />
+<Table
+  columns={[
+    { header: 'Task' },
+    { header: 'Progress' },
+  ]}
+  rows={[
+    [
+      { text: 'Build' },
+      { text: '████░░░░', node: <Text color="green">████░░░░</Text> },
+    ],
+    [
+      { text: 'Test' },
+      { text: '██████░░', node: <Text color="cyan">██████░░</Text> },
+    ],
+  ]}
+/>
 ```
 
 ## Output Format
 
-The table renders with box-drawing characters:
-
 ```
-┌─────────┬─────┬─────────┐
+╭─────────┬─────┬─────────╮
 │ name    │ age │ city    │
 ├─────────┼─────┼─────────┤
 │ Alice   │ 30  │ NYC     │
-├─────────┼─────┼─────────┤
 │ Bob     │ 25  │ LA      │
-└─────────┴─────┴─────────┘
+│ Charlie │ 35  │ Chicago │
+╰─────────┴─────┴─────────╯
 ```

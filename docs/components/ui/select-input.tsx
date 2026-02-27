@@ -1,7 +1,3 @@
-/**
- * Select Input component for ink-web
- */
-
 import React, { useState, useCallback } from 'react'
 import { Box, Text, useInput } from 'ink'
 
@@ -24,7 +20,7 @@ function DefaultIndicator({ isSelected = false }: IndicatorProps) {
   return (
     <Box marginRight={1}>
       {isSelected ? (
-        <Text color="blue">❯</Text>
+        <Text color="cyan">▸</Text>
       ) : (
         <Text> </Text>
       )}
@@ -118,10 +114,12 @@ export function SelectInput<V>({
     <Box flexDirection="column">
       {visibleItems.map((item, index) => {
         const isSelected = index === visibleSelectedIndex
+        const { key: itemKey, ...itemProps } = item
+        const key = itemKey ?? `item-${scrollOffset + index}`
         return (
-          <Box key={item.key ?? String(item.value)}>
+          <Box key={key}>
             <IndicatorComponent isSelected={isSelected} />
-            <ItemComponent {...item} isSelected={isSelected} />
+            <ItemComponent {...itemProps} isSelected={isSelected} />
           </Box>
         )
       })}

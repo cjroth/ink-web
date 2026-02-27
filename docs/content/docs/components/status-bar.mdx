@@ -62,8 +62,11 @@ import "ink-web/css";
 import "xterm/css/xterm.css";
 
 const shortcuts = [
-  { key: "⌘S", label: "Save" },
-  { key: "⌘Q", label: "Quit" },
+  { key: "⏎/q", label: "exit" },
+  { key: "Tab", label: "switch focus" },
+  { key: "←→", label: "cycle" },
+  { key: "b", label: "back" },
+  { key: "z", label: "reset" },
 ];
 
 export default function Terminal() {
@@ -84,42 +87,37 @@ export default function Terminal() {
 |------|------|---------|-------------|
 | `items` | `StatusBarItem[]` | — | Array of items to display. Each item has `key` and `label` |
 | `extra` | `React.ReactNode` | — | Optional content displayed before the items, separated by a vertical bar |
-| `separator` | `string` | `' · '` | Separator string between items |
 
 ### StatusBarItem
 
 | Prop | Type | Description |
 |------|------|-------------|
-| `key` | `string` | The keyboard shortcut or key label |
-| `label` | `string` | Description of the action |
+| `key` | `string` | The keyboard shortcut or key label (displayed as inverse bold badge) |
+| `label` | `string` | Description of the action (displayed dimmed) |
 
 ## Examples
 
 ### Basic Status Bar
 
 ```tsx
-const shortcuts = [
-  { key: "⌘S", label: "Save" },
-  { key: "⌘Q", label: "Quit" },
-];
-
-<StatusBar items={shortcuts} />
+<StatusBar items={[
+  { key: "⏎/q", label: "exit" },
+  { key: "Tab", label: "switch focus" },
+  { key: "←→", label: "cycle" },
+  { key: "b", label: "back" },
+  { key: "z", label: "reset" },
+]} />
 ```
 
 ### With Extra Content
 
 ```tsx
 <StatusBar
-  items={shortcuts}
+  items={[
+    { key: "⏎/q", label: "exit" },
+    { key: "Tab", label: "switch focus" },
+    { key: "←→", label: "cycle" },
+  ]}
   extra={<Text color="green">● Connected</Text>}
-/>
-```
-
-### Custom Separator
-
-```tsx
-<StatusBar
-  items={shortcuts}
-  separator=" | "
 />
 ```

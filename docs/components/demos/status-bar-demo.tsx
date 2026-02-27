@@ -8,18 +8,29 @@ import "xterm/css/xterm.css";
 import { StatusBar } from "@/components/ui/status-bar";
 
 const shortcuts = [
-  { key: "s", label: "Save" },
-  { key: "o", label: "Open" },
-  { key: "q", label: "Quit" },
+  { key: "⏎/q", label: "exit" },
+  { key: "Tab", label: "switch focus" },
+  { key: "←→", label: "cycle" },
+  { key: "b", label: "back" },
+  { key: "z", label: "reset" },
 ];
 
 function StatusBarApp() {
   const [lastKey, setLastKey] = useState<string | null>(null);
 
-  useInput((input) => {
-    const match = shortcuts.find((s) => s.key === input);
-    if (match) {
-      setLastKey(`${match.label} (${match.key})`);
+  useInput((input, key) => {
+    if (key.return || input === "q") {
+      setLastKey("exit (⏎/q)");
+    } else if (key.tab) {
+      setLastKey("switch focus (Tab)");
+    } else if (key.leftArrow) {
+      setLastKey("cycle (←)");
+    } else if (key.rightArrow) {
+      setLastKey("cycle (→)");
+    } else if (input === "b") {
+      setLastKey("back (b)");
+    } else if (input === "z") {
+      setLastKey("reset (z)");
     }
   });
 

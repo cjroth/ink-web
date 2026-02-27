@@ -1,231 +1,93 @@
 // Bun Snapshot v1, https://bun.sh/docs/test/snapshots
 
-exports[`Table Component renders table with data 1`] = `
-"\x1B[1m┌─────────┬─────┬─────────┐\x1B[22m
-\x1B[1m│\x1B[34m name    \x1B[39m│\x1B[34m age \x1B[39m│\x1B[34m city    \x1B[39m│\x1B[22m
-\x1B[1m├─────────┼─────┼─────────┤\x1B[22m
-\x1B[1m│\x1B[22m Alice   \x1B[1m│\x1B[22m 30  \x1B[1m│\x1B[22m NYC     \x1B[1m│\x1B[22m
-\x1B[1m├─────────┼─────┼─────────┤\x1B[22m
-\x1B[1m│\x1B[22m Bob     \x1B[1m│\x1B[22m 25  \x1B[1m│\x1B[22m LA      \x1B[1m│\x1B[22m
-\x1B[1m├─────────┼─────┼─────────┤\x1B[22m
-\x1B[1m│\x1B[22m Charlie \x1B[1m│\x1B[22m 35  \x1B[1m│\x1B[22m Chicago \x1B[1m│\x1B[22m
-\x1B[1m└─────────┴─────┴─────────┘\x1B[22m
+exports[`Table – simple mode renders table with data 1`] = `
+"\x1B[2m╭─────────┬─────┬─────────╮\x1B[22m
+\x1B[2m│\x1B[1m name    \x1B[2m│\x1B[1m age \x1B[2m│\x1B[1m city    \x1B[2m│\x1B[22m
+\x1B[2m├─────────┼─────┼─────────┤\x1B[22m
+\x1B[2m│\x1B[22m Alice   \x1B[2m│\x1B[22m 30  \x1B[2m│\x1B[22m NYC     \x1B[2m│\x1B[22m
+\x1B[2m│\x1B[22m Bob     \x1B[2m│\x1B[22m 25  \x1B[2m│\x1B[22m LA      \x1B[2m│\x1B[22m
+\x1B[2m│\x1B[22m Charlie \x1B[2m│\x1B[22m 35  \x1B[2m│\x1B[22m Chicago \x1B[2m│\x1B[22m
+\x1B[2m╰─────────┴─────┴─────────╯\x1B[22m
 \x1B[?25l"
 `;
 
-exports[`Table Component renders with specific columns 1`] = `
-"\x1B[1m┌─────────┬─────┐\x1B[22m
-\x1B[1m│\x1B[34m name    \x1B[39m│\x1B[34m age \x1B[39m│\x1B[22m
-\x1B[1m├─────────┼─────┤\x1B[22m
-\x1B[1m│\x1B[22m Alice   \x1B[1m│\x1B[22m 30  \x1B[1m│\x1B[22m
-\x1B[1m├─────────┼─────┤\x1B[22m
-\x1B[1m│\x1B[22m Bob     \x1B[1m│\x1B[22m 25  \x1B[1m│\x1B[22m
-\x1B[1m├─────────┼─────┤\x1B[22m
-\x1B[1m│\x1B[22m Charlie \x1B[1m│\x1B[22m 35  \x1B[1m│\x1B[22m
-\x1B[1m└─────────┴─────┘\x1B[22m
+exports[`Table – simple mode renders with specific columns 1`] = `
+"\x1B[2m╭─────────┬─────╮\x1B[22m
+\x1B[2m│\x1B[1m name    \x1B[2m│\x1B[1m age \x1B[2m│\x1B[22m
+\x1B[2m├─────────┼─────┤\x1B[22m
+\x1B[2m│\x1B[22m Alice   \x1B[2m│\x1B[22m 30  \x1B[2m│\x1B[22m
+\x1B[2m│\x1B[22m Bob     \x1B[2m│\x1B[22m 25  \x1B[2m│\x1B[22m
+\x1B[2m│\x1B[22m Charlie \x1B[2m│\x1B[22m 35  \x1B[2m│\x1B[22m
+\x1B[2m╰─────────┴─────╯\x1B[22m
 \x1B[?25l"
 `;
 
-exports[`Table Component renders empty table 1`] = `
-"\x1B[1m┌┐\x1B[22m
-\x1B[1m││\x1B[22m
-\x1B[1m└┘\x1B[22m
+exports[`Table – simple mode renders empty table 1`] = `
+"\x1B[2m╭╮\x1B[22m
+\x1B[2m│\x1B[22m
+\x1B[2m├┤\x1B[22m
+\x1B[2m╰╯\x1B[22m
 \x1B[?25l"
 `;
 
-exports[`Table Component renders with custom padding 1`] = `
-"\x1B[1m┌───────────┬───────┬───────────┐\x1B[22m
-\x1B[1m│\x1B[34m  name     \x1B[39m│\x1B[34m  age  \x1B[39m│\x1B[34m  city     \x1B[39m│\x1B[22m
-\x1B[1m├───────────┼───────┼───────────┤\x1B[22m
-\x1B[1m│\x1B[22m  Alice    \x1B[1m│\x1B[22m  30   \x1B[1m│\x1B[22m  NYC      \x1B[1m│\x1B[22m
-\x1B[1m├───────────┼───────┼───────────┤\x1B[22m
-\x1B[1m│\x1B[22m  Bob      \x1B[1m│\x1B[22m  25   \x1B[1m│\x1B[22m  LA       \x1B[1m│\x1B[22m
-\x1B[1m├───────────┼───────┼───────────┤\x1B[22m
-\x1B[1m│\x1B[22m  Charlie  \x1B[1m│\x1B[22m  35   \x1B[1m│\x1B[22m  Chicago  \x1B[1m│\x1B[22m
-\x1B[1m└───────────┴───────┴───────────┘\x1B[22m
+exports[`Table – simple mode renders with custom padding 1`] = `
+"\x1B[2m╭─────────┬─────┬─────────╮\x1B[22m
+\x1B[2m│\x1B[1m name    \x1B[2m│\x1B[1m age \x1B[2m│\x1B[1m city    \x1B[2m│\x1B[22m
+\x1B[2m├─────────┼─────┼─────────┤\x1B[22m
+\x1B[2m│\x1B[22m Alice   \x1B[2m│\x1B[22m 30  \x1B[2m│\x1B[22m NYC     \x1B[2m│\x1B[22m
+\x1B[2m│\x1B[22m Bob     \x1B[2m│\x1B[22m 25  \x1B[2m│\x1B[22m LA      \x1B[2m│\x1B[22m
+\x1B[2m│\x1B[22m Charlie \x1B[2m│\x1B[22m 35  \x1B[2m│\x1B[22m Chicago \x1B[2m│\x1B[22m
+\x1B[2m╰─────────┴─────┴─────────╯\x1B[22m
 \x1B[?25l"
 `;
 
-exports[`Table Component renders table with data 2`] = `
-"\x1B[1m┌─────────┬─────┬─────────┐\x1B[22m
-\x1B[1m│\x1B[34m name    \x1B[39m│\x1B[34m age \x1B[39m│\x1B[34m city    \x1B[39m│\x1B[22m
-\x1B[1m├─────────┼─────┼─────────┤\x1B[22m
-\x1B[1m│\x1B[22m Alice   \x1B[1m│\x1B[22m 30  \x1B[1m│\x1B[22m NYC     \x1B[1m│\x1B[22m
-\x1B[1m├─────────┼─────┼─────────┤\x1B[22m
-\x1B[1m│\x1B[22m Bob     \x1B[1m│\x1B[22m 25  \x1B[1m│\x1B[22m LA      \x1B[1m│\x1B[22m
-\x1B[1m├─────────┼─────┼─────────┤\x1B[22m
-\x1B[1m│\x1B[22m Charlie \x1B[1m│\x1B[22m 35  \x1B[1m│\x1B[22m Chicago \x1B[1m│\x1B[22m
-\x1B[1m└─────────┴─────┴─────────┘\x1B[22m
+exports[`Table – advanced mode renders with columns and rows 1`] = `
+"\x1B[2m╭────────┬────────╮\x1B[22m
+\x1B[2m│\x1B[1m Name   \x1B[2m│\x1B[1m  Price \x1B[2m│\x1B[22m
+\x1B[2m├────────┼────────┤\x1B[22m
+\x1B[2m│\x1B[22m Widget \x1B[2m│\x1B[22m $10.00 \x1B[2m│\x1B[22m
+\x1B[2m│\x1B[22m Gadget \x1B[2m│\x1B[22m $25.00 \x1B[2m│\x1B[22m
+\x1B[2m╰────────┴────────╯\x1B[22m
 \x1B[?25l"
 `;
 
-exports[`Table Component renders empty table 2`] = `
-"\x1B[1m┌┐\x1B[22m
-\x1B[1m││\x1B[22m
-\x1B[1m└┘\x1B[22m
+exports[`Table – advanced mode renders with footer rows 1`] = `
+"\x1B[2m╭────────┬────────╮\x1B[22m
+\x1B[2m│\x1B[1m Item   \x1B[2m│\x1B[1m  Price \x1B[2m│\x1B[22m
+\x1B[2m├────────┼────────┤\x1B[22m
+\x1B[2m│\x1B[22m Widget \x1B[2m│\x1B[22m $10.00 \x1B[2m│\x1B[22m
+\x1B[2m│\x1B[22m Gadget \x1B[2m│\x1B[22m $25.00 \x1B[2m│\x1B[22m
+\x1B[2m├────────┼────────┤\x1B[22m
+\x1B[2m│\x1B[1m Total  \x1B[2m│\x1B[1m $35.00 \x1B[2m│\x1B[22m
+\x1B[2m╰────────┴────────╯\x1B[22m
 \x1B[?25l"
 `;
 
-exports[`Table Component renders with specific columns 2`] = `
-"\x1B[1m┌─────────┬─────┐\x1B[22m
-\x1B[1m│\x1B[34m name    \x1B[39m│\x1B[34m age \x1B[39m│\x1B[22m
-\x1B[1m├─────────┼─────┤\x1B[22m
-\x1B[1m│\x1B[22m Alice   \x1B[1m│\x1B[22m 30  \x1B[1m│\x1B[22m
-\x1B[1m├─────────┼─────┤\x1B[22m
-\x1B[1m│\x1B[22m Bob     \x1B[1m│\x1B[22m 25  \x1B[1m│\x1B[22m
-\x1B[1m├─────────┼─────┤\x1B[22m
-\x1B[1m│\x1B[22m Charlie \x1B[1m│\x1B[22m 35  \x1B[1m│\x1B[22m
-\x1B[1m└─────────┴─────┘\x1B[22m
+exports[`Table – advanced mode renders with colored cells 1`] = `
+"\x1B[2m╭─────────┬───────╮\x1B[22m
+\x1B[2m│\x1B[1m\x1B[36m Status  \x1B[39m\x1B[2m│\x1B[1m Count \x1B[2m│\x1B[22m
+\x1B[2m├─────────┼───────┤\x1B[22m
+\x1B[2m│\x1B[22m\x1B[32m Passing \x1B[39m\x1B[2m│\x1B[22m    42 \x1B[2m│\x1B[22m
+\x1B[2m│\x1B[22m\x1B[31m Failing \x1B[39m\x1B[2m│\x1B[22m     3 \x1B[2m│\x1B[22m
+\x1B[2m│ Skipped │\x1B[22m     7 \x1B[2m│\x1B[22m
+\x1B[2m╰─────────┴───────╯\x1B[22m
 \x1B[?25l"
 `;
 
-exports[`Table Component renders with custom padding 2`] = `
-"\x1B[1m┌───────────┬───────┬───────────┐\x1B[22m
-\x1B[1m│\x1B[34m  name     \x1B[39m│\x1B[34m  age  \x1B[39m│\x1B[34m  city     \x1B[39m│\x1B[22m
-\x1B[1m├───────────┼───────┼───────────┤\x1B[22m
-\x1B[1m│\x1B[22m  Alice    \x1B[1m│\x1B[22m  30   \x1B[1m│\x1B[22m  NYC      \x1B[1m│\x1B[22m
-\x1B[1m├───────────┼───────┼───────────┤\x1B[22m
-\x1B[1m│\x1B[22m  Bob      \x1B[1m│\x1B[22m  25   \x1B[1m│\x1B[22m  LA       \x1B[1m│\x1B[22m
-\x1B[1m├───────────┼───────┼───────────┤\x1B[22m
-\x1B[1m│\x1B[22m  Charlie  \x1B[1m│\x1B[22m  35   \x1B[1m│\x1B[22m  Chicago  \x1B[1m│\x1B[22m
-\x1B[1m└───────────┴───────┴───────────┘\x1B[22m
+exports[`Table – advanced mode renders with custom node cells 1`] = `
+"\x1B[2m╭────────┬────────╮\x1B[22m
+\x1B[2m│\x1B[1m Name   \x1B[2m│\x1B[1m Bar    \x1B[2m│\x1B[22m
+\x1B[2m├────────┼────────┤\x1B[22m
+\x1B[2m│\x1B[22m Task 1 \x1B[2m│\x1B[22m \x1B[32m████░░\x1B[39m \x1B[2m│\x1B[22m
+\x1B[2m╰────────┴────────╯\x1B[22m
 \x1B[?25l"
 `;
 
-exports[`Table Component renders with specific columns 3`] = `
-"\x1B[1m┌─────────┬─────┐\x1B[22m
-\x1B[1m│\x1B[34m name    \x1B[39m│\x1B[34m age \x1B[39m│\x1B[22m
-\x1B[1m├─────────┼─────┤\x1B[22m
-\x1B[1m│\x1B[22m Alice   \x1B[1m│\x1B[22m 30  \x1B[1m│\x1B[22m
-\x1B[1m├─────────┼─────┤\x1B[22m
-\x1B[1m│\x1B[22m Bob     \x1B[1m│\x1B[22m 25  \x1B[1m│\x1B[22m
-\x1B[1m├─────────┼─────┤\x1B[22m
-\x1B[1m│\x1B[22m Charlie \x1B[1m│\x1B[22m 35  \x1B[1m│\x1B[22m
-\x1B[1m└─────────┴─────┘\x1B[22m
-\x1B[?25l"
-`;
-
-exports[`Table Component renders empty table 3`] = `
-"\x1B[1m┌┐\x1B[22m
-\x1B[1m││\x1B[22m
-\x1B[1m└┘\x1B[22m
-\x1B[?25l"
-`;
-
-exports[`Table Component renders table with data 3`] = `
-"\x1B[1m┌─────────┬─────┬─────────┐\x1B[22m
-\x1B[1m│\x1B[34m name    \x1B[39m│\x1B[34m age \x1B[39m│\x1B[34m city    \x1B[39m│\x1B[22m
-\x1B[1m├─────────┼─────┼─────────┤\x1B[22m
-\x1B[1m│\x1B[22m Alice   \x1B[1m│\x1B[22m 30  \x1B[1m│\x1B[22m NYC     \x1B[1m│\x1B[22m
-\x1B[1m├─────────┼─────┼─────────┤\x1B[22m
-\x1B[1m│\x1B[22m Bob     \x1B[1m│\x1B[22m 25  \x1B[1m│\x1B[22m LA      \x1B[1m│\x1B[22m
-\x1B[1m├─────────┼─────┼─────────┤\x1B[22m
-\x1B[1m│\x1B[22m Charlie \x1B[1m│\x1B[22m 35  \x1B[1m│\x1B[22m Chicago \x1B[1m│\x1B[22m
-\x1B[1m└─────────┴─────┴─────────┘\x1B[22m
-\x1B[?25l"
-`;
-
-exports[`Table Component renders with custom padding 3`] = `
-"\x1B[1m┌───────────┬───────┬───────────┐\x1B[22m
-\x1B[1m│\x1B[34m  name     \x1B[39m│\x1B[34m  age  \x1B[39m│\x1B[34m  city     \x1B[39m│\x1B[22m
-\x1B[1m├───────────┼───────┼───────────┤\x1B[22m
-\x1B[1m│\x1B[22m  Alice    \x1B[1m│\x1B[22m  30   \x1B[1m│\x1B[22m  NYC      \x1B[1m│\x1B[22m
-\x1B[1m├───────────┼───────┼───────────┤\x1B[22m
-\x1B[1m│\x1B[22m  Bob      \x1B[1m│\x1B[22m  25   \x1B[1m│\x1B[22m  LA       \x1B[1m│\x1B[22m
-\x1B[1m├───────────┼───────┼───────────┤\x1B[22m
-\x1B[1m│\x1B[22m  Charlie  \x1B[1m│\x1B[22m  35   \x1B[1m│\x1B[22m  Chicago  \x1B[1m│\x1B[22m
-\x1B[1m└───────────┴───────┴───────────┘\x1B[22m
-\x1B[?25l"
-`;
-
-exports[`Table Component renders with specific columns 4`] = `
-"\x1B[1m┌─────────┬─────┐\x1B[22m
-\x1B[1m│\x1B[34m name    \x1B[39m│\x1B[34m age \x1B[39m│\x1B[22m
-\x1B[1m├─────────┼─────┤\x1B[22m
-\x1B[1m│\x1B[22m Alice   \x1B[1m│\x1B[22m 30  \x1B[1m│\x1B[22m
-\x1B[1m├─────────┼─────┤\x1B[22m
-\x1B[1m│\x1B[22m Bob     \x1B[1m│\x1B[22m 25  \x1B[1m│\x1B[22m
-\x1B[1m├─────────┼─────┤\x1B[22m
-\x1B[1m│\x1B[22m Charlie \x1B[1m│\x1B[22m 35  \x1B[1m│\x1B[22m
-\x1B[1m└─────────┴─────┘\x1B[22m
-\x1B[?25l"
-`;
-
-exports[`Table Component renders table with data 4`] = `
-"\x1B[1m┌─────────┬─────┬─────────┐\x1B[22m
-\x1B[1m│\x1B[34m name    \x1B[39m│\x1B[34m age \x1B[39m│\x1B[34m city    \x1B[39m│\x1B[22m
-\x1B[1m├─────────┼─────┼─────────┤\x1B[22m
-\x1B[1m│\x1B[22m Alice   \x1B[1m│\x1B[22m 30  \x1B[1m│\x1B[22m NYC     \x1B[1m│\x1B[22m
-\x1B[1m├─────────┼─────┼─────────┤\x1B[22m
-\x1B[1m│\x1B[22m Bob     \x1B[1m│\x1B[22m 25  \x1B[1m│\x1B[22m LA      \x1B[1m│\x1B[22m
-\x1B[1m├─────────┼─────┼─────────┤\x1B[22m
-\x1B[1m│\x1B[22m Charlie \x1B[1m│\x1B[22m 35  \x1B[1m│\x1B[22m Chicago \x1B[1m│\x1B[22m
-\x1B[1m└─────────┴─────┴─────────┘\x1B[22m
-\x1B[?25l"
-`;
-
-exports[`Table Component renders empty table 4`] = `
-"\x1B[1m┌┐\x1B[22m
-\x1B[1m││\x1B[22m
-\x1B[1m└┘\x1B[22m
-\x1B[?25l"
-`;
-
-exports[`Table Component renders with custom padding 4`] = `
-"\x1B[1m┌───────────┬───────┬───────────┐\x1B[22m
-\x1B[1m│\x1B[34m  name     \x1B[39m│\x1B[34m  age  \x1B[39m│\x1B[34m  city     \x1B[39m│\x1B[22m
-\x1B[1m├───────────┼───────┼───────────┤\x1B[22m
-\x1B[1m│\x1B[22m  Alice    \x1B[1m│\x1B[22m  30   \x1B[1m│\x1B[22m  NYC      \x1B[1m│\x1B[22m
-\x1B[1m├───────────┼───────┼───────────┤\x1B[22m
-\x1B[1m│\x1B[22m  Bob      \x1B[1m│\x1B[22m  25   \x1B[1m│\x1B[22m  LA       \x1B[1m│\x1B[22m
-\x1B[1m├───────────┼───────┼───────────┤\x1B[22m
-\x1B[1m│\x1B[22m  Charlie  \x1B[1m│\x1B[22m  35   \x1B[1m│\x1B[22m  Chicago  \x1B[1m│\x1B[22m
-\x1B[1m└───────────┴───────┴───────────┘\x1B[22m
-\x1B[?25l"
-`;
-
-exports[`Table Component renders empty table 5`] = `
-"\x1B[1m┌┐\x1B[22m
-\x1B[1m││\x1B[22m
-\x1B[1m└┘\x1B[22m
-\x1B[?25l"
-`;
-
-exports[`Table Component renders with custom padding 5`] = `
-"\x1B[1m┌───────────┬───────┬───────────┐\x1B[22m
-\x1B[1m│\x1B[34m  name     \x1B[39m│\x1B[34m  age  \x1B[39m│\x1B[34m  city     \x1B[39m│\x1B[22m
-\x1B[1m├───────────┼───────┼───────────┤\x1B[22m
-\x1B[1m│\x1B[22m  Alice    \x1B[1m│\x1B[22m  30   \x1B[1m│\x1B[22m  NYC      \x1B[1m│\x1B[22m
-\x1B[1m├───────────┼───────┼───────────┤\x1B[22m
-\x1B[1m│\x1B[22m  Bob      \x1B[1m│\x1B[22m  25   \x1B[1m│\x1B[22m  LA       \x1B[1m│\x1B[22m
-\x1B[1m├───────────┼───────┼───────────┤\x1B[22m
-\x1B[1m│\x1B[22m  Charlie  \x1B[1m│\x1B[22m  35   \x1B[1m│\x1B[22m  Chicago  \x1B[1m│\x1B[22m
-\x1B[1m└───────────┴───────┴───────────┘\x1B[22m
-\x1B[?25l"
-`;
-
-exports[`Table Component renders with specific columns 5`] = `
-"\x1B[1m┌─────────┬─────┐\x1B[22m
-\x1B[1m│\x1B[34m name    \x1B[39m│\x1B[34m age \x1B[39m│\x1B[22m
-\x1B[1m├─────────┼─────┤\x1B[22m
-\x1B[1m│\x1B[22m Alice   \x1B[1m│\x1B[22m 30  \x1B[1m│\x1B[22m
-\x1B[1m├─────────┼─────┤\x1B[22m
-\x1B[1m│\x1B[22m Bob     \x1B[1m│\x1B[22m 25  \x1B[1m│\x1B[22m
-\x1B[1m├─────────┼─────┤\x1B[22m
-\x1B[1m│\x1B[22m Charlie \x1B[1m│\x1B[22m 35  \x1B[1m│\x1B[22m
-\x1B[1m└─────────┴─────┘\x1B[22m
-\x1B[?25l"
-`;
-
-exports[`Table Component renders table with data 5`] = `
-"\x1B[1m┌─────────┬─────┬─────────┐\x1B[22m
-\x1B[1m│\x1B[34m name    \x1B[39m│\x1B[34m age \x1B[39m│\x1B[34m city    \x1B[39m│\x1B[22m
-\x1B[1m├─────────┼─────┼─────────┤\x1B[22m
-\x1B[1m│\x1B[22m Alice   \x1B[1m│\x1B[22m 30  \x1B[1m│\x1B[22m NYC     \x1B[1m│\x1B[22m
-\x1B[1m├─────────┼─────┼─────────┤\x1B[22m
-\x1B[1m│\x1B[22m Bob     \x1B[1m│\x1B[22m 25  \x1B[1m│\x1B[22m LA      \x1B[1m│\x1B[22m
-\x1B[1m├─────────┼─────┼─────────┤\x1B[22m
-\x1B[1m│\x1B[22m Charlie \x1B[1m│\x1B[22m 35  \x1B[1m│\x1B[22m Chicago \x1B[1m│\x1B[22m
-\x1B[1m└─────────┴─────┴─────────┘\x1B[22m
+exports[`Table – advanced mode truncates long headers 1`] = `
+"\x1B[2m╭────────────┬───────╮\x1B[22m
+\x1B[2m│\x1B[1m A Very Lo… \x1B[2m│\x1B[1m Short \x1B[2m│\x1B[22m
+\x1B[2m├────────────┼───────┤\x1B[22m
+\x1B[2m│\x1B[22m a          \x1B[2m│\x1B[22m b     \x1B[2m│\x1B[22m
+\x1B[2m╰────────────┴───────╯\x1B[22m
 \x1B[?25l"
 `;

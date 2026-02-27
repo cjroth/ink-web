@@ -1,161 +1,206 @@
-/**
- * Table component for ink-web
- */
-
-import React from 'react'
+import React, { type ReactNode } from 'react'
 import { Box, Text } from 'ink'
 
-type Scalar = string | number | boolean | null | undefined
+// ── Shared types ──
 
-type ScalarDict = {
-  [key: string]: Scalar
+export interface Column {
+  header: string
+  width?: number
+  minWidth?: number
+  align?: 'left' | 'right'
+  headerColor?: string
 }
 
-export type CellProps = React.PropsWithChildren<{ column: number }>
+export interface Cell {
+  text: string
+  color?: string
+  bold?: boolean
+  dimColor?: boolean
+  /** Custom node for rendering. `text` is still required for width calculation. */
+  node?: ReactNode
+}
 
-export type TableProps<T extends ScalarDict> = {
+// ── Props union ──
+
+type TableBaseProps = {
+  padding?: number
+  /** Max header width before truncating with … */
+  maxHeaderWidth?: number
+}
+
+type SimpleTableProps<T> = TableBaseProps & {
   data: T[]
   columns?: (keyof T)[]
-  padding?: number
-  header?: (props: React.PropsWithChildren<{}>) => React.ReactElement
-  cell?: (props: CellProps) => React.ReactElement
-  skeleton?: (props: React.PropsWithChildren<{}>) => React.ReactElement
+  rows?: never
+  footerRows?: never
 }
 
-function Header(props: React.PropsWithChildren<{}>) {
-  return (
-    <Text bold color="blue">
-      {props.children}
-    </Text>
-  )
+type AdvancedTableProps = TableBaseProps & {
+  columns: Column[]
+  rows: Cell[][]
+  footerRows?: Cell[][]
+  data?: never
 }
 
-function Cell(props: CellProps) {
-  return <Text>{props.children}</Text>
+export type TableProps<T extends Record<string, unknown> = Record<string, unknown>> =
+  | SimpleTableProps<T>
+  | AdvancedTableProps
+
+// ── Helpers ──
+
+function buildBorder(type: 'top' | 'mid' | 'bot', widths: number[]): string {
+  const c = {
+    top: { l: '╭', r: '╮', m: '┬', h: '─' },
+    mid: { l: '├', r: '┤', m: '┼', h: '─' },
+    bot: { l: '╰', r: '╯', m: '┴', h: '─' },
+  }[type]
+  return c.l + widths.map(w => c.h.repeat(w + 2)).join(c.m) + c.r
 }
 
-function Skeleton(props: React.PropsWithChildren<{}>) {
-  return <Text bold>{props.children}</Text>
+function truncate(s: string, max: number): string {
+  return s.length > max ? s.slice(0, max - 1) + '…' : s
 }
 
-type ColumnInfo<T> = {
-  key: string
-  field: keyof T
-  width: number
-}
-
-export function Table<T extends ScalarDict>({
-  data,
-  columns: columnsProp,
-  padding = 1,
-  header = Header,
-  cell = Cell,
-  skeleton = Skeleton,
-}: TableProps<T>) {
-  // Determine which columns to display
-  const getColumns = (): (keyof T)[] => {
-    if (columnsProp) return columnsProp
-
-    const keys = new Set<keyof T>()
-    for (const row of data) {
-      for (const key in row) {
-        keys.add(key)
-      }
+function computeWidths(columns: Column[], rows: Cell[][], footerRows: Cell[][], maxHeader: number): number[] {
+  return columns.map((col, i) => {
+    let w = Math.min(col.header.length, maxHeader)
+    if (col.minWidth) w = Math.max(w, col.minWidth)
+    for (const row of rows) {
+      const cell = row[i]
+      if (cell) w = Math.max(w, cell.text.length)
     }
-    return Array.from(keys)
-  }
+    for (const row of footerRows) {
+      const cell = row[i]
+      if (cell) w = Math.max(w, cell.text.length)
+    }
+    return col.width ?? w
+  })
+}
 
-  const columns = getColumns()
+function pad(s: string, w: number, align: 'left' | 'right'): string {
+  return align === 'right' ? s.padStart(w) : s.padEnd(w)
+}
 
-  // Calculate column widths
-  const calculateColumnWidths = (): ColumnInfo<T>[] => {
-    return columns.map((field) => {
-      const headerWidth = String(field).length
-      const maxDataWidth = Math.max(
-        ...data.map((row) => {
-          const value = row[field]
-          return value == null ? 0 : String(value).length
-        }),
-        0
-      )
-      return {
-        field,
-        key: String(field),
-        width: Math.max(headerWidth, maxDataWidth) + padding * 2,
-      }
-    })
-  }
+function V() {
+  return <Text dimColor>│</Text>
+}
 
-  const columnInfo = calculateColumnWidths()
-
-  // Render a single row with configurable borders and cell renderer
-  const renderRow = (
-    rowData: Partial<T>,
-    borders: { left: string; right: string; cross: string; fill: string },
-    CellComponent: React.FC<any>
-  ) => {
-    const cells: React.ReactNode[] = []
-
-    columnInfo.forEach((col, index) => {
-      const value = rowData[col.field]
-      const content = value == null ? borders.fill.repeat(col.width) : formatCell(value, col.width, borders.fill)
-
-      cells.push(
-        <CellComponent key={`${col.key}-${index}`} column={index}>
-          {content}
-        </CellComponent>
-      )
-
-      // Add separator between columns
-      if (index < columnInfo.length - 1) {
-        cells.push(<Skeleton key={`sep-${index}`}>{borders.cross}</Skeleton>)
-      }
-    })
-
-    return (
-      <Box flexDirection="row">
-        <Skeleton>{borders.left}</Skeleton>
-        {cells}
-        <Skeleton>{borders.right}</Skeleton>
-      </Box>
-    )
-  }
-
-  // Format cell content with padding
-  const formatCell = (value: Scalar, width: number, fill: string): string => {
-    const str = String(value)
-    const leftPad = padding
-    const rightPad = width - str.length - padding
-    return `${fill.repeat(leftPad)}${str}${fill.repeat(rightPad)}`
-  }
-
-  // Create header data
-  const headerData = columns.reduce(
-    (acc, col) => ({ ...acc, [col]: col }),
-    {} as Partial<T>
+function renderRow(cells: Cell[], widths: number[], columns: Column[]) {
+  return (
+    <Box>
+      {cells.map((cell, i) => {
+        const w = widths[i]!
+        const align = columns[i]?.align ?? 'left'
+        return (
+          <React.Fragment key={i}>
+            <V />
+            {cell.node ? (
+              <Box width={w + 2} justifyContent={align === 'right' ? 'flex-end' : undefined}>
+                <Text> </Text>
+                {cell.node}
+                {align === 'right' && <Text> </Text>}
+              </Box>
+            ) : (
+              <Text
+                color={cell.color as any}
+                bold={cell.bold}
+                dimColor={cell.dimColor}
+              >
+                {' '}{pad(cell.text, w, align)}{' '}
+              </Text>
+            )}
+          </React.Fragment>
+        )
+      })}
+      <V />
+    </Box>
   )
+}
+
+// ── Simple → Advanced conversion ──
+
+function toAdvanced<T extends Record<string, unknown>>(
+  data: T[],
+  columnKeys?: (keyof T)[],
+): { columns: Column[]; rows: Cell[][] } {
+  const keys: (keyof T)[] = columnKeys ?? Array.from(
+    data.reduce((set, row) => {
+      for (const k in row) set.add(k)
+      return set
+    }, new Set<keyof T>()),
+  )
+
+  const columns: Column[] = keys.map(k => ({ header: String(k) }))
+  const rows: Cell[][] = data.map(row =>
+    keys.map(k => ({ text: row[k] == null ? '' : String(row[k]) })),
+  )
+
+  return { columns, rows }
+}
+
+// ── Component ──
+
+export function Table<T extends Record<string, unknown>>(props: TableProps<T>) {
+  let columns: Column[]
+  let rows: Cell[][]
+  let footerRows: Cell[] [] = []
+  let maxHeaderWidth: number
+
+  if ('data' in props && props.data !== undefined) {
+    const converted = toAdvanced(props.data, props.columns)
+    columns = converted.columns
+    rows = converted.rows
+    maxHeaderWidth = props.maxHeaderWidth ?? Infinity
+  } else {
+    columns = (props as AdvancedTableProps).columns
+    rows = (props as AdvancedTableProps).rows
+    footerRows = (props as AdvancedTableProps).footerRows ?? []
+    maxHeaderWidth = props.maxHeaderWidth ?? 8
+  }
+
+  const widths = computeWidths(columns, rows, footerRows, maxHeaderWidth)
 
   return (
     <Box flexDirection="column">
-      {/* Top border */}
-      {renderRow({}, { left: '┌', right: '┐', cross: '┬', fill: '─' }, skeleton)}
+      <Text dimColor>{buildBorder('top', widths)}</Text>
 
-      {/* Header row */}
-      {renderRow(headerData, { left: '│', right: '│', cross: '│', fill: ' ' }, header)}
+      {/* Header */}
+      <Box>
+        {columns.map((col, i) => (
+          <React.Fragment key={i}>
+            <V />
+            <Text bold color={col.headerColor as any}>
+              {' '}{pad(truncate(col.header, maxHeaderWidth), widths[i]!, col.align ?? 'left')}{' '}
+            </Text>
+          </React.Fragment>
+        ))}
+        <V />
+      </Box>
 
-      {/* Data rows with separators */}
-      {data.map((row, index) => (
-        <Box flexDirection="column" key={`row-${index}`}>
-          {renderRow({}, { left: '├', right: '┤', cross: '┼', fill: '─' }, skeleton)}
-          {renderRow(row, { left: '│', right: '│', cross: '│', fill: ' ' }, cell)}
-        </Box>
+      <Text dimColor>{buildBorder('mid', widths)}</Text>
+
+      {/* Data rows */}
+      {rows.map((row, i) => (
+        <React.Fragment key={i}>
+          {renderRow(row, widths, columns)}
+        </React.Fragment>
       ))}
 
-      {/* Bottom border */}
-      {renderRow({}, { left: '└', right: '┘', cross: '┴', fill: '─' }, skeleton)}
+      {/* Footer */}
+      {footerRows.length > 0 && (
+        <>
+          <Text dimColor>{buildBorder('mid', widths)}</Text>
+          {footerRows.map((row, i) => (
+            <React.Fragment key={i}>
+              {renderRow(row, widths, columns)}
+            </React.Fragment>
+          ))}
+        </>
+      )}
+
+      <Text dimColor>{buildBorder('bot', widths)}</Text>
     </Box>
   )
 }
 
 export default Table
-export { Header, Cell, Skeleton }

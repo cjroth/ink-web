@@ -1,10 +1,3 @@
-/**
- * Tab Bar component for ink-web
- *
- * A horizontal option selector with focus and active states.
- * Useful for switching between views, dimensions, or modes.
- */
-
 import React from 'react'
 import { Box, Text } from 'ink'
 
@@ -32,9 +25,10 @@ export function TabBar({
     <Box>
       {label && (
         <Text dimColor={!focused} bold={focused}>
-          {label}:{' '}
+          {label}
         </Text>
       )}
+      <Text> </Text>
       {options.map((opt, i) => {
         const selected = i === selectedIndex
         return (

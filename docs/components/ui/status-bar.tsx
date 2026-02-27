@@ -1,34 +1,36 @@
-import React from 'react'
+import React, { type ReactNode } from 'react'
 import { Box, Text } from 'ink'
 
 export interface StatusBarItem {
+  /** The key or key combination (e.g., "Tab", "←→", "q") */
   key: string
+  /** Description of the action (e.g., "switch focus", "quit") */
   label: string
 }
 
 export interface StatusBarProps {
+  /** Keybinding hints to display */
   items: StatusBarItem[]
-  extra?: React.ReactNode
-  separator?: string
+  /** Optional extra content to display before the keybinding hints */
+  extra?: ReactNode
 }
 
-export function StatusBar({ items, extra, separator = ' \u00b7 ' }: StatusBarProps) {
+export function StatusBar({
+  items,
+  extra,
+}: StatusBarProps) {
   return (
     <Box gap={2}>
-      {extra != null && (
-        <>
-          {extra}
-          <Text dimColor>{'\u2502'}</Text>
-        </>
-      )}
-      <Text dimColor>
-        {items.map((item, i) => (
-          <React.Fragment key={item.key}>
-            {i > 0 && separator}
-            {item.key}: {item.label}
-          </React.Fragment>
+      {extra}
+      {extra && <Text dimColor>│</Text>}
+      <Box gap={1}>
+        {items.map((item) => (
+          <Box key={item.key + item.label} gap={0}>
+            <Text inverse bold> {item.key} </Text>
+            <Text dimColor> {item.label}</Text>
+          </Box>
         ))}
-      </Text>
+      </Box>
     </Box>
   )
 }

@@ -1,7 +1,3 @@
-/**
- * Select Input component for ink-web
- */
-
 import React, { useState, useCallback } from 'react'
 import { Box, Text, useInput } from 'ink'
 
@@ -24,7 +20,7 @@ function DefaultIndicator({ isSelected = false }: IndicatorProps) {
   return (
     <Box marginRight={1}>
       {isSelected ? (
-        <Text color="blue">❯</Text>
+        <Text color="cyan">▸</Text>
       ) : (
         <Text> </Text>
       )}

@@ -74,7 +74,7 @@ const COMPONENT_CONFIGS: Record<string, ComponentConfig> = {
   table: {
     name: 'table',
     title: 'Table',
-    description: 'A table component for displaying tabular data with customizable styling',
+    description: 'A table component with box-drawing borders, column alignment, per-cell styling, and footer rows',
   },
   'text-input': {
     name: 'text-input',
