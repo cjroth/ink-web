@@ -9,3 +9,43 @@ exports[`Link Component renders with different URL 1`] = `
 "\x1B]8;;https://example.com\x07Example\x1B]8;;\x07
 \x1B[?25l"
 `;
+
+exports[`Link Component renders with different URL 2`] = `
+"\x1B]8;;https://example.com\x07Example\x1B]8;;\x07
+\x1B[?25l"
+`;
+
+exports[`Link Component renders link with text 2`] = `
+"\x1B]8;;https://github.com\x07GitHub\x1B]8;;\x07
+\x1B[?25l"
+`;
+
+exports[`Link Component renders with different URL 3`] = `
+"\x1B]8;;https://example.com\x07Example\x1B]8;;\x07
+\x1B[?25l"
+`;
+
+exports[`Link Component renders link with text 3`] = `
+"\x1B]8;;https://github.com\x07GitHub\x1B]8;;\x07
+\x1B[?25l"
+`;
+
+exports[`Link Component renders with different URL 4`] = `
+"\x1B]8;;https://example.com\x07Example\x1B]8;;\x07
+\x1B[?25l"
+`;
+
+exports[`Link Component renders link with text 4`] = `
+"\x1B]8;;https://github.com\x07GitHub\x1B]8;;\x07
+\x1B[?25l"
+`;
+
+exports[`Link Component renders with different URL 5`] = `
+"\x1B]8;;https://example.com\x07Example\x1B]8;;\x07
+\x1B[?25l"
+`;
+
+exports[`Link Component renders link with text 5`] = `
+"\x1B]8;;https://github.com\x07GitHub\x1B]8;;\x07
+\x1B[?25l"
+`;

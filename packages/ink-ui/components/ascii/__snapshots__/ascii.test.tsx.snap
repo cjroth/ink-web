@@ -19,3 +19,83 @@ exports[`Ascii Component renders with color 1`] = `
 \x1B[36m          \x1B[39m
 "
 `;
+
+exports[`Ascii Component renders with color 2`] = `
+"\x1B[?25l\x1B[36m  _   _ _ \x1B[39m
+\x1B[36m | | | (_)\x1B[39m
+\x1B[36m | |_| | |\x1B[39m
+\x1B[36m |  _  | |\x1B[39m
+\x1B[36m |_| |_|_|\x1B[39m
+\x1B[36m          \x1B[39m
+"
+`;
+
+exports[`Ascii Component renders basic text 2`] = `
+"\x1B[?25l  _   _ _
+ | | | (_)
+ | |_| | |
+ |  _  | |
+ |_| |_|_|
+
+"
+`;
+
+exports[`Ascii Component renders basic text 3`] = `
+"\x1B[?25l  _   _ _
+ | | | (_)
+ | |_| | |
+ |  _  | |
+ |_| |_|_|
+
+"
+`;
+
+exports[`Ascii Component renders with color 3`] = `
+"\x1B[?25l\x1B[36m  _   _ _ \x1B[39m
+\x1B[36m | | | (_)\x1B[39m
+\x1B[36m | |_| | |\x1B[39m
+\x1B[36m |  _  | |\x1B[39m
+\x1B[36m |_| |_|_|\x1B[39m
+\x1B[36m          \x1B[39m
+"
+`;
+
+exports[`Ascii Component renders with color 4`] = `
+"\x1B[?25l\x1B[36m  _   _ _ \x1B[39m
+\x1B[36m | | | (_)\x1B[39m
+\x1B[36m | |_| | |\x1B[39m
+\x1B[36m |  _  | |\x1B[39m
+\x1B[36m |_| |_|_|\x1B[39m
+\x1B[36m          \x1B[39m
+"
+`;
+
+exports[`Ascii Component renders basic text 4`] = `
+"\x1B[?25l  _   _ _
+ | | | (_)
+ | |_| | |
+ |  _  | |
+ |_| |_|_|
+
+"
+`;
+
+exports[`Ascii Component renders basic text 5`] = `
+"\x1B[?25l  _   _ _
+ | | | (_)
+ | |_| | |
+ |  _  | |
+ |_| |_|_|
+
+"
+`;
+
+exports[`Ascii Component renders with color 5`] = `
+"\x1B[?25l\x1B[36m  _   _ _ \x1B[39m
+\x1B[36m | | | (_)\x1B[39m
+\x1B[36m | |_| | |\x1B[39m
+\x1B[36m |  _  | |\x1B[39m
+\x1B[36m |_| |_|_|\x1B[39m
+\x1B[36m          \x1B[39m
+"
+`;

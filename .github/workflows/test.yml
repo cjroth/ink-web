@@ -21,4 +21,6 @@ jobs:
         run: bun install
 
       - name: Run tests
-        run: unset CI && bun run test:ci
+        run: bun run test:ci
+        env:
+          CI: "false"
