@@ -1,0 +1,1 @@
+- Use atomic commits with conventional commit messages
