@@ -1,0 +1,84 @@
+---
+title: Responsive Layouts
+description: Build responsive terminal UIs with flex layouts and handle wide content
+---
+
+import ResponsiveWideDemoWrapper from "@/components/demos/responsive-wide-demo-wrapper";
+import ResponsiveFlexDemoWrapper from "@/components/demos/responsive-flex-demo-wrapper";
+
+## Wide Terminal Content
+
+When your Ink app renders wide content — like a multi-column dashboard — the xterm canvas can exceed the viewport width and cause horizontal overflow.
+
+The `MacWindow` component supports a `minWidth` prop to ensure the window is wide enough for your content. Wrap it in a scrollable container so users can pan to see everything:
+
+<ResponsiveWideDemoWrapper />
+
+```tsx
+import { createDynamicTerminal } from "ink-web/next";
+import { MacWindow } from "@/components/ui/mac-window";
+
+const Dashboard = createDynamicTerminal(
+  () => import("./dashboard").then((m) => m.default),
+  { loading: "spinner" }
+);
+
+export default function DashboardWrapper() {
+  return (
+    <MacWindow title="Dashboard" minWidth={900}>
+      <Dashboard />
+    </MacWindow>
+  );
+}
+```
+
+The `minWidth` prop sets a CSS `min-width` on an inner content div inside MacWindow. The content area uses `overflow-x: auto` so the terminal scrolls horizontally within the window frame — the title bar and window chrome stay fixed at the page width.
+
+## Flex Layouts
+
+Ink uses [Yoga](https://github.com/nicolo-ribaudo/yoga) — the same layout engine as React Native — which implements CSS flexbox. You can build responsive layouts with `Box` using familiar flex properties.
+
+<ResponsiveFlexDemoWrapper />
+
+```tsx
+import { Box, Text } from "ink";
+
+export default function Layout() {
+  return (
+    <Box flexDirection="column" padding={1} gap={1}>
+      {/* Row with sidebar and main content */}
+      <Box flexDirection="row" gap={1}>
+        <Box flexDirection="column" borderStyle="single" paddingX={1} flexGrow={1}>
+          <Text bold>Sidebar</Text>
+          <Text>Navigation</Text>
+        </Box>
+        <Box flexDirection="column" borderStyle="single" paddingX={1} flexGrow={3}>
+          <Text bold>Main Content</Text>
+          <Text>Takes 3x the space of the sidebar.</Text>
+        </Box>
+      </Box>
+
+      {/* Footer */}
+      <Box borderStyle="single" paddingX={1} justifyContent="space-between">
+        <Text dimColor>Status: Ready</Text>
+        <Text dimColor>v1.0.0</Text>
+      </Box>
+    </Box>
+  );
+}
+```
+
+### Key Box Layout Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `flexDirection` | `"row" \| "column"` | Direction of child layout |
+| `flexGrow` | `number` | How much a box grows relative to siblings |
+| `gap` | `number` | Spacing between children |
+| `padding` / `paddingX` / `paddingY` | `number` | Inner spacing |
+| `justifyContent` | `"flex-start" \| "center" \| "flex-end" \| "space-between" \| "space-around"` | Alignment along main axis |
+| `alignItems` | `"flex-start" \| "center" \| "flex-end" \| "stretch"` | Alignment along cross axis |
+| `borderStyle` | `"single" \| "double" \| "round" \| "bold" \| "classic"` | Box border style |
+| `width` / `minWidth` | `number \| string` | Explicit sizing |
+
+See the [Ink documentation](https://term.ink) for the full list of `Box` props.

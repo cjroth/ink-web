@@ -1,6 +1,7 @@
 /* Terminal box container - provides sizing and border */
 .ink-terminal-box {
   width: 100%;
+  min-width: 0;
   border: none;
   overflow: hidden;
   position: relative;

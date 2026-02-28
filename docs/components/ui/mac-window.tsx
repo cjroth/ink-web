@@ -4,6 +4,7 @@ export interface MacWindowProps {
   children: ReactNode
   className?: string
   title?: string
+  minWidth?: number | string
   onClose?: () => void
   onMinimize?: () => void
   onMaximize?: () => void
@@ -13,7 +14,7 @@ function cn(...classes: (string | undefined | false)[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export const MacWindow = ({ children, className, title, onClose, onMinimize, onMaximize }: MacWindowProps) => {
+export const MacWindow = ({ children, className, title, minWidth, onClose, onMinimize, onMaximize }: MacWindowProps) => {
   return (
     <div className={cn('rounded-2xl border bg-card shadow-lg overflow-hidden', className)}>
       {/* Window Title Bar */}
@@ -30,7 +31,9 @@ export const MacWindow = ({ children, className, title, onClose, onMinimize, onM
         <div />
       </div>
       {/* Window Content */}
-      <div className="overflow-hidden">{children}</div>
+      <div className="overflow-x-auto overscroll-x-none">
+        <div style={minWidth != null ? { minWidth, contain: 'content' } : undefined}>{children}</div>
+      </div>
     </div>
   )
 }
