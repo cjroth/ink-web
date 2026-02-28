@@ -4,6 +4,7 @@ export interface MacWindowProps {
   children: ReactNode
   className?: string
   title?: string
+  minWidth?: number | string
   onClose?: () => void
   onMinimize?: () => void
   onMaximize?: () => void
@@ -13,9 +14,9 @@ function cn(...classes: (string | undefined | false)[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export const MacWindow = ({ children, className, title, onClose, onMinimize, onMaximize }: MacWindowProps) => {
+export const MacWindow = ({ children, className, title, minWidth, onClose, onMinimize, onMaximize }: MacWindowProps) => {
   return (
-    <div className={cn('rounded-2xl border bg-card shadow-lg overflow-hidden', className)}>
+    <div className={cn('rounded-2xl border bg-card shadow-lg overflow-hidden', className)} style={minWidth != null ? { minWidth } : undefined}>
       {/* Window Title Bar */}
       <div className="grid grid-cols-3 items-center px-3 py-2.5 border-b bg-muted/50">
         {/* Traffic Light Buttons */}
