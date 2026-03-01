@@ -4,8 +4,10 @@
   "pages": [
     "getting-started",
     "ascii",
+    "chat",
     "gradient",
     "link",
+    "modal",
     "multi-select",
     "select-input",
     "spinner",

@@ -1,0 +1,197 @@
+---
+title: Chat
+---
+
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import ChatDemo from '@/components/demos/chat-demo-wrapper';
+
+A chat panel component with message list, streaming text, tool call display, and text input. Uses ACP-aligned types for interoperability with agent protocols.
+
+<div className="my-8">
+  <ChatDemo />
+</div>
+
+## Installation
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/chat.json
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/chat.json
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/chat.json
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bunx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/chat.json
+    ```
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx title="app/page.tsx"
+"use client";
+
+import dynamic from "next/dynamic";
+
+const Terminal = dynamic(() => import("./terminal"), {
+  ssr: false,
+});
+
+export default function Home() {
+  return <Terminal />;
+}
+```
+
+```tsx title="app/terminal.tsx"
+"use client";
+
+import { useState } from "react";
+import { Box } from "ink";
+import { InkXterm } from "ink-web";
+import { ChatPanel } from '@/components/ui/chat'
+import type { ChatMessage } from '@/components/ui/chat'
+import "ink-web/css";
+import "xterm/css/xterm.css";
+
+export default function Terminal() {
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+
+  const handleSend = (text: string) => {
+    setMessages((prev) => [
+      ...prev,
+      { id: String(Date.now()), role: 'user', content: text },
+    ]);
+    // Connect to your AI backend here
+  };
+
+  return (
+    <InkXterm focus>
+      <Box flexDirection="column">
+        <ChatPanel
+          messages={messages}
+          onSendMessage={handleSend}
+        />
+      </Box>
+    </InkXterm>
+  )
+}
+```
+
+## ChatPanel Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `messages` | `ChatMessage[]` | - | Array of chat messages to display |
+| `streamingText` | `string` | `""` | Text currently being streamed from assistant |
+| `isLoading` | `boolean` | `false` | Show loading indicator |
+| `activeToolCalls` | `ToolCallInfo[]` | `[]` | Active tool calls to display |
+| `onSendMessage` | `(text: string) => void` | - | Called when user submits a message |
+| `onCancel` | `() => void` | - | Called when user cancels |
+| `placeholder` | `string` | `"Type a message..."` | Input placeholder text |
+| `promptChar` | `string` | `"> "` | Prompt character before input |
+| `promptColor` | `string` | `"green"` | Color of the prompt |
+| `userColor` | `string` | `"green"` | Color of user message prefix |
+| `assistantColor` | `string` | `"blue"` | Color of assistant message prefix |
+| `loadingText` | `string` | `"Thinking..."` | Text shown while loading |
+
+## Types
+
+### ChatMessage
+
+```tsx
+interface ChatMessage {
+  id: string
+  role: 'user' | 'assistant'
+  content: string
+  toolCalls?: ToolCallInfo[]
+}
+```
+
+### ToolCallInfo
+
+Uses ACP-aligned status states:
+
+```tsx
+interface ToolCallInfo {
+  id: string
+  title: string
+  status: 'pending' | 'in_progress' | 'completed' | 'failed'
+  result?: string
+}
+```
+
+## Examples
+
+### Basic Chat
+
+```tsx
+<ChatPanel
+  messages={messages}
+  onSendMessage={(text) => console.log(text)}
+/>
+```
+
+### With Streaming
+
+```tsx
+<ChatPanel
+  messages={messages}
+  streamingText="The assistant is typing..."
+  onSendMessage={handleSend}
+/>
+```
+
+### With Tool Calls
+
+```tsx
+const toolCalls: ToolCallInfo[] = [
+  { id: '1', title: 'get_portfolio', status: 'completed' },
+  { id: '2', title: 'calculate_trades', status: 'in_progress' },
+];
+
+<ChatPanel
+  messages={messages}
+  activeToolCalls={toolCalls}
+  onSendMessage={handleSend}
+/>
+```
+
+### Inside a Modal
+
+```tsx
+import { ChatPanel } from '@/components/ui/chat'
+import { Modal } from '@/components/ui/modal'
+
+<Modal title="AI Chat" onClose={() => setOpen(false)}>
+  <ChatPanel
+    messages={messages}
+    streamingText={streaming}
+    isLoading={loading}
+    activeToolCalls={toolCalls}
+    onSendMessage={handleSend}
+  />
+</Modal>
+```
+
+### Custom Colors
+
+```tsx
+<ChatPanel
+  messages={messages}
+  onSendMessage={handleSend}
+  userColor="cyan"
+  assistantColor="magenta"
+  promptColor="yellow"
+  promptChar="$ "
+/>
+```

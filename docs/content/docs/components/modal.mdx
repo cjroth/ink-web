@@ -1,0 +1,143 @@
+---
+title: Modal
+---
+
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+import ModalDemo from '@/components/demos/modal-demo-wrapper';
+
+A full-screen modal overlay with border and keyboard dismiss. Useful for overlaying chat panels, settings, or any content on top of existing UI.
+
+<div className="my-8">
+  <ModalDemo />
+</div>
+
+## Installation
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/modal.json
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    npx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/modal.json
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm dlx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/modal.json
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bunx shadcn@latest add https://raw.githubusercontent.com/cjroth/ink-web/main/packages/ink-ui/registry/modal.json
+    ```
+  </Tab>
+</Tabs>
+
+## Usage
+
+```tsx title="app/page.tsx"
+"use client";
+
+import dynamic from "next/dynamic";
+
+const Terminal = dynamic(() => import("./terminal"), {
+  ssr: false,
+});
+
+export default function Home() {
+  return <Terminal />;
+}
+```
+
+```tsx title="app/terminal.tsx"
+"use client";
+
+import { useState } from "react";
+import { Box, Text } from "ink";
+import { InkXterm } from "ink-web";
+import { Modal } from '@/components/ui/modal'
+import "ink-web/css";
+import "xterm/css/xterm.css";
+
+export default function Terminal() {
+  const [isOpen, setIsOpen] = useState(true);
+
+  return (
+    <InkXterm focus>
+      {isOpen ? (
+        <Modal title="Settings" onClose={() => setIsOpen(false)}>
+          <Box paddingX={1}>
+            <Text>Modal content goes here</Text>
+          </Box>
+        </Modal>
+      ) : (
+        <Text>Modal closed. Press any key to reopen.</Text>
+      )}
+    </InkXterm>
+  )
+}
+```
+
+## Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `children` | `ReactNode` | - | Content to display inside the modal |
+| `title` | `string` | - | Optional title displayed at the top |
+| `borderColor` | `string` | `"blue"` | Color of the border |
+| `borderStyle` | `string` | `"round"` | Border style (single, double, round, bold, etc.) |
+| `onClose` | `() => void` | - | Called when Escape key is pressed |
+
+## Examples
+
+### Basic Modal
+
+```tsx
+<Modal onClose={() => setOpen(false)}>
+  <Box paddingX={1}>
+    <Text>Hello from the modal!</Text>
+  </Box>
+</Modal>
+```
+
+### With Title
+
+```tsx
+<Modal title="My Modal" onClose={() => setOpen(false)}>
+  <Box paddingX={1}>
+    <Text>Content with a title above</Text>
+  </Box>
+</Modal>
+```
+
+### Custom Border
+
+```tsx
+<Modal
+  title="Warning"
+  borderColor="red"
+  borderStyle="double"
+  onClose={() => setOpen(false)}
+>
+  <Box paddingX={1}>
+    <Text color="red">Something went wrong!</Text>
+  </Box>
+</Modal>
+```
+
+### With Chat Panel
+
+```tsx
+import { ChatPanel } from '@/components/ui/chat'
+import { Modal } from '@/components/ui/modal'
+
+<Modal title="AI Chat" onClose={() => setOpen(false)}>
+  <ChatPanel
+    messages={messages}
+    onSendMessage={handleSend}
+  />
+</Modal>
+```
