@@ -30,4 +30,26 @@ import { Accordions, Accordion } from 'fumadocs-ui/components/accordion'
 
     This works because ink-web ships its `src/` directory in the npm package. The `ink-web/vite` plugin already handles aliasing Node.js builtins to browser shims, so the only missing piece is ensuring ink-web itself is resolved from source rather than dist.
   </Accordion>
+  <Accordion title="Garbled or overlapping output when resizing the browser window">
+    **Problem**: When you resize the browser window, the terminal shows garbled box-drawing characters, overlapping renders at different widths stacked vertically, or goes completely blank.
+
+    **Solution**: Upgrade to `ink-web@0.1.15` or later. This version includes a fix for the resize handling.
+
+    ```bash
+    npm install ink-web@latest
+    ```
+
+    **Root cause**: Two interacting bugs between xterm.js and Ink's resize handler:
+
+    1. **Shrinking shows extra lines / garbled output.** When xterm.js resizes to fewer columns, it reflows existing content to fit the new width — wrapping lines and pushing overflow into scrollback. This garbles box-drawing characters and creates extra lines. Ink's built-in resize handler does call `log.clear()` when narrowing, but `log.clear()` uses `eraseLines(previousLineCount)` — which erases the wrong number of lines because xterm.js reflow has already changed the line count. The result is partially-erased old output stacked on top of new output.
+
+    2. **Expanding shows a blank screen.** Ink's `resized()` method only resets its log state when the terminal gets *narrower*. When widening, it skips the reset and goes straight to re-rendering. The renderer compares the new output to `previousOutput` — if the content hasn't changed (just the width did), it skips the write entirely, leaving whatever xterm.js reflowed on screen (which after a clear is nothing).
+
+    **How the fix works**: Before emitting `resize` to Ink, ink-web now does two things:
+
+    - Calls `instance.clear()` to reset Ink's log-update state (`previousOutput`, `previousLineCount`) so it doesn't skip the next write or erase the wrong number of lines.
+    - Writes `\x1b[2J\x1b[3J\x1b[H` to clear the visible screen, scrollback, and move the cursor home — wiping xterm.js's garbled reflow.
+
+    Then `updateStreamsSize()` emits `resize` synchronously, triggering Ink's re-render. Because the shim's `emit()` is synchronous, the clear and re-render are queued in the same xterm.js write batch — so the user sees a single atomic update with no flicker. A dimension guard prevents double-fire from ResizeObserver and the window resize event both triggering.
+  </Accordion>
 </Accordions>
