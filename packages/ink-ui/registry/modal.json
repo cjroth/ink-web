@@ -1,0 +1,15 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "modal",
+  "type": "registry:ui",
+  "title": "Modal",
+  "description": "A full-screen modal overlay with border and keyboard dismiss",
+  "files": [
+    {
+      "path": "ui/modal.tsx",
+      "type": "registry:ui",
+      "target": "components/ui/modal.tsx",
+      "content": "import type { ReactNode } from 'react'\nimport { Box, Text, useInput } from 'ink'\n\nexport interface ModalProps {\n  children: ReactNode\n  title?: string\n  borderColor?: string\n  borderStyle?: 'single' | 'double' | 'round' | 'bold' | 'singleDouble' | 'doubleSingle' | 'classic' | 'arrow'\n  onClose?: () => void\n}\n\nexport function Modal({\n  children,\n  title,\n  borderColor = 'blue',\n  borderStyle = 'round',\n  onClose,\n}: ModalProps) {\n  useInput((_input, key) => {\n    if (key.escape && onClose) {\n      onClose()\n    }\n  })\n\n  return (\n    <Box flexDirection=\"column\" flexGrow={1}>\n      <Box\n        flexDirection=\"column\"\n        flexGrow={1}\n        borderStyle={borderStyle}\n        borderColor={borderColor}\n      >\n        {title && (\n          <Box paddingX={1} marginBottom={1}>\n            <Text bold color={borderColor}>{title}</Text>\n          </Box>\n        )}\n        {children}\n      </Box>\n    </Box>\n  )\n}\n\nexport default Modal\n"
+    }
+  ]
+}
