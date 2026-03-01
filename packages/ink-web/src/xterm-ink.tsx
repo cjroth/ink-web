@@ -161,12 +161,28 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
       console.error('Error initializing Yoga or rendering Ink:', e)
     })
 
-  // Resize handling
+  // Resize handling — when xterm.js resizes, it reflows existing content to
+  // the new width which garbles box-drawing characters and pushes wrapped
+  // lines into scrollback.  Ink's built-in resize handler only clears state
+  // when the terminal gets *narrower*, so widening leaves artifacts.
+  //
+  // We fix this by resetting Ink's log state (instance.clear()) and writing
+  // a full terminal clear before emitting 'resize'.  Because emit() is
+  // synchronous, Ink's re-render is queued in the same xterm.js write batch
+  // as our clear — so clear + new content are processed atomically.
   const resize = () => {
     try {
       if ((term as any)._core?.viewport) {
         fitAddon.fit()
-        updateStreamsSize()
+        const cols = term.cols
+        const rows = term.rows
+        if (cols !== (stdout as any).columns || rows !== (stdout as any).rows) {
+          if (instance) {
+            instance.clear()
+          }
+          stdout.write('\x1b[2J\x1b[3J\x1b[H')
+          updateStreamsSize()
+        }
       }
     } catch (e) {
       console.error('Error during resize:', e)
