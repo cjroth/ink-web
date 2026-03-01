@@ -176,15 +176,15 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
       console.error('Error initializing Yoga or rendering Ink:', e)
     })
 
-  // Resize handling — when xterm.js resizes, it reflows existing content to
+  // Resize handling — when xterm.js narrows, it reflows existing content to
   // the new width which garbles box-drawing characters and pushes wrapped
-  // lines into scrollback.  Ink's built-in resize handler only clears state
-  // when the terminal gets *narrower*, so widening leaves artifacts.
+  // lines into scrollback.  We fix this by resetting Ink's log state and
+  // clearing the terminal before emitting 'resize'.
   //
-  // We fix this by resetting Ink's log state (instance.clear()) and writing
-  // a full terminal clear before emitting 'resize'.  Because emit() is
-  // synchronous, Ink's re-render is queued in the same xterm.js write batch
-  // as our clear — so clear + new content are processed atomically.
+  // We only clear on SHRINK, not expand.  Ink's resize handler resets
+  // lastOutput only when narrowing, so a clear + re-render works atomically.
+  // On expand, Ink does NOT reset lastOutput — clearing would leave the
+  // screen blank when the rendered output string hasn't changed.
   const resize = () => {
     try {
       if ((term as any)._core?.viewport && (term as any)._core?._renderService?._renderer?.value) {
@@ -192,10 +192,19 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
         const cols = term.cols
         const rows = term.rows
         if (cols !== (stdout as any).columns || rows !== (stdout as any).rows) {
-          if (instance) {
-            instance.clear()
+          const isNarrowing = cols < (stdout as any).columns
+          if (isNarrowing) {
+            // Only clear on shrink — xterm.js reflow when narrowing garbles
+            // box-drawing characters.  Ink's own resize handler already resets
+            // lastOutput when narrowing, so the re-render after our clear will
+            // always produce output.  On expand, Ink does NOT reset lastOutput,
+            // so clearing here would leave the screen blank when the rendered
+            // string hasn't changed.
+            if (instance) {
+              instance.clear()
+            }
+            term.write('\x1b[2J\x1b[3J\x1b[H')
           }
-          stdout.write('\x1b[2J\x1b[3J\x1b[H')
           updateStreamsSize()
         }
       }
