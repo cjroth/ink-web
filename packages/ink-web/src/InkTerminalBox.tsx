@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useCallback, useMemo } from 'react'
 import type { ITerminalOptions } from 'xterm'
 import './InkTerminalBox.css'
 import { InkXterm } from './InkXterm'
@@ -40,7 +40,10 @@ export const InkTerminalBox: React.FC<InkTerminalBoxProps> = ({ className = '', 
 
   // Calculate height from rows if specified
   const height = rows ? getTerminalHeight(rows) : undefined
-  const mergedTermOptions = rows ? { ...termOptions, rows } : termOptions
+  const mergedTermOptions = useMemo(
+    () => rows ? { ...termOptions, rows } : termOptions,
+    [termOptions, rows]
+  )
 
   return (
     <div

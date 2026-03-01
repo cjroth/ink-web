@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useMemo, useRef } from 'react'
 import type { ITerminalOptions } from 'xterm'
 import { mountInkInXterm } from './xterm-ink'
 
@@ -13,8 +13,16 @@ interface InkXtermProps {
 export const InkXterm: React.FC<InkXtermProps> = ({ className = '', focus, termOptions, children, onReady }) => {
   const containerRef = useRef<HTMLDivElement | null>(null)
   const unmountRef = useRef<(() => Promise<void>) | null>(null)
+  const rerenderRef = useRef<((element: React.ReactElement) => void) | null>(null)
   const initializedRef = useRef(false)
+  const childrenRef = useRef(children)
+  childrenRef.current = children
 
+  // Stabilize termOptions by value so callers don't need to memoize
+  const termOptionsKey = JSON.stringify(termOptions)
+  const stableTermOptions = useMemo(() => termOptions, [termOptionsKey])
+
+  // Create/destroy terminal — only depends on stable options, not children
   useEffect(() => {
     if (!containerRef.current) return
 
@@ -27,8 +35,9 @@ export const InkXterm: React.FC<InkXtermProps> = ({ className = '', focus, termO
       if (container.clientWidth === 0 || container.clientHeight === 0) return
 
       initializedRef.current = true
-      const { unmount } = mountInkInXterm(children, { container, focus, termOptions, onReady })
+      const { unmount, rerender } = mountInkInXterm(childrenRef.current, { container, focus, termOptions: stableTermOptions, onReady })
       unmountRef.current = unmount
+      rerenderRef.current = rerender
     }
 
     // Use requestAnimationFrame to ensure we're past the paint cycle
@@ -54,12 +63,20 @@ export const InkXterm: React.FC<InkXtermProps> = ({ className = '', focus, termO
       cancelAnimationFrame(rafId)
       ro?.disconnect()
       initializedRef.current = false
+      rerenderRef.current = null
       if (unmountRef.current) {
         void unmountRef.current()
         unmountRef.current = null
       }
     }
-  }, [children, focus, termOptions, onReady])
+  }, [focus, stableTermOptions, onReady])
+
+  // Re-render Ink element when children change (without recreating the terminal)
+  useEffect(() => {
+    if (rerenderRef.current) {
+      rerenderRef.current(children)
+    }
+  }, [children])
 
   return <div className={className} ref={containerRef} style={{ width: '100%', height: '100%' }} />
 }

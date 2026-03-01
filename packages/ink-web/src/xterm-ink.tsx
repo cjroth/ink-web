@@ -55,11 +55,24 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
     }, 100)
   }
 
-  // Create stdout stream that writes into xterm
+  // Create stdout stream that writes into xterm.
+  //
+  // Ink has a code path that fires clearTerminal (\x1b[2J\x1b[3J\x1b[H) when
+  // the rendered output exceeds terminal rows, then rewrites everything.
+  // In xterm.js this causes a full-screen flash because the clear and redraw
+  // are rendered in separate animation frames.
+  //
+  // Fix: strip clearTerminal sequences and replace with a cursor-home so the
+  // new content overwrites in place without a visible blank frame.
+  const CLEAR_TERMINAL = '\x1b[2J\x1b[3J\x1b[H'
+  const CURSOR_HOME = '\x1b[H'
   const stdoutBase = new Writable()
   stdoutBase.write = (chunk: unknown, encoding?: any, cb?: any) => {
-    const str = typeof chunk === 'string' ? chunk : String(chunk)
+    let str = typeof chunk === 'string' ? chunk : String(chunk)
     if (str.length > 0) {
+      if (str.includes(CLEAR_TERMINAL)) {
+        str = str.replace(CLEAR_TERMINAL, CURSOR_HOME)
+      }
       term.write(str)
     }
     if (typeof encoding === 'function') {
@@ -147,14 +160,16 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
   updateStreamsSize()
 
   let instance: any
+  let pendingElement: React.ReactElement = element
 
   getYogaInit()
     .then(() => {
-      instance = render(element, {
+      instance = render(pendingElement, {
         stdout,
         stderr: stdout,
         stdin,
         patchConsole: false,
+        incrementalRendering: true,
       })
     })
     .catch((e: Error) => {
@@ -172,7 +187,7 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
   // as our clear — so clear + new content are processed atomically.
   const resize = () => {
     try {
-      if ((term as any)._core?.viewport) {
+      if ((term as any)._core?.viewport && (term as any)._core?._renderService?._renderer?.value) {
         fitAddon.fit()
         const cols = term.cols
         const rows = term.rows
@@ -184,8 +199,9 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
           updateStreamsSize()
         }
       }
-    } catch (e) {
-      console.error('Error during resize:', e)
+    } catch {
+      // fitAddon.fit() can throw if xterm's renderer isn't ready yet;
+      // the ResizeObserver or next resize event will retry.
     }
   }
 
@@ -201,6 +217,12 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
 
   return {
     term,
+    rerender: (newElement: React.ReactElement) => {
+      pendingElement = newElement
+      if (instance) {
+        instance.rerender(newElement)
+      }
+    },
     unmount: async () => {
       try {
         if (instance) {
