@@ -43,6 +43,19 @@
       ]
     },
     {
+      "name": "chat",
+      "type": "registry:ui",
+      "title": "Chat",
+      "description": "A chat panel component with message list, streaming text, tool call display, and text input",
+      "files": [
+        {
+          "path": "registry/ui/chat.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/chat.tsx"
+        }
+      ]
+    },
+    {
       "name": "mac-window",
       "type": "registry:ui",
       "title": "Mac Window",
@@ -143,6 +156,19 @@
           "path": "registry/ui/made-with-ink-web.tsx",
           "type": "registry:ui",
           "target": "components/ui/made-with-ink-web.tsx"
+        }
+      ]
+    },
+    {
+      "name": "modal",
+      "type": "registry:ui",
+      "title": "Modal",
+      "description": "A full-screen modal overlay with border and keyboard dismiss",
+      "files": [
+        {
+          "path": "registry/ui/modal.tsx",
+          "type": "registry:ui",
+          "target": "components/ui/modal.tsx"
         }
       ]
     },

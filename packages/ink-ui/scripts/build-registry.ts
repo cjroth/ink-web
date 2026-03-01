@@ -29,6 +29,11 @@ const COMPONENT_CONFIGS: Record<string, ComponentConfig> = {
     dependencies: ['figlet'],
     devDependencies: ['@types/figlet'],
   },
+  chat: {
+    name: 'chat',
+    title: 'Chat',
+    description: 'A chat panel component with message list, streaming text, tool call display, and text input',
+  },
 
   gradient: {
     name: 'gradient',
@@ -80,6 +85,11 @@ const COMPONENT_CONFIGS: Record<string, ComponentConfig> = {
     name: 'text-input',
     title: 'Text Input',
     description: 'A text input component with cursor and placeholder support',
+  },
+  modal: {
+    name: 'modal',
+    title: 'Modal',
+    description: 'A full-screen modal overlay with border and keyboard dismiss',
   },
   'made-with-ink-web': {
     name: 'made-with-ink-web',
