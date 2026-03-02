@@ -13,7 +13,7 @@ figlet.parseFont("Doom", doom);
 
 export default function AsciiDemo({ onReady }: { onReady?: () => void }) {
   return (
-    <InkTerminalBox loading={false} onReady={onReady}>
+    <InkTerminalBox rows={16} loading={false} onReady={onReady}>
       <Box flexDirection="column" alignItems="center">
         <Ascii text="Ink" color="cyan" font="Doom" />
         <Ascii text="Web" color="yellow" font="Doom" />
