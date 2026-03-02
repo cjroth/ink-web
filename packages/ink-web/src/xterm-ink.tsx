@@ -200,26 +200,24 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
   // screen blank when the rendered output string hasn't changed.
   const resize = () => {
     try {
-      if ((term as any)._core?.viewport && (term as any)._core?._renderService?._renderer?.value) {
-        fitAddon.fit()
-        const cols = term.cols
-        const rows = term.rows
-        if (cols !== (stdout as any).columns || rows !== (stdout as any).rows) {
-          const isNarrowing = cols < (stdout as any).columns
-          if (isNarrowing) {
-            // Only clear on shrink — xterm.js reflow when narrowing garbles
-            // box-drawing characters.  Ink's own resize handler already resets
-            // lastOutput when narrowing, so the re-render after our clear will
-            // always produce output.  On expand, Ink does NOT reset lastOutput,
-            // so clearing here would leave the screen blank when the rendered
-            // string hasn't changed.
-            if (instance) {
-              instance.clear()
-            }
-            term.write(CLEAR_TERMINAL)
+      fitAddon.fit()
+      const cols = term.cols
+      const rows = term.rows
+      if (cols !== (stdout as any).columns || rows !== (stdout as any).rows) {
+        const isNarrowing = cols < (stdout as any).columns
+        if (isNarrowing) {
+          // Only clear on shrink — xterm.js reflow when narrowing garbles
+          // box-drawing characters.  Ink's own resize handler already resets
+          // lastOutput when narrowing, so the re-render after our clear will
+          // always produce output.  On expand, Ink does NOT reset lastOutput,
+          // so clearing here would leave the screen blank when the rendered
+          // string hasn't changed.
+          if (instance) {
+            instance.clear()
           }
-          updateStreamsSize()
+          term.write(CLEAR_TERMINAL)
         }
+        updateStreamsSize()
       }
     } catch {
       // fitAddon.fit() can throw if xterm's renderer isn't ready yet;

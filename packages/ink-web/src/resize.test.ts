@@ -15,10 +15,6 @@ let fitCallback: (() => void) | null = null
 
 mock.module('@xterm/xterm', () => ({
   Terminal: class MockTerminal {
-    _core = {
-      viewport: true,
-      _renderService: { _renderer: { value: true } },
-    }
     get cols() { return termCols }
     get rows() { return termRows }
     open() {}
