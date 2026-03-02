@@ -1,5 +1,5 @@
 - Use atomic commits with conventional commit messages
-- After making any change, always run `bun run build` and `bun test` to confirm the build succeeds and tests pass. After adding or changing dependencies, also run `cd docs && bun run build` to verify the docs build.
+- After making any fix, always run `bun run clean && bun run setup && bun test` to do a clean rebuild and confirm everything works from scratch before considering the fix complete. A fix is not verified until clean build + tests pass.
 - Every user-facing change (new features, API changes, new components, config changes) requires updating the relevant docs under `docs/content/docs/`.
 - Breaking changes require a migration guide in `docs/content/docs/guides/migration.mdx`.
 - ink-web bundles ink (a Node.js CLI framework) for the browser. Any new dependency that imports Node.js built-ins (fs, child_process, tty, net, etc.) will break the Next.js docs build unless `packages/ink-web/scripts/fix-bundled-fs.ts` is updated to stub the import. The script must handle all import forms: static (`import X from`), namespace (`import * as X from`), and dynamic (`await import()`).
