@@ -28,7 +28,7 @@ npm install ink-web react xterm
 ```typescript
 import { InkTerminalBox, Box, Text } from 'ink'
 import 'ink-web/css'
-import 'xterm/css/xterm.css'
+import '@xterm/xterm/css/xterm.css'
 
 const App = () => (
   <InkTerminalBox focus>
@@ -110,7 +110,7 @@ The plugin automatically:
 ```typescript
 import { InkXterm } from 'ink-web'
 import { Box, Text } from 'ink'
-import 'xterm/css/xterm.css'
+import '@xterm/xterm/css/xterm.css'
 
 const App = () => (
   <InkXterm focus>
@@ -133,7 +133,7 @@ Note: Import ink components from `ink` separately.
 import { mountInkInXterm } from 'ink-web'
 import { Box, Text } from 'ink'
 import React from 'react'
-import 'xterm/css/xterm.css'
+import '@xterm/xterm/css/xterm.css'
 
 const App = () => (
   <Box flexDirection="column">
@@ -158,7 +158,7 @@ await unmount()
 import { InkXterm } from 'ink-web'
 import { Box, Text } from 'ink'
 import React from 'react'
-import 'xterm/css/xterm.css'
+import '@xterm/xterm/css/xterm.css'
 
 const App = () => (
   <Box flexDirection="column">

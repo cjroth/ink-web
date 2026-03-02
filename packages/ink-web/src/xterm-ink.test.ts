@@ -94,22 +94,13 @@ describe('stdin forwarding', () => {
   })
 })
 
-describe('stdout write filtering (BSU/ESU and CLEAR_TERMINAL)', () => {
+describe('stdout write filtering (CLEAR_TERMINAL)', () => {
   // Import the real filtering function and constants from the source module
   // so these tests exercise the actual production code path.
   const { filterStdoutChunk, CLEAR_TERMINAL, CURSOR_HOME, BSU, ESU } = require('./xterm-ink')
 
-  test('strips BSU (Begin Synchronized Update) sequences', () => {
-    expect(filterStdoutChunk(`${BSU}Hello World`)).toBe('Hello World')
-  })
-
-  test('strips ESU (End Synchronized Update) sequences', () => {
-    expect(filterStdoutChunk(`some text${ESU}`)).toBe('some text')
-  })
-
-  test('strips BSU + content + ESU (full synchronized update wrapper)', () => {
-    const input = `${BSU}Hello World${ESU}`
-    expect(filterStdoutChunk(input)).toBe('Hello World')
+  test('preserves BSU/ESU sequences (xterm 6.x supports synchronized updates)', () => {
+    expect(filterStdoutChunk(`${BSU}Hello World${ESU}`)).toBe(`${BSU}Hello World${ESU}`)
   })
 
   test('replaces CLEAR_TERMINAL with CURSOR_HOME', () => {
@@ -119,7 +110,7 @@ describe('stdout write filtering (BSU/ESU and CLEAR_TERMINAL)', () => {
 
   test('handles ink 6.8.0 combined pattern: BSU + CLEAR_TERMINAL + content + ESU', () => {
     const input = `${BSU}${CLEAR_TERMINAL}rendered content here${ESU}`
-    expect(filterStdoutChunk(input)).toBe(`${CURSOR_HOME}rendered content here`)
+    expect(filterStdoutChunk(input)).toBe(`${BSU}${CURSOR_HOME}rendered content here${ESU}`)
   })
 
   test('passes regular text through unchanged', () => {
@@ -130,15 +121,6 @@ describe('stdout write filtering (BSU/ESU and CLEAR_TERMINAL)', () => {
   test('handles multiple CLEAR_TERMINAL sequences', () => {
     const input = `${CLEAR_TERMINAL}first${CLEAR_TERMINAL}second`
     expect(filterStdoutChunk(input)).toBe(`${CURSOR_HOME}first${CURSOR_HOME}second`)
-  })
-
-  test('handles multiple BSU/ESU pairs', () => {
-    const input = `${BSU}first${ESU}middle${BSU}second${ESU}`
-    expect(filterStdoutChunk(input)).toBe('firstmiddlesecond')
-  })
-
-  test('empty string after stripping becomes empty (no xterm.write call)', () => {
-    expect(filterStdoutChunk(`${BSU}${ESU}`)).toBe('')
   })
 })
 

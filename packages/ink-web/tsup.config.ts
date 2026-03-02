@@ -85,7 +85,7 @@ export default defineConfig([
     sourcemap: true,
     target: 'es2020',
     platform: 'browser',
-    external: ['react', 'react-dom', 'ink', 'xterm', '@xterm/addon-fit'],
+    external: ['react', 'react-dom', 'ink', '@xterm/xterm', '@xterm/addon-fit'],
   },
   // Main bundle - bundles Ink and shims but NOT React
   // Compatible with Next.js and other React 19+ environments
@@ -101,7 +101,7 @@ export default defineConfig([
     splitting: false,
     minify: false,
     // Externalize React and related packages - they must be provided by the host app
-    external: ['react', 'react-dom', 'react/jsx-runtime', 'react/jsx-dev-runtime', 'scheduler', 'react-reconciler', 'xterm', '@xterm/addon-fit'],
+    external: ['react', 'react-dom', 'react/jsx-runtime', 'react/jsx-dev-runtime', 'scheduler', 'react-reconciler', '@xterm/xterm', '@xterm/addon-fit'],
     noExternal: [
       'ink',
       'chalk',
@@ -130,7 +130,7 @@ export default defineConfig([
         ...options.define,
       }
       // Make React and scheduler truly external - don't bundle them
-      options.external = ['react', 'react-dom', 'react/jsx-runtime', 'react/jsx-dev-runtime', 'scheduler', 'react-reconciler', 'xterm', '@xterm/addon-fit']
+      options.external = ['react', 'react-dom', 'react/jsx-runtime', 'react/jsx-dev-runtime', 'scheduler', 'react-reconciler', '@xterm/xterm', '@xterm/addon-fit']
       // Add banner to provide require for external modules (similar to bundled)
       options.banner = {
         js: `
@@ -139,7 +139,7 @@ import * as __react_dom__ from 'react-dom';
 import * as __react_jsx_runtime__ from 'react/jsx-runtime';
 import * as __scheduler__ from 'scheduler';
 import * as __react_reconciler__ from 'react-reconciler';
-import * as __xterm__ from 'xterm';
+import * as __xterm__ from '@xterm/xterm';
 import * as __xterm_addon_fit__ from '@xterm/addon-fit';
 // Provide require for CommonJS modules that need to import externals
 const __EXTERNAL_MODULES__ = {
@@ -148,7 +148,7 @@ const __EXTERNAL_MODULES__ = {
   'react/jsx-runtime': __react_jsx_runtime__,
   'scheduler': __scheduler__,
   'react-reconciler': __react_reconciler__,
-  'xterm': __xterm__,
+  '@xterm/xterm': __xterm__,
   '@xterm/addon-fit': __xterm_addon_fit__,
 };
 if (typeof globalThis.__bundled_require__ === 'undefined') {
@@ -184,7 +184,7 @@ const require = globalThis.__bundled_require__;
     sourcemap: true,
     target: 'es2020',
     platform: 'browser',
-    external: ['react', 'react-dom', 'next', 'next/dynamic', 'xterm', 'xterm/css/xterm.css', '@xterm/addon-fit', 'ink-web', 'ink-web/css'],
+    external: ['react', 'react-dom', 'next', 'next/dynamic', '@xterm/xterm', '@xterm/xterm/css/xterm.css', '@xterm/addon-fit', 'ink-web', 'ink-web/css'],
   },
   // SSR-safe utilities (pure functions, no browser dependencies)
   {

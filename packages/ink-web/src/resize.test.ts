@@ -13,7 +13,7 @@ let fitCallback: (() => void) | null = null
 // Note: We do NOT mock 'ink' because mock.module is global and permanent,
 // which breaks other tests that depend on the real ink module.
 
-mock.module('xterm', () => ({
+mock.module('@xterm/xterm', () => ({
   Terminal: class MockTerminal {
     _core = {
       viewport: true,

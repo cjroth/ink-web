@@ -8,22 +8,22 @@ import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 <Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
   <Tab value="npm">
     ```bash
-    npm install ink-web xterm
+    npm install ink-web @xterm/xterm
     ```
   </Tab>
   <Tab value="yarn">
     ```bash
-    yarn add ink-web xterm
+    yarn add ink-web @xterm/xterm
     ```
   </Tab>
   <Tab value="pnpm">
     ```bash
-    pnpm add ink-web xterm
+    pnpm add ink-web @xterm/xterm
     ```
   </Tab>
   <Tab value="bun">
     ```bash
-    bun add ink-web xterm
+    bun add ink-web @xterm/xterm
     ```
   </Tab>
 </Tabs>
@@ -35,7 +35,7 @@ import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
 
 import { InkXterm, Box, Text } from "ink-web";
 import "ink-web/css";
-import "xterm/css/xterm.css";
+import "@xterm/xterm/css/xterm.css";
 
 export const Terminal = () => (
   <div style={{ width: "100vw", height: "100vh" }}>

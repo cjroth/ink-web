@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Box } from "ink";
 import { InkTerminalBox } from "ink-web";
 import "ink-web/css";
-import "xterm/css/xterm.css";
+import "@xterm/xterm/css/xterm.css";
 import { ChatPanel } from "@/components/ui/chat";
 import type { ChatMessage, ToolCallInfo } from "@/components/ui/chat";
 

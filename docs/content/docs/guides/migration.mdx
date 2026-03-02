@@ -1,0 +1,65 @@
+---
+title: Migrating to v0.2
+description: Guide for upgrading ink-web from v0.1 to v0.2
+---
+
+## xterm.js 6.0
+
+ink-web v0.2 upgrades from `xterm` v5.x to `@xterm/xterm` v6.0. The xterm.js project moved to scoped npm packages, so the package name has changed.
+
+### Update your dependencies
+
+Replace `xterm` with `@xterm/xterm` in your `package.json`:
+
+import { Tabs, Tab } from 'fumadocs-ui/components/tabs';
+
+<Tabs items={['npm', 'yarn', 'pnpm', 'bun']}>
+  <Tab value="npm">
+    ```bash
+    npm uninstall xterm && npm install @xterm/xterm
+    ```
+  </Tab>
+  <Tab value="yarn">
+    ```bash
+    yarn remove xterm && yarn add @xterm/xterm
+    ```
+  </Tab>
+  <Tab value="pnpm">
+    ```bash
+    pnpm remove xterm && pnpm add @xterm/xterm
+    ```
+  </Tab>
+  <Tab value="bun">
+    ```bash
+    bun remove xterm && bun add @xterm/xterm
+    ```
+  </Tab>
+</Tabs>
+
+If you use `@xterm/addon-fit` directly, upgrade it too:
+
+```bash
+npm install @xterm/addon-fit@^0.11.0
+```
+
+### Update CSS imports
+
+```diff
+- import "xterm/css/xterm.css";
++ import "@xterm/xterm/css/xterm.css";
+```
+
+### Update TypeScript imports
+
+If you import types from xterm directly (e.g. `ITerminalOptions`):
+
+```diff
+- import type { ITerminalOptions } from "xterm";
++ import type { ITerminalOptions } from "@xterm/xterm";
+```
+
+### Synchronized updates
+
+xterm.js 6.0 adds native support for synchronized updates (DEC private mode 2026). ink-web now passes these sequences through to the terminal instead of stripping them, which improves render smoothness.
+
+No action is needed on your part — this is handled automatically.

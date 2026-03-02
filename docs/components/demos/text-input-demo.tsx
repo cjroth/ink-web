@@ -1,7 +1,7 @@
 "use client";
 
 import "ink-web/css";
-import "xterm/css/xterm.css";
+import "@xterm/xterm/css/xterm.css";
 import { Box, Text } from "ink";
 import { InkTerminalBox } from "ink-web";
 import { useTextInput } from "@/components/ui/text-input";

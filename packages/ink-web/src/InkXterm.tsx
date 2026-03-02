@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from 'react'
-import type { ITerminalOptions } from 'xterm'
+import type { ITerminalOptions } from '@xterm/xterm'
 import { mountInkInXterm } from './xterm-ink'
 
 interface InkXtermProps {

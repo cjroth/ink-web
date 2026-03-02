@@ -3,7 +3,7 @@
 import { Box, Text } from "ink";
 import { InkTerminalBox } from "ink-web";
 import "ink-web/css";
-import "xterm/css/xterm.css";
+import "@xterm/xterm/css/xterm.css";
 
 function Panel({ title, children, width = 40 }: { title: string; children: React.ReactNode; width?: number }) {
   return (

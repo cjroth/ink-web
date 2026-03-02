@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Box, Text, useInput, useStdout } from "ink";
 import { InkTerminalBox } from "ink-web";
 import "ink-web/css";
-import "xterm/css/xterm.css";
+import "@xterm/xterm/css/xterm.css";
 import { Modal } from "@/components/ui/modal";
 import { StatusBar } from "@/components/ui/status-bar";
 

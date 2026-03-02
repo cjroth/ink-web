@@ -1,7 +1,7 @@
 import { FitAddon } from '@xterm/addon-fit'
 import { render } from 'ink'
 import React from 'react'
-import { Terminal, type ITerminalOptions } from 'xterm'
+import { Terminal, type ITerminalOptions } from '@xterm/xterm'
 import { Readable, Writable } from './shims/stream'
 import { FILE_DROP_EVENT, type DroppedFile } from './file-drop'
 import './shims/timers'
@@ -12,11 +12,9 @@ export const CURSOR_HOME = '\x1b[H'
 export const BSU = '\x1b[?2026h' // Begin Synchronized Update (DEC private mode 2026)
 export const ESU = '\x1b[?2026l' // End Synchronized Update
 
-/** Strip/replace ANSI sequences that xterm.js 5.x cannot handle. */
+/** Strip/replace ANSI sequences that cause visual glitches in xterm.js. */
 export function filterStdoutChunk(str: string): string {
   str = str.replaceAll(CLEAR_TERMINAL, CURSOR_HOME)
-  str = str.replaceAll(BSU, '')
-  str = str.replaceAll(ESU, '')
   return str
 }
 
@@ -81,8 +79,6 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
   //
   // Fix: strip clearTerminal sequences and replace with a cursor-home so the
   // new content overwrites in place without a visible blank frame.
-  // Ink 6.8.0 also wraps every render in synchronized update sequences
-  // (BSU/ESU) which xterm.js 5.x does not support — those are stripped too.
   // See filterStdoutChunk() at module scope.
   const stdoutBase = new Writable()
   stdoutBase.write = (chunk: unknown, encoding?: any, cb?: any) => {

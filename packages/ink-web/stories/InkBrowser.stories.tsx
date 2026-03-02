@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import 'xterm/css/xterm.css'
+import '@xterm/xterm/css/xterm.css'
 import { mountInkInXterm } from '../src'
 
 export default {

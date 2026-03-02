@@ -12,7 +12,7 @@ A higher-level component that wraps `InkXterm` with styling, CSS isolation, and 
 ```tsx
 import { InkTerminalBox, Box, Text } from "ink-web";
 import "ink-web/css";
-import "xterm/css/xterm.css";
+import "@xterm/xterm/css/xterm.css";
 
 export function MyTerminal() {
   return (
@@ -72,7 +72,7 @@ A lower-level component that directly integrates xterm.js with Ink. Use this whe
 
 ```tsx
 import { InkXterm, Box, Text } from "ink-web";
-import "xterm/css/xterm.css";
+import "@xterm/xterm/css/xterm.css";
 
 export function MyTerminal() {
   return (

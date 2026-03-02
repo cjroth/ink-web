@@ -2,7 +2,7 @@
 
 import { Box, Text, InkTerminalBox } from "ink-web/bundled";
 import "ink-web/bundled/css";
-import "xterm/css/xterm.css";
+import "@xterm/xterm/css/xterm.css";
 
 export default function Terminal() {
   return (

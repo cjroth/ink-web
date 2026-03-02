@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useMemo } from 'react'
-import type { ITerminalOptions } from 'xterm'
+import type { ITerminalOptions } from '@xterm/xterm'
 import './InkTerminalBox.css'
 import { InkXterm } from './InkXterm'
 import { getTerminalHeight } from './utils'

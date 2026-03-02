@@ -3,7 +3,7 @@
 import { Box } from "ink";
 import { InkTerminalBox } from "ink-web";
 import "ink-web/css";
-import "xterm/css/xterm.css";
+import "@xterm/xterm/css/xterm.css";
 import { Ascii } from "@/components/ui/ascii";
 import figlet from "figlet";
 import doom from "figlet/importable-fonts/Doom.js";

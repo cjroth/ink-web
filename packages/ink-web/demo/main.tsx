@@ -1,5 +1,5 @@
 import React from 'react'
-import 'xterm/css/xterm.css'
+import '@xterm/xterm/css/xterm.css'
 // In a real app, this would be: import { mountInkInXterm, DemoApp } from 'ink-web'
 import { DemoApp, mountInkInXterm } from '../src/index'
 
