@@ -5,3 +5,4 @@ dist
 ink/
 .playwright*
 .vercel
+.env
