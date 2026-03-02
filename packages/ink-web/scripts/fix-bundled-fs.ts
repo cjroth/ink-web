@@ -29,6 +29,9 @@ class EventEmitter {
   removeListener(e, l) { return this.off(e, l); }
   removeAllListeners(e) { if (e) this._listeners.delete(e); else this._listeners.clear(); return this; }
   once(e, l) { const w = (...a) => { this.off(e, w); l(...a); }; return this.on(e, w); }
+  setMaxListeners() { return this; }
+  listeners(e) { const s = this._listeners.get(e); return s ? [...s] : []; }
+  listenerCount(e) { const s = this._listeners.get(e); return s ? s.size : 0; }
 }
 `
 
@@ -73,7 +76,7 @@ let __yogaPromise = null;
 // Start loading immediately
 __yogaPromise = yoga_wasm_base64_esm_default().then(wasm => {
   __yogaInstance = wrapAssembly(wasm);
-  console.log('[Yoga] WASM initialized successfully');
+  // Yoga WASM initialized
   return __yogaInstance;
 }).catch(err => {
   console.error('[Yoga] Failed to initialize WASM:', err);
@@ -157,6 +160,58 @@ if (typeof globalThis !== 'undefined') {
 
   // Also handle node:fs
   content = content.replace(/import \* as fs from ['"]node:fs['"];/g, fsShim.trim())
+
+  // Replace ink 6.8.0's loadPackageJson() which uses dynamic import("fs").
+  // The function itself AND its call site use top-level await which
+  // Next.js/Turbopack cannot handle in dependencies.
+  content = content.replace(
+    /async function loadPackageJson\(\) \{[\s\S]*?\n\}/,
+    'async function loadPackageJson() { return { name: undefined, version: undefined }; }'
+  )
+  // Remove the top-level await that calls loadPackageJson
+  content = content.replace(
+    /var packageJson = isDev\(\) \? await loadPackageJson\(\) : \{ name: void 0, version: void 0 \};/,
+    'var packageJson = { name: void 0, version: void 0 };'
+  )
+
+  // Remove the top-level await for devtools import — even though isDev() is
+  // always false in the browser, the `await` keyword makes Turbopack treat
+  // the entire module as async, causing "CJS module can't be async" errors.
+  // We match the entire if (isDev()) { try { await ... } catch { ... } } block.
+  content = content.replace(
+    /if \(isDev\(\)\) \{\s*try \{\s*await Promise\.resolve\(\)[\s\S]*?\n\}\n/,
+    '// devtools import removed for browser compatibility\n'
+  )
+
+  // Remove bare `import os from "os"` — the `os` module is only used by `environment`
+  // for CI/terminal detection; our process shim already handles env vars.
+  content = content.replace(
+    /import os from ["']os["'];/g,
+    'var os = { platform: () => "browser", homedir: () => "/", tmpdir: () => "/tmp", type: () => "Browser", release: () => "0", hostname: () => "localhost", EOL: "\\n" };'
+  )
+
+  // Remove bare `import { Buffer as Buffer2 } from "buffer"` — only used by
+  // ink's parse-keypress which we don't rely on in the browser.
+  content = content.replace(
+    /import \{ Buffer as (\w+) \} from ["']buffer["'];/g,
+    'var $1 = { from: (s) => ({ toString: () => String(s) }), isBuffer: () => false, alloc: (n) => new Uint8Array(n) };'
+  )
+
+  // Replace empty createContainer error callbacks with logging ones so
+  // reconciler errors during rendering are surfaced in the console.
+  content = content.replace(
+    `this.container = reconciler_default.createContainer(this.rootNode, rootTag, null, false, null, "id", () => {
+    }, () => {
+    }, () => {
+    }, () => {
+    });`,
+    `this.container = reconciler_default.createContainer(this.rootNode, rootTag, null, false, null, "id",
+      (err) => { console.error('[ink-web] Uncaught error in render:', err); },
+      (err) => { console.error('[ink-web] Caught error in render:', err); },
+      (err) => { console.error('[ink-web] Recoverable error in render:', err); },
+      () => {}
+    );`
+  )
 
   // Fix node builtin imports (process, events, stream)
   // The actual shim files (src/shims/*.ts) are already bundled by esbuild

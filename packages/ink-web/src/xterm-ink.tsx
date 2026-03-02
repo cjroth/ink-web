@@ -66,6 +66,10 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
   // new content overwrites in place without a visible blank frame.
   const CLEAR_TERMINAL = '\x1b[2J\x1b[3J\x1b[H'
   const CURSOR_HOME = '\x1b[H'
+  // Ink 6.8.0 wraps every render in synchronized update sequences (BSU/ESU)
+  // which xterm.js 5.x does not support — strip them.
+  const BSU = '\x1b[?2026h'
+  const ESU = '\x1b[?2026l'
   const stdoutBase = new Writable()
   stdoutBase.write = (chunk: unknown, encoding?: any, cb?: any) => {
     let str = typeof chunk === 'string' ? chunk : String(chunk)
@@ -73,7 +77,15 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
       if (str.includes(CLEAR_TERMINAL)) {
         str = str.replace(CLEAR_TERMINAL, CURSOR_HOME)
       }
-      term.write(str)
+      if (str.includes(BSU)) {
+        str = str.split(BSU).join('')
+      }
+      if (str.includes(ESU)) {
+        str = str.split(ESU).join('')
+      }
+      if (str.length > 0) {
+        term.write(str)
+      }
     }
     if (typeof encoding === 'function') {
       encoding()
@@ -169,11 +181,10 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
         stderr: stdout,
         stdin,
         patchConsole: false,
-        incrementalRendering: true,
       })
     })
     .catch((e: Error) => {
-      console.error('Error initializing Yoga or rendering Ink:', e)
+      console.error('[ink-web] Error initializing Yoga or rendering Ink:', e)
     })
 
   // Resize handling — when xterm.js narrows, it reflows existing content to

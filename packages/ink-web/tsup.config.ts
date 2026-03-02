@@ -15,6 +15,7 @@ const shimAliasesForBundled = (rootDir: string) => ({
   'cli-cursor': resolve(rootDir, 'src/shims/cli-cursor.ts'),
   'signal-exit': resolve(rootDir, 'src/shims/signal-exit.ts'),
   'window-size': resolve(rootDir, 'src/shims/window-size.ts'),
+  'terminal-size': resolve(rootDir, 'src/shims/terminal-size.ts'),
 
   // Optional dev dependencies
   'react-devtools-core': resolve(rootDir, 'src/shims/react-devtools-core.ts'),
@@ -107,6 +108,7 @@ export default defineConfig([
       'cli-cursor',
       'signal-exit',
       'window-size',
+      'terminal-size',
       'stack-utils',
       'code-excerpt',
       'ansi-escapes',

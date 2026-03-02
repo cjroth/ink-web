@@ -69,6 +69,13 @@ This copies the component source into your `components/ui/` folder. Available co
 | `table` | Table with rounded borders, alignment, per-cell styling, and footer rows |
 | `text-input` | Text input with cursor, placeholder, and history |
 
+## Compatibility
+
+| ink-web  | ink       | xterm.js | React |
+|----------|-----------|----------|-------|
+| 0.1.17+  | 6.5–6.8+  | 5.x      | 19.x  |
+| 0.1.15–0.1.16 | 6.0–6.5 | 5.x | 19.x  |
+
 ## Development
 
 ```bash

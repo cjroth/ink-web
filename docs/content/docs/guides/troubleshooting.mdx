@@ -52,4 +52,26 @@ import { Accordions, Accordion } from 'fumadocs-ui/components/accordion'
 
     Then `updateStreamsSize()` emits `resize` synchronously, triggering Ink's re-render. Because the shim's `emit()` is synchronous, the clear and re-render are queued in the same xterm.js write batch — so the user sees a single atomic update with no flicker. A dimension guard prevents double-fire from ResizeObserver and the window resize event both triggering.
   </Accordion>
+  <Accordion title="Garbled or flickering output with ink 6.6+">
+    **Problem**: After upgrading your project's `ink` dependency to 6.6 or later, the terminal output in the browser is garbled, duplicated, or flickers on every render.
+
+    **Cause**: Ink 6.6+ introduced two changes that are incompatible with xterm.js 5.x:
+
+    1. **Synchronized update sequences (BSU/ESU)**: Ink 6.8.0 wraps every render in `\x1b[?2026h` (begin) and `\x1b[?2026l` (end) DEC private mode 2026 sequences when `stdout.isTTY === true`. xterm.js 5.x has no support for these sequences, so they are rendered as visible garbage or cause cursor positioning errors.
+
+    2. **Rewritten incremental renderer**: Ink 6.8.0's incremental renderer uses new cursor math (`visibleLineCount`, `cursorUp(previousVisible - 1)`) that drifts when running inside xterm.js, causing duplicated or overlapping lines.
+
+    **Solution**: Upgrade to `ink-web@0.1.17` or later, which is tested against ink 6.8.0 and strips the incompatible sequences.
+
+    ```bash
+    npm install ink-web@latest
+    ```
+  </Accordion>
 </Accordions>
+
+## Compatibility
+
+| ink-web  | ink       | xterm.js | React |
+|----------|-----------|----------|-------|
+| 0.1.17+  | 6.5–6.8+  | 5.x      | 19.x  |
+| 0.1.15–0.1.16 | 6.0–6.5 | 5.x | 19.x  |
