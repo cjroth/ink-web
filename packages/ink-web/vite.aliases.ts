@@ -9,6 +9,7 @@ export function inkBrowserAliases(rootDir: string) {
     { find: '#supports-color', replacement: r('src/shims/supports-color.ts') },
     { find: 'signal-exit', replacement: r('src/shims/signal-exit.ts') },
     { find: 'window-size', replacement: r('src/shims/window-size.ts') },
+    { find: 'terminal-size', replacement: r('src/shims/terminal-size.ts') },
     { find: 'tty', replacement: r('src/shims/tty.ts') },
     { find: 'process', replacement: r('src/shims/process.ts') },
     { find: 'node:process', replacement: r('src/shims/process.ts') },
