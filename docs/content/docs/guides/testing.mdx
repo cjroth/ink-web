@@ -1,0 +1,243 @@
+---
+title: Testing
+description: Test your Ink components with ink-testing
+---
+
+import { Callout, Steps, Step } from 'fumadocs-ui/components/callout';
+
+## Quick Start
+
+The `ink-testing` package provides ergonomic testing utilities for Ink components, wrapping `ink-testing-library` with helpers for screen queries, keyboard input, and async waiting.
+
+```tsx
+import { describe, expect, test, afterEach } from 'bun:test'
+import React from 'react'
+import { renderTui, cleanup } from 'ink-testing'
+import { MyComponent } from './my-component.tsx'
+
+afterEach(() => {
+  cleanup()
+})
+
+test('renders and responds to input', async () => {
+  const tui = renderTui(<MyComponent />)
+
+  // Read screen content
+  expect(tui.screen.contains('Hello')).toBe(true)
+
+  // Send keyboard input
+  tui.keys.enter()
+  await tui.flush()
+
+  // Assert on updated screen
+  expect(tui.screen.contains('Next step')).toBe(true)
+
+  tui.unmount()
+})
+```
+
+## Installation
+
+`ink-testing` is a workspace package in the ink-web monorepo. Add it as a dev dependency:
+
+```bash
+bun add -d ink-testing@workspace:*
+```
+
+## API Reference
+
+### `renderTui(node)`
+
+Renders an Ink component and returns a `TuiInstance` with helpers:
+
+```tsx
+const tui = renderTui(<MyComponent />)
+```
+
+**Returns:** `TuiInstance`
+
+| Property | Type | Description |
+| --- | --- | --- |
+| `screen` | `Screen` | Screen query helpers |
+| `keys` | `KeySender` | Keyboard input helpers |
+| `flush()` | `Promise<void>` | Flush pending React renders |
+| `waitFor(condition, options?)` | `Promise<void>` | Wait for a condition |
+| `rerender(node)` | `void` | Re-render with new props |
+| `unmount()` | `void` | Unmount and cleanup the component |
+| `ink` | `Instance` | Underlying ink-testing-library instance |
+
+### Screen Queries
+
+```tsx
+tui.screen.text()           // Full screen text (ANSI stripped)
+tui.screen.rawText()        // Full screen text (with ANSI codes)
+tui.screen.contains('text') // Check if text is present
+tui.screen.matches(/regex/) // Match against regex
+tui.screen.lines()          // All non-empty lines
+tui.screen.line(0)          // Specific line (0-indexed)
+tui.screen.frames()         // All rendered frames (stripped)
+tui.screen.rawFrames()      // All rendered frames (with ANSI)
+```
+
+### Key Helpers
+
+```tsx
+tui.keys.enter()            // Press Enter (sends \r)
+tui.keys.escape()           // Press Escape
+tui.keys.tab()              // Press Tab
+tui.keys.backspace()        // Press Backspace
+tui.keys.up()               // Arrow up
+tui.keys.down()             // Arrow down
+tui.keys.left()             // Arrow left
+tui.keys.right()            // Arrow right
+tui.keys.space()            // Press Space
+tui.keys.press('a')         // Press a single character
+tui.keys.type('hello')      // Type a string (sends each char)
+tui.keys.key('pageUp')      // Press a named key
+tui.keys.raw('\x1b[A')      // Send raw escape sequence
+```
+
+**Named keys:** `return`, `escape`, `tab`, `backspace`, `delete`, `up`, `down`, `left`, `right`, `space`, `pageUp`, `pageDown`, `home`, `end`, `ctrlC`
+
+### `waitFor(condition, options?)`
+
+Polls until a condition is met or timeout is reached.
+
+```tsx
+// Wait for text to appear
+await tui.waitFor('Loading complete')
+
+// Wait for a custom assertion
+await tui.waitFor(() => {
+  expect(tui.screen.lines().length).toBeGreaterThan(3)
+})
+
+// With custom timeout
+await tui.waitFor('Ready', { timeout: 5000, interval: 100 })
+```
+
+**Options:**
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `timeout` | `3000` | Timeout in milliseconds |
+| `interval` | `50` | Polling interval in milliseconds |
+
+### `flush()`
+
+Flushes pending React renders. Call after sending keys when you need to synchronously assert without `waitFor`.
+
+```tsx
+tui.keys.enter()
+await tui.flush()
+expect(tui.screen.contains('Next')).toBe(true)
+```
+
+### `cleanup()`
+
+Cleans up all rendered instances. Call in `afterEach`:
+
+```tsx
+import { cleanup } from 'ink-testing'
+
+afterEach(() => {
+  cleanup()
+})
+```
+
+## Patterns
+
+### Testing keyboard navigation
+
+```tsx
+test('navigates a list', async () => {
+  const tui = renderTui(<SelectInput items={items} />)
+
+  tui.keys.down()
+  await tui.flush()
+  // Assert second item is highlighted
+
+  tui.keys.enter()
+  await tui.flush()
+  // Assert item was selected
+
+  tui.unmount()
+})
+```
+
+### Testing text input
+
+Use `press()` + `flush()` per character for reliable input:
+
+```tsx
+test('types into input', async () => {
+  const tui = renderTui(<TextInput />)
+
+  tui.keys.press('h')
+  await tui.flush()
+  tui.keys.press('i')
+  await tui.flush()
+
+  expect(tui.screen.contains('hi')).toBe(true)
+  tui.unmount()
+})
+```
+
+### Testing async components
+
+Use `waitFor` for components that update asynchronously:
+
+```tsx
+test('loads data', async () => {
+  const tui = renderTui(<DataLoader />)
+
+  await tui.waitFor('Data loaded')
+  expect(tui.screen.contains('42 items')).toBe(true)
+
+  tui.unmount()
+})
+```
+
+### Re-rendering with new props
+
+```tsx
+test('updates on prop change', () => {
+  const tui = renderTui(<TabBar options={['A', 'B']} selectedIndex={0} />)
+  expect(tui.screen.contains('A')).toBe(true)
+
+  tui.rerender(<TabBar options={['A', 'B']} selectedIndex={1} />)
+  expect(tui.screen.contains('B')).toBe(true)
+
+  tui.unmount()
+})
+```
+
+## Gotchas
+
+### `\r` vs `\n`
+
+Ink maps `\r` to `key.return`. The newline character `\n` does **not** trigger `key.return`. Always use `tui.keys.enter()` (which sends `\r`) instead of `\n`.
+
+### Double-tick flush
+
+After sending input, React needs two event loop ticks to process:
+1. `batchedUpdates` processes the state change
+2. Re-render commits and writes to stdout
+
+`flush()` handles this automatically. If you skip it, assertions may see stale state.
+
+### React batching with `type()`
+
+`type('hello')` sends all characters synchronously in a single tick. This works for components that use functional state updaters (e.g., `setState(prev => prev + char)`). For components that read state directly, use `press()` + `flush()` per character instead.
+
+### `useInput` ordering
+
+All `useInput` handlers in the component tree fire for every input event — parent and child components both receive the input. There's no event propagation or `stopPropagation()`.
+
+### Focus prop
+
+Components like `SelectInput` have a `focus` prop. When `focus={false}`, they ignore all keyboard input. Make sure to manage focus when composing multiple input-handling components to prevent them from all capturing the same keys.
+
+### Workspace dependency resolution
+
+When using `ink-testing` in a monorepo, ensure `ink` and `react` resolve to a single copy. The workspace setup handles this automatically, but if you see unexpected behavior (input not working, state not updating), check for duplicate package installations with `bun pm ls`.

@@ -1,7 +1,9 @@
 [test]
-# Force color output for deterministic snapshot testing
-# Chalk caches color support at module load time, so we need to set this
-# before any modules are loaded
+# IMPORTANT: Do not run `bun test` from the root — it discovers all test files
+# across packages and runs them in a single process, which causes cross-package
+# interference (e.g., resize.test.ts mocks the ink module globally).
+#
+# Use `bun run test` instead, which runs each package's tests independently.
 preload = ["./packages/ink-ui/test/preload.ts"]
 
 [test.env]

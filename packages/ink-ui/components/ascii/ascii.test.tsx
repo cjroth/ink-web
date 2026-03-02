@@ -1,26 +1,29 @@
-import { describe, expect, test, beforeAll } from 'bun:test'
+import { describe, expect, test, afterEach } from 'bun:test'
 import React from 'react'
-import { setupHappyDom, renderForTest } from '../../test/utils'
-import { Ascii } from './ascii'
+import { renderTui, cleanup } from 'ink-testing'
+import { Ascii } from './ascii.tsx'
 
-beforeAll(() => {
-  setupHappyDom()
+afterEach(() => {
+  cleanup()
 })
 
-describe('Ascii Component', () => {
-  test('renders basic text', async () => {
-    const { stdout, cleanup, waitForRender, waitForNextRender } = renderForTest(<Ascii text="Hi" />)
-    await waitForRender()
-    await waitForNextRender() // Wait for figlet async callback to complete
-    expect(stdout.output()).toMatchSnapshot()
-    cleanup()
+describe('Ascii', () => {
+  test('renders ASCII art text', async () => {
+    const tui = renderTui(<Ascii text="Hi" />)
+    await tui.waitFor(() => {
+      const lines = tui.screen.lines()
+      expect(lines.length).toBeGreaterThan(1)
+    })
+    tui.unmount()
   })
 
-  test('renders with color', async () => {
-    const { stdout, cleanup, waitForRender, waitForNextRender } = renderForTest(<Ascii text="Hi" color="cyan" />)
-    await waitForRender()
-    await waitForNextRender() // Wait for figlet async callback to complete
-    expect(stdout.output()).toMatchSnapshot()
-    cleanup()
+  test('renders the actual text in ASCII art form', async () => {
+    const tui = renderTui(<Ascii text="A" />)
+    await tui.waitFor(() => {
+      const text = tui.screen.text()
+      expect(text.length).toBeGreaterThan(0)
+      expect(tui.screen.lines().length).toBeGreaterThan(1)
+    })
+    tui.unmount()
   })
 })

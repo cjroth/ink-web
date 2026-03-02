@@ -10,6 +10,8 @@ let inkClearCalled = false
 let fitCallback: (() => void) | null = null
 
 // --- Mock modules before importing xterm-ink ---
+// Note: We do NOT mock 'ink' because mock.module is global and permanent,
+// which breaks other tests that depend on the real ink module.
 
 mock.module('xterm', () => ({
   Terminal: class MockTerminal {
@@ -34,17 +36,6 @@ mock.module('@xterm/addon-fit', () => ({
   },
 }))
 
-mock.module('ink', () => ({
-  render: () => ({
-    rerender: () => {},
-    unmount: () => {},
-    waitUntilExit: () => Promise.resolve(),
-    clear: () => { inkClearCalled = true },
-    cleanup: () => {},
-  }),
-  useStdin: () => ({ stdin: null, isRawModeSupported: false, setRawMode: () => {} }),
-}))
-
 // Capture ResizeObserver callbacks
 globalThis.ResizeObserver = class MockResizeObserver {
   cb: () => void
@@ -58,6 +49,17 @@ globalThis.ResizeObserver = class MockResizeObserver {
 
 // Import after mocks are set up
 const { mountInkInXterm } = await import('./xterm-ink')
+
+// Mock render function injected via _render option instead of mock.module('ink')
+function createMockRender() {
+  return (() => ({
+    rerender: () => {},
+    unmount: () => {},
+    waitUntilExit: () => Promise.resolve(),
+    clear: () => { inkClearCalled = true },
+    cleanup: () => {},
+  })) as any
+}
 
 const CLEAR_TERMINAL = '\x1b[2J\x1b[3J\x1b[H'
 
@@ -80,7 +82,11 @@ describe('resize behavior', () => {
 
   test('narrowing clears terminal and resets Ink state', async () => {
     const container = createContainer()
-    const result = mountInkInXterm(React.createElement('div'), { container, focus: false })
+    const result = mountInkInXterm(React.createElement('div'), {
+      container,
+      focus: false,
+      _render: createMockRender(),
+    })
 
     // Wait for async init (yoga promise + 200ms setTimeout)
     await new Promise(r => setTimeout(r, 300))
@@ -99,7 +105,11 @@ describe('resize behavior', () => {
 
   test('expanding does NOT clear terminal or reset Ink state', async () => {
     const container = createContainer()
-    const result = mountInkInXterm(React.createElement('div'), { container, focus: false })
+    const result = mountInkInXterm(React.createElement('div'), {
+      container,
+      focus: false,
+      _render: createMockRender(),
+    })
 
     await new Promise(r => setTimeout(r, 300))
     termWrites = []
@@ -117,7 +127,11 @@ describe('resize behavior', () => {
 
   test('no-op when size has not changed', async () => {
     const container = createContainer()
-    const result = mountInkInXterm(React.createElement('div'), { container, focus: false })
+    const result = mountInkInXterm(React.createElement('div'), {
+      container,
+      focus: false,
+      _render: createMockRender(),
+    })
 
     await new Promise(r => setTimeout(r, 300))
     termWrites = []
@@ -135,7 +149,11 @@ describe('resize behavior', () => {
 
   test('height-only shrink does not trigger clear (only width matters for reflow)', async () => {
     const container = createContainer()
-    const result = mountInkInXterm(React.createElement('div'), { container, focus: false })
+    const result = mountInkInXterm(React.createElement('div'), {
+      container,
+      focus: false,
+      _render: createMockRender(),
+    })
 
     await new Promise(r => setTimeout(r, 300))
     termWrites = []

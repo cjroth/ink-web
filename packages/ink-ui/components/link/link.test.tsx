@@ -1,28 +1,24 @@
-import { describe, expect, test, beforeAll } from 'bun:test'
+import { describe, expect, test, afterEach } from 'bun:test'
 import React from 'react'
-import { setupHappyDom, renderForTest } from '../../test/utils'
-import { Link } from './link'
+import { renderTui, cleanup } from 'ink-testing'
+import { Link } from './link.tsx'
 
-beforeAll(() => {
-  setupHappyDom()
+afterEach(() => {
+  cleanup()
 })
 
-describe('Link Component', () => {
-  test('renders link with text', async () => {
-    const { stdout, cleanup, waitForRender } = renderForTest(
-      <Link url="https://github.com">GitHub</Link>
-    )
-    await waitForRender()
-    expect(stdout.output()).toMatchSnapshot()
-    cleanup()
+describe('Link', () => {
+  test('renders link text', () => {
+    const tui = renderTui(<Link url="https://example.com">Click me</Link>)
+    expect(tui.screen.contains('Click me')).toBe(true)
+    tui.unmount()
   })
 
-  test('renders with different URL', async () => {
-    const { stdout, cleanup, waitForRender } = renderForTest(
-      <Link url="https://example.com">Example</Link>
-    )
-    await waitForRender()
-    expect(stdout.output()).toMatchSnapshot()
-    cleanup()
+  test('raw output contains OSC 8 escape sequence with URL', () => {
+    const tui = renderTui(<Link url="https://example.com">Example</Link>)
+    const raw = tui.screen.rawText()
+    expect(raw).toContain('https://example.com')
+    expect(raw).toContain('\x1b]8;;')
+    tui.unmount()
   })
 })

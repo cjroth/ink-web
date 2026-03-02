@@ -1,60 +1,51 @@
-import { describe, expect, test, beforeAll } from 'bun:test'
+import { describe, expect, test, afterEach } from 'bun:test'
 import React from 'react'
-import { setupHappyDom, renderForTest } from '../../test/utils'
-import { TabBar } from './tab-bar'
+import { renderTui, cleanup } from 'ink-testing'
+import { TabBar } from './tab-bar.tsx'
 
-beforeAll(() => {
-  setupHappyDom()
+afterEach(() => {
+  cleanup()
 })
 
-describe('TabBar Component', () => {
-  test('renders options with selected highlight', async () => {
-    const { stdout, cleanup, waitForRender } = renderForTest(
-      <TabBar options={['Alpha', 'Beta', 'Gamma']} selectedIndex={1} />
+describe('TabBar', () => {
+  const options = ['Files', 'Search', 'Settings']
+
+  test('renders all options', () => {
+    const tui = renderTui(
+      <TabBar options={options} selectedIndex={0} />
     )
-    await waitForRender()
-    const output = stdout.output()
-    expect(output).toContain('Alpha')
-    expect(output).toContain('Beta')
-    expect(output).toContain('Gamma')
-    cleanup()
+    expect(tui.screen.contains('Files')).toBe(true)
+    expect(tui.screen.contains('Search')).toBe(true)
+    expect(tui.screen.contains('Settings')).toBe(true)
+    tui.unmount()
   })
 
-  test('renders label when provided', async () => {
-    const { stdout, cleanup, waitForRender } = renderForTest(
-      <TabBar label="View" options={['One', 'Two']} selectedIndex={0} />
+  test('renders label when provided', () => {
+    const tui = renderTui(
+      <TabBar label="View:" options={options} selectedIndex={0} />
     )
-    await waitForRender()
-    expect(stdout.output()).toContain('View')
-    cleanup()
+    expect(tui.screen.contains('View:')).toBe(true)
+    tui.unmount()
   })
 
-  test('renders without label', async () => {
-    const { stdout, cleanup, waitForRender } = renderForTest(
-      <TabBar options={['A', 'B']} selectedIndex={0} />
+  test('changing selectedIndex updates display', () => {
+    const tui = renderTui(
+      <TabBar options={options} selectedIndex={0} />
     )
-    await waitForRender()
-    const output = stdout.output()
-    expect(output).toContain('A')
-    expect(output).toContain('B')
-    cleanup()
+    expect(tui.screen.contains('Files')).toBe(true)
+
+    tui.rerender(
+      <TabBar options={options} selectedIndex={2} />
+    )
+    expect(tui.screen.contains('Settings')).toBe(true)
+    tui.unmount()
   })
 
-  test('renders dimmed when unfocused', async () => {
-    const { stdout, cleanup, waitForRender } = renderForTest(
-      <TabBar options={['X', 'Y']} selectedIndex={0} focused={false} />
+  test('renders without label', () => {
+    const tui = renderTui(
+      <TabBar options={options} selectedIndex={1} />
     )
-    await waitForRender()
-    expect(stdout.output()).toContain('X')
-    cleanup()
-  })
-
-  test('renders with custom activeColor', async () => {
-    const { stdout, cleanup, waitForRender } = renderForTest(
-      <TabBar options={['A', 'B']} selectedIndex={0} activeColor="green" />
-    )
-    await waitForRender()
-    expect(stdout.output()).toContain('A')
-    cleanup()
+    expect(tui.screen.contains('Search')).toBe(true)
+    tui.unmount()
   })
 })

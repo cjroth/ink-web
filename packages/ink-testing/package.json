@@ -1,0 +1,21 @@
+{
+  "name": "ink-testing",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "bun test"
+  },
+  "dependencies": {
+    "ink-testing-library": "^4.0.0",
+    "strip-ansi": "^7.1.0"
+  },
+  "peerDependencies": {
+    "ink": ">=6.0.0",
+    "react": ">=19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.0.0",
+    "typescript": "^5.0.0"
+  }
+}

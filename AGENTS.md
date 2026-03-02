@@ -1,1 +1,3 @@
 - Use atomic commits with conventional commit messages
+- ink-web bundles ink (a Node.js CLI framework) for the browser. Any new dependency that imports Node.js built-ins (fs, child_process, tty, net, etc.) will break the Next.js docs build unless `packages/ink-web/scripts/fix-bundled-fs.ts` is updated to stub the import. The script must handle all import forms: static (`import X from`), namespace (`import * as X from`), and dynamic (`await import()`).
+- After adding or changing dependencies in ink-web, always run `bun run build && cd docs && bun run build` to verify the full build works.

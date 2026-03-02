@@ -155,11 +155,38 @@ if (typeof globalThis !== 'undefined') {
 }`
   )
 
-  // Replace import * as fs from "fs" or import * as fs from 'fs'
-  content = content.replace(/import \* as fs from ['"]fs['"];/g, fsShim.trim())
+  // Replace all forms of fs imports:
+  //   import * as fs from "fs"        (namespace import)
+  //   import * as fs2 from "fs"       (aliased namespace import)
+  //   import fs from "fs"             (default import)
+  //   import fs3 from "fs"            (aliased default import)
+  content = content.replace(/import \* as (\w+) from ['"](?:node:)?fs['"];/g, (_, name) => {
+    return `const ${name} = { existsSync: () => false, readFileSync: () => '' };`
+  })
+  content = content.replace(/import (\w+) from ['"](?:node:)?fs['"];/g, (_, name) => {
+    return `const ${name} = { existsSync: () => false, readFileSync: () => '' };`
+  })
 
-  // Also handle node:fs
-  content = content.replace(/import \* as fs from ['"]node:fs['"];/g, fsShim.trim())
+  // Replace dynamic import("fs") calls (used by ink's reconciler for package.json loading)
+  // Turbopack does static analysis on import() so we must eliminate the specifier entirely
+  content = content.replace(/await import\("fs"\)/g, '({ existsSync: () => false, readFileSync: () => \'{}\' })')
+  content = content.replace(/await import\('fs'\)/g, "({ existsSync: () => false, readFileSync: () => '{}' })")
+  content = content.replace(/await import\("node:fs"\)/g, '({ existsSync: () => false, readFileSync: () => \'{}\' })')
+  content = content.replace(/await import\('node:fs'\)/g, "({ existsSync: () => false, readFileSync: () => '{}' })")
+
+  // Replace child_process imports (used by terminal-size)
+  content = content.replace(/import \{ ([^}]+) \} from ['"](?:node:)?child_process['"];/g, (_, imports) => {
+    const stubs = imports.split(',').map((s: string) => `${s.trim()}: () => ''`).join(', ')
+    return `const { ${imports} } = { ${stubs} };`
+  })
+  content = content.replace(/import (\w+) from ['"](?:node:)?child_process['"];/g, (_, name) => {
+    return `const ${name} = { execFileSync: () => '' };`
+  })
+
+  // Replace tty imports (used by terminal-size)
+  content = content.replace(/import (\w+) from ['"](?:node:)?tty['"];/g, (_, name) => {
+    return `const ${name} = {};`
+  })
 
   // Replace ink 6.8.0's loadPackageJson() which uses dynamic import("fs").
   // The function itself AND its call site use top-level await which
