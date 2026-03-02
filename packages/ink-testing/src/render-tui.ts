@@ -1,8 +1,8 @@
 import { render, cleanup as inkCleanup } from 'ink-testing-library'
-import type { ReactNode } from 'react'
-import { createKeySender, type KeySender } from './keys.ts'
-import { createScreen, type Screen } from './screen.ts'
-import { waitFor as waitForImpl, type WaitForOptions } from './wait-for.ts'
+import type { ReactElement, ReactNode } from 'react'
+import { createKeySender, type KeySender } from './keys.js'
+import { createScreen, type Screen } from './screen.js'
+import { waitFor as waitForImpl, type WaitForOptions } from './wait-for.js'
 
 export interface TuiInstance {
   /** Screen query helpers — read what's currently rendered */
@@ -57,7 +57,7 @@ export interface TuiInstance {
  * ```
  */
 export function renderTui(node: ReactNode): TuiInstance {
-  const instance = render(node)
+  const instance = render(node as ReactElement)
   const screen = createScreen(instance.lastFrame, instance.frames)
   const keys = createKeySender((data) => instance.stdin.write(data))
 

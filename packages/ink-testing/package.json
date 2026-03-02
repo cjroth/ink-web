@@ -1,10 +1,27 @@
 {
   "name": "ink-testing",
-  "version": "0.1.0",
+  "version": "0.2.0",
+  "description": "Ergonomic testing utilities for Ink (React for CLIs)",
   "type": "module",
-  "main": "src/index.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist",
+    "src",
+    "README.md"
+  ],
   "scripts": {
-    "test": "bun test"
+    "build": "tsup",
+    "test": "bun test",
+    "prepublishOnly": "bun run build"
   },
   "dependencies": {
     "ink-testing-library": "^4.0.0",
@@ -15,7 +32,31 @@
     "react": ">=19.0.0"
   },
   "devDependencies": {
+    "@types/node": "^24.11.0",
     "@types/react": "^19.0.0",
+    "tsup": "^8.5.1",
     "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "ink",
+    "testing",
+    "react",
+    "cli",
+    "tui",
+    "terminal"
+  ],
+  "author": "Chris Roth <chris@cjroth.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/cjroth/ink-web#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cjroth/ink-web.git",
+    "directory": "packages/ink-testing"
+  },
+  "bugs": {
+    "url": "https://github.com/cjroth/ink-web/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
