@@ -7,10 +7,11 @@
   },
   "workspaces": [
     "packages/*",
+    "examples/*",
     "docs"
   ],
   "scripts": {
-    "build": "bun run --cwd packages/ink-web build",
+    "build": "bun run --cwd packages/ink-web build && bun run --cwd packages/ink-ui build && bun run --cwd packages/ink-testing build",
     "dev": "bun run --cwd packages/ink-web dev",
     "test": "bun run --cwd packages/ink-web test && bun run --cwd packages/ink-ui test && bun run --cwd packages/ink-testing test",
     "test:web": "bun run --cwd packages/ink-web test",
@@ -22,6 +23,9 @@
     "ui:test": "bun run --cwd packages/ink-ui test",
     "docs": "bun run --cwd docs dev",
     "docs:build": "bun run build && bun run --cwd docs build",
-    "publish": "cp README.md packages/ink-web/README.md && npm publish --workspace packages/ink-web"
+    "clean": "rm -rf dist node_modules docs/dist docs/node_modules docs/.next packages/ink-web/dist packages/ink-web/node_modules packages/ink-ui/dist packages/ink-ui/node_modules packages/ink-testing/dist packages/ink-testing/node_modules",
+    "setup": "bun install && bun install --cwd docs && bun install --cwd packages/ink-ui && bun install --cwd packages/ink-testing && bun run build",
+    "publish": "cp README.md packages/ink-web/README.md && npm publish --workspace packages/ink-web",
+    "publish:testing": "npm publish --workspace packages/ink-testing"
   }
 }
