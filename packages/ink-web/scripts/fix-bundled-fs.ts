@@ -57,6 +57,26 @@ var PassThrough = __InkPassThrough;
 `
 
 
+function checkedReplace(
+  content: string,
+  pattern: string | RegExp,
+  replacement: string,
+  label: string,
+  critical: boolean
+): string {
+  const result = content.replace(pattern, replacement)
+  if (result === content) {
+    const msg = `[fix-bundled-fs] Pattern did not match: ${label}`
+    if (critical) {
+      console.error(`ERROR: ${msg}`)
+      process.exit(1)
+    } else {
+      console.warn(`WARNING: ${msg}`)
+    }
+  }
+  return result
+}
+
 function fixFile(filePath: string, fileName: string, fixReact: boolean = true) {
   let content = readFileSync(filePath, 'utf-8')
 
@@ -191,42 +211,47 @@ if (typeof globalThis !== 'undefined') {
   // Replace ink 6.8.0's loadPackageJson() which uses dynamic import("fs").
   // The function itself AND its call site use top-level await which
   // Next.js/Turbopack cannot handle in dependencies.
-  content = content.replace(
+  content = checkedReplace(content,
     /async function loadPackageJson\(\) \{[\s\S]*?\n\}/,
-    'async function loadPackageJson() { return { name: undefined, version: undefined }; }'
+    'async function loadPackageJson() { return { name: undefined, version: undefined }; }',
+    'loadPackageJson() function body', true
   )
   // Remove the top-level await that calls loadPackageJson
-  content = content.replace(
+  content = checkedReplace(content,
     /var packageJson = isDev\(\) \? await loadPackageJson\(\) : \{ name: void 0, version: void 0 \};/,
-    'var packageJson = { name: void 0, version: void 0 };'
+    'var packageJson = { name: void 0, version: void 0 };',
+    'packageJson top-level await', true
   )
 
   // Remove the top-level await for devtools import — even though isDev() is
   // always false in the browser, the `await` keyword makes Turbopack treat
   // the entire module as async, causing "CJS module can't be async" errors.
   // We match the entire if (isDev()) { try { await ... } catch { ... } } block.
-  content = content.replace(
+  content = checkedReplace(content,
     /if \(isDev\(\)\) \{\s*try \{\s*await Promise\.resolve\(\)[\s\S]*?\n\}\n/,
-    '// devtools import removed for browser compatibility\n'
+    '// devtools import removed for browser compatibility\n',
+    'devtools if(isDev()) await block', true
   )
 
   // Remove bare `import os from "os"` — the `os` module is only used by `environment`
   // for CI/terminal detection; our process shim already handles env vars.
-  content = content.replace(
+  content = checkedReplace(content,
     /import os from ["']os["'];/g,
-    'var os = { platform: () => "browser", homedir: () => "/", tmpdir: () => "/tmp", type: () => "Browser", release: () => "0", hostname: () => "localhost", EOL: "\\n" };'
+    'var os = { platform: () => "browser", homedir: () => "/", tmpdir: () => "/tmp", type: () => "Browser", release: () => "0", hostname: () => "localhost", EOL: "\\n" };',
+    'os import (safety net)', false
   )
 
   // Remove bare `import { Buffer as Buffer2 } from "buffer"` — only used by
   // ink's parse-keypress which we don't rely on in the browser.
-  content = content.replace(
+  content = checkedReplace(content,
     /import \{ Buffer as (\w+) \} from ["']buffer["'];/g,
-    'var $1 = { from: (s) => ({ toString: () => String(s) }), isBuffer: () => false, alloc: (n) => new Uint8Array(n) };'
+    'var $1 = { from: (s) => ({ toString: () => String(s) }), isBuffer: () => false, alloc: (n) => new Uint8Array(n) };',
+    'Buffer import (safety net)', false
   )
 
   // Replace empty createContainer error callbacks with logging ones so
   // reconciler errors during rendering are surfaced in the console.
-  content = content.replace(
+  content = checkedReplace(content,
     `this.container = reconciler_default.createContainer(this.rootNode, rootTag, null, false, null, "id", () => {
     }, () => {
     }, () => {
@@ -237,7 +262,8 @@ if (typeof globalThis !== 'undefined') {
       (err) => { console.error('[ink-web] Caught error in render:', err); },
       (err) => { console.error('[ink-web] Recoverable error in render:', err); },
       () => {}
-    );`
+    );`,
+    'createContainer error callbacks', false
   )
 
   // Fix node builtin imports (process, events, stream)
