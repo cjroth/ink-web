@@ -6,6 +6,20 @@ import { Readable, Writable } from './shims/stream'
 import { FILE_DROP_EVENT, type DroppedFile } from './file-drop'
 import './shims/timers'
 
+// ANSI sequences that need filtering when writing to xterm.js
+export const CLEAR_TERMINAL = '\x1b[2J\x1b[3J\x1b[H'
+export const CURSOR_HOME = '\x1b[H'
+export const BSU = '\x1b[?2026h' // Begin Synchronized Update (DEC private mode 2026)
+export const ESU = '\x1b[?2026l' // End Synchronized Update
+
+/** Strip/replace ANSI sequences that xterm.js 5.x cannot handle. */
+export function filterStdoutChunk(str: string): string {
+  str = str.replaceAll(CLEAR_TERMINAL, CURSOR_HOME)
+  str = str.replaceAll(BSU, '')
+  str = str.replaceAll(ESU, '')
+  return str
+}
+
 // Helper to check if yoga init is available
 const getYogaInit = (): Promise<void> => {
   if (typeof globalThis !== 'undefined' && (globalThis as any).__yogaPromise) {
@@ -67,25 +81,14 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
   //
   // Fix: strip clearTerminal sequences and replace with a cursor-home so the
   // new content overwrites in place without a visible blank frame.
-  const CLEAR_TERMINAL = '\x1b[2J\x1b[3J\x1b[H'
-  const CURSOR_HOME = '\x1b[H'
-  // Ink 6.8.0 wraps every render in synchronized update sequences (BSU/ESU)
-  // which xterm.js 5.x does not support — strip them.
-  const BSU = '\x1b[?2026h'
-  const ESU = '\x1b[?2026l'
+  // Ink 6.8.0 also wraps every render in synchronized update sequences
+  // (BSU/ESU) which xterm.js 5.x does not support — those are stripped too.
+  // See filterStdoutChunk() at module scope.
   const stdoutBase = new Writable()
   stdoutBase.write = (chunk: unknown, encoding?: any, cb?: any) => {
     let str = typeof chunk === 'string' ? chunk : String(chunk)
     if (str.length > 0) {
-      if (str.includes(CLEAR_TERMINAL)) {
-        str = str.replace(CLEAR_TERMINAL, CURSOR_HOME)
-      }
-      if (str.includes(BSU)) {
-        str = str.split(BSU).join('')
-      }
-      if (str.includes(ESU)) {
-        str = str.split(ESU).join('')
-      }
+      str = filterStdoutChunk(str)
       if (str.length > 0) {
         term.write(str)
       }
@@ -217,7 +220,7 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
             if (instance) {
               instance.clear()
             }
-            term.write('\x1b[2J\x1b[3J\x1b[H')
+            term.write(CLEAR_TERMINAL)
           }
           updateStreamsSize()
         }
