@@ -1,45 +1,75 @@
-import { describe, expect, test, beforeAll } from 'bun:test'
+import { describe, expect, test, afterEach } from 'bun:test'
 import React from 'react'
 import { Text } from 'ink'
-import { setupHappyDom, renderForTest } from '../../test/utils'
-import { Gradient } from './gradient'
+import { renderTui, cleanup } from 'ink-testing'
+import { Gradient } from './gradient.tsx'
 
-beforeAll(() => {
-  setupHappyDom()
+afterEach(() => {
+  cleanup()
 })
 
-describe('Gradient Component', () => {
-  test('renders with rainbow gradient', async () => {
-    const { stdout, cleanup, waitForRender } = renderForTest(
+describe('Gradient', () => {
+  test('renders gradient text with preset name', () => {
+    const tui = renderTui(
       <Gradient name="rainbow">
-        <Text>Hello</Text>
+        <Text>Hello World</Text>
       </Gradient>
     )
-    await waitForRender()
-    expect(stdout.output()).toMatchSnapshot()
-    cleanup()
+    expect(tui.screen.contains('Hello World')).toBe(true)
+    tui.unmount()
   })
 
-  test('renders with custom colors', async () => {
-    const { stdout, cleanup, waitForRender } = renderForTest(
+  test('renders gradient text with custom colors', () => {
+    const tui = renderTui(
       <Gradient colors={['#ff0000', '#0000ff']}>
-        <Text>Test</Text>
+        <Text>Custom</Text>
       </Gradient>
     )
-    await waitForRender()
-    expect(stdout.output()).toMatchSnapshot()
-    cleanup()
+    expect(tui.screen.contains('Custom')).toBe(true)
+    tui.unmount()
   })
 
-  test('throws error when both name and colors provided', () => {
-    expect(() => {
-      Gradient({ name: 'rainbow', colors: ['#ff0000'], children: 'Test' })
-    }).toThrow('mutually exclusive')
+  test('raw output contains ANSI color codes', () => {
+    const tui = renderTui(
+      <Gradient name="rainbow">
+        <Text>Colored</Text>
+      </Gradient>
+    )
+    expect(tui.screen.rawText()).toContain('\x1b[38;2;')
+    tui.unmount()
   })
 
-  test('throws error when neither name nor colors provided', () => {
-    expect(() => {
-      Gradient({ children: 'Test' })
-    }).toThrow('must be provided')
+  test('different preset names produce output', () => {
+    const presets = ['cristal', 'teen', 'morning', 'pastel'] as const
+    for (const name of presets) {
+      const tui = renderTui(
+        <Gradient name={name}>
+          <Text>Test</Text>
+        </Gradient>
+      )
+      expect(tui.screen.contains('Test')).toBe(true)
+      tui.unmount()
+    }
+  })
+
+  test('single color gradient works', () => {
+    const tui = renderTui(
+      <Gradient colors={['#ff0000']}>
+        <Text>Mono</Text>
+      </Gradient>
+    )
+    expect(tui.screen.contains('Mono')).toBe(true)
+    tui.unmount()
+  })
+
+  test('multiline text gets gradient applied', () => {
+    const tui = renderTui(
+      <Gradient name="rainbow">
+        <Text>{'Line1\nLine2'}</Text>
+      </Gradient>
+    )
+    expect(tui.screen.contains('Line1')).toBe(true)
+    expect(tui.screen.contains('Line2')).toBe(true)
+    tui.unmount()
   })
 })

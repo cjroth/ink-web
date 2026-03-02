@@ -21,6 +21,7 @@
     "figlet": "^1.9.4",
     "ink": "^6.5.1",
     "react": "^19.2.1",
+    "ink-testing": "workspace:*",
     "typescript": "^5.9.3"
   },
   "license": "MIT"

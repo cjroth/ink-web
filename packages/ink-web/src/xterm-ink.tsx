@@ -19,9 +19,12 @@ export interface InkWebOptions {
   container: HTMLElement
   focus?: boolean
   onReady?: () => void
+  /** @internal Override the render function (used for testing) */
+  _render?: typeof render
 }
 
 export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions) {
+  const renderFn = opts._render ?? render
   const containerWidth = opts.container.clientWidth
   const containerHeight = opts.container.clientHeight
 
@@ -164,7 +167,7 @@ export function mountInkInXterm(element: React.ReactElement, opts: InkWebOptions
 
   getYogaInit()
     .then(() => {
-      instance = render(pendingElement, {
+      instance = renderFn(pendingElement, {
         stdout,
         stderr: stdout,
         stdin,

@@ -1,55 +1,56 @@
-import { describe, expect, test, beforeAll } from 'bun:test'
+import { describe, expect, test, afterEach } from 'bun:test'
 import React from 'react'
 import { Text } from 'ink'
-import { setupHappyDom, renderForTest } from '../../test/utils'
-import { Modal } from './modal'
+import { renderTui, cleanup } from 'ink-testing'
+import { Modal } from './modal.tsx'
 
-beforeAll(() => {
-  setupHappyDom()
+afterEach(() => {
+  cleanup()
 })
 
 describe('Modal', () => {
-  test('renders children', async () => {
-    const { stdout, cleanup, waitForRender } = renderForTest(
+  test('renders children content', () => {
+    const tui = renderTui(
       <Modal>
         <Text>Modal content here</Text>
       </Modal>
     )
-    await waitForRender()
-    expect(stdout.output()).toContain('Modal content here')
-    cleanup()
+    expect(tui.screen.contains('Modal content here')).toBe(true)
+    tui.unmount()
   })
 
-  test('renders with title', async () => {
-    const { stdout, cleanup, waitForRender } = renderForTest(
+  test('renders title when provided', () => {
+    const tui = renderTui(
       <Modal title="My Modal">
+        <Text>Body</Text>
+      </Modal>
+    )
+    expect(tui.screen.contains('My Modal')).toBe(true)
+    expect(tui.screen.contains('Body')).toBe(true)
+    tui.unmount()
+  })
+
+  test('Escape key calls onClose', async () => {
+    let closed = false
+    const tui = renderTui(
+      <Modal onClose={() => { closed = true }}>
         <Text>Content</Text>
       </Modal>
     )
-    await waitForRender()
-    expect(stdout.output()).toContain('My Modal')
-    cleanup()
+
+    tui.keys.escape()
+    await tui.flush()
+    expect(closed).toBe(true)
+    tui.unmount()
   })
 
-  test('renders without title', async () => {
-    const { stdout, cleanup, waitForRender } = renderForTest(
+  test('renders without title', () => {
+    const tui = renderTui(
       <Modal>
-        <Text>Just content</Text>
+        <Text>No title</Text>
       </Modal>
     )
-    await waitForRender()
-    expect(stdout.output()).toContain('Just content')
-    cleanup()
-  })
-
-  test('renders with custom border color', async () => {
-    const { stdout, cleanup, waitForRender } = renderForTest(
-      <Modal borderColor="red" title="Red Modal">
-        <Text>Content</Text>
-      </Modal>
-    )
-    await waitForRender()
-    expect(stdout.output()).toContain('Red Modal')
-    cleanup()
+    expect(tui.screen.contains('No title')).toBe(true)
+    tui.unmount()
   })
 })

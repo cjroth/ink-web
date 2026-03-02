@@ -1,31 +1,28 @@
-import { describe, expect, test, beforeAll } from 'bun:test'
+import { describe, expect, test, afterEach } from 'bun:test'
 import React from 'react'
-import { setupHappyDom, renderForTest } from '../../test/utils'
-import { Spinner } from './spinner'
+import { renderTui, cleanup } from 'ink-testing'
+import { Spinner } from './spinner.tsx'
 
-beforeAll(() => {
-  setupHappyDom()
+afterEach(() => {
+  cleanup()
 })
 
-describe('Spinner Component', () => {
-  test('renders with default text', async () => {
-    const { stdout, cleanup, waitForRender } = renderForTest(<Spinner />)
-    await waitForRender()
-    expect(stdout.output()).toContain('Loading')
-    cleanup()
+describe('Spinner', () => {
+  test('renders spinner with default text', () => {
+    const tui = renderTui(<Spinner />)
+    expect(tui.screen.contains('Loading')).toBe(true)
+    tui.unmount()
   })
 
-  test('renders with custom text', async () => {
-    const { stdout, cleanup, waitForRender } = renderForTest(<Spinner text="Processing..." />)
-    await waitForRender()
-    expect(stdout.output()).toContain('Processing...')
-    cleanup()
+  test('renders spinner with custom text', () => {
+    const tui = renderTui(<Spinner text="Processing..." />)
+    expect(tui.screen.contains('Processing...')).toBe(true)
+    tui.unmount()
   })
 
-  test('renders with custom color', async () => {
-    const { stdout, cleanup, waitForRender } = renderForTest(<Spinner color="cyan" text="Wait" />)
-    await waitForRender()
-    expect(stdout.output()).toContain('Wait')
-    cleanup()
+  test('renders a braille spinner character', () => {
+    const tui = renderTui(<Spinner />)
+    expect(tui.screen.matches(/[⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏]/)).toBe(true)
+    tui.unmount()
   })
 })

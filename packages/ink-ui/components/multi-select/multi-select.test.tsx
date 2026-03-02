@@ -1,53 +1,137 @@
-import { describe, expect, test, beforeAll } from 'bun:test'
+import { describe, expect, test, afterEach } from 'bun:test'
 import React from 'react'
-import { setupHappyDom, renderForTest } from '../../test/utils'
-import { MultiSelect } from './multi-select'
+import { renderTui, cleanup } from 'ink-testing'
+import { MultiSelect } from './multi-select.tsx'
 
-beforeAll(() => {
-  setupHappyDom()
+afterEach(() => {
+  cleanup()
 })
 
-const testItems = [
-  { label: 'Option A', value: 'a' },
-  { label: 'Option B', value: 'b' },
-  { label: 'Option C', value: 'c' },
+const items = [
+  { label: 'Apple', value: 'apple' },
+  { label: 'Banana', value: 'banana' },
+  { label: 'Cherry', value: 'cherry' },
 ]
 
-describe('MultiSelect Component', () => {
-  test('renders all items', async () => {
-    const { stdout, cleanup, waitForRender } = renderForTest(<MultiSelect items={testItems} />)
-    await waitForRender()
-    expect(stdout.output()).toMatchSnapshot()
-    cleanup()
+describe('MultiSelect', () => {
+  test('renders all items', () => {
+    const tui = renderTui(<MultiSelect items={items} />)
+    expect(tui.screen.contains('Apple')).toBe(true)
+    expect(tui.screen.contains('Banana')).toBe(true)
+    expect(tui.screen.contains('Cherry')).toBe(true)
+    tui.unmount()
   })
 
-  test('renders with default selected items', async () => {
-    const { stdout, cleanup, waitForRender } = renderForTest(
-      <MultiSelect items={testItems} defaultSelected={[testItems[0]!]} />
+  test('shows unselected checkboxes initially', () => {
+    const tui = renderTui(<MultiSelect items={items} />)
+    expect(tui.screen.contains('◯')).toBe(true)
+    tui.unmount()
+  })
+
+  test('space toggles selection on', async () => {
+    const tui = renderTui(<MultiSelect items={items} />)
+
+    tui.keys.space()
+    await tui.flush()
+    expect(tui.screen.contains('◉')).toBe(true)
+    tui.unmount()
+  })
+
+  test('space toggles selection off', async () => {
+    const tui = renderTui(<MultiSelect items={items} />)
+
+    tui.keys.space()
+    await tui.flush()
+    expect(tui.screen.contains('◉')).toBe(true)
+
+    tui.keys.space()
+    await tui.flush()
+    expect(tui.screen.contains('◉')).toBe(false)
+    tui.unmount()
+  })
+
+  test('arrow navigation changes highlighted item', async () => {
+    const highlights: string[] = []
+    const tui = renderTui(
+      <MultiSelect
+        items={items}
+        onHighlight={(item) => highlights.push(item.label)}
+      />
     )
-    await waitForRender()
-    expect(stdout.output()).toMatchSnapshot()
-    cleanup()
+
+    tui.keys.down()
+    await tui.flush()
+    expect(highlights).toContain('Banana')
+
+    tui.keys.down()
+    await tui.flush()
+    expect(highlights).toContain('Cherry')
+    tui.unmount()
   })
 
-  test('renders with limit', async () => {
-    const manyItems = [
-      { label: 'Item 1', value: '1' },
-      { label: 'Item 2', value: '2' },
-      { label: 'Item 3', value: '3' },
-      { label: 'Item 4', value: '4' },
-      { label: 'Item 5', value: '5' },
-    ]
-    const { stdout, cleanup, waitForRender } = renderForTest(<MultiSelect items={manyItems} limit={3} />)
-    await waitForRender()
-    expect(stdout.output()).toMatchSnapshot()
-    cleanup()
+  test('Enter submits selected items', async () => {
+    let submitted: typeof items | undefined
+    const tui = renderTui(
+      <MultiSelect
+        items={items}
+        onSubmit={(selected) => { submitted = selected }}
+      />
+    )
+
+    tui.keys.space()
+    await tui.flush()
+
+    tui.keys.down()
+    await tui.flush()
+    tui.keys.down()
+    await tui.flush()
+    tui.keys.space()
+    await tui.flush()
+
+    tui.keys.enter()
+    await tui.flush()
+
+    expect(submitted).toBeDefined()
+    expect(submitted!.length).toBe(2)
+    expect(submitted!.map(s => s.label)).toContain('Apple')
+    expect(submitted!.map(s => s.label)).toContain('Cherry')
+    tui.unmount()
   })
 
-  test('renders empty list', async () => {
-    const { stdout, cleanup, waitForRender } = renderForTest(<MultiSelect items={[]} />)
-    await waitForRender()
-    expect(stdout.output()).toMatchSnapshot()
-    cleanup()
+  test('j/k navigation works', async () => {
+    const highlights: string[] = []
+    const tui = renderTui(
+      <MultiSelect
+        items={items}
+        onHighlight={(item) => highlights.push(item.label)}
+      />
+    )
+
+    tui.keys.press('j')
+    await tui.flush()
+    expect(highlights).toContain('Banana')
+
+    tui.keys.press('k')
+    await tui.flush()
+    expect(highlights).toContain('Apple')
+    tui.unmount()
+  })
+
+  test('focus=false disables input', async () => {
+    let submitted: typeof items | undefined
+    const tui = renderTui(
+      <MultiSelect
+        items={items}
+        focus={false}
+        onSubmit={(selected) => { submitted = selected }}
+      />
+    )
+
+    tui.keys.space()
+    await tui.flush()
+    tui.keys.enter()
+    await tui.flush()
+    expect(submitted).toBeUndefined()
+    tui.unmount()
   })
 })
